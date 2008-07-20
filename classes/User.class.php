@@ -1,5 +1,4 @@
 <?php
-require_once("User.sql.php");
 
 class User {
    public function __construct($data = null) {     

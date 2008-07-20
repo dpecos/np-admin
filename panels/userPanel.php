@@ -1,7 +1,13 @@
 <?
-global $PWD;
 $PWD = "../";
 require_once($PWD."include/common.php");
+
+if (!npadmin_userallowed()) {
+   if (npadmin_logindata() == null)
+      redirect ($PWD."login.php?referer=".$_SERVER["PHP_SELF"]);
+   else
+      echo "User unauthorized!";
+}
 ?>
 
 <?
@@ -169,7 +175,7 @@ function html_head() {
            <table id="user_form_table">
               <form id="user_form">
                  <tr><td>User name:</td><td><input type="text" name="user"</td><tr>
-                 <tr><td>Password:</td><td><input type="text" name="password"</td><tr>
+                 <tr><td>Password:</td><td><input type="password" name="password"</td><tr>
                  <tr><td>Real Name:</td><td><input type="text" name="real_name"</td><tr>
                  <tr><td>Email:</td><td><input type="text" name="email"</td><tr>
                  <input type="hidden" name="op" value="add"/>

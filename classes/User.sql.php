@@ -14,4 +14,4 @@ $ddbb_types['User']['password'] =    "STRING";
 $ddbb_types['User']['email'] =       "STRING";
 $ddbb_types['User']['creation_date'] = "DATE";
 $ddbb_types['User']['real_name'] =   "STRING";
-?>	
+?>

@@ -6,8 +6,14 @@ $ddbb_mapping = array();
 $ddbb_types = array();	
 
 require_once($PWD."config/ddbb.php");
+require_once($PWD."lib/np-lib/NPLib_Object.php");
 require_once($PWD."lib/np-lib/NPLib_Sql.php");
+require_once($PWD."lib/np-lib/NPLib_Net.php");
+require_once($PWD."lib/np-lib/NPLib_String.php");
+require_once($PWD."API.php");
+
 __NP_initDDBB($ddbb_settings);
+require_once($PWD."classes/User.sql.php");
 
 function __autoload($class_name) {
    global $PWD;

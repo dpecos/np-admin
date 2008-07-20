@@ -1,5 +1,4 @@
 <?
-global $PWD;
 $PWD = "../";
 require_once($PWD."include/common.php");
 
@@ -23,8 +22,16 @@ if ($_POST['op'] == "add") {
       }
    }
    echo "OK";
+   
 } else if ($_POST['op'] == "list" || $_GET['op'] == "list") {
    $returnList = true;
+   
+} else if ($_POST['op'] == "login") {
+   echo npadmin_login($_POST['user'], $_POST['password']) ? "OK" : "ERROR";
+
+} else if ($_POST['op'] == "logout" || $_GET['op'] == "logout") {
+   npadmin_logout();
+   echo "OK";
 }
 
 if ($returnList) {

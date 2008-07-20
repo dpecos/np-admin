@@ -9,11 +9,11 @@
             var logReader = new YAHOO.widget.LogReader(div, {verboseOutput:false}); 
             logReader.collapse()
             logReader.show();
-         });
+         });        
       </script>
       <? } ?>
       
-      <? require_once($PWD."menu.php") ?>
+      <? require_once($PWD."include/menu.php") ?>
       
       <link rel="stylesheet" type="text/css" href="<?= $PWD ?>npadmin_styles.css"/>
       <script language="javascript" src="<?= $PWD ?>npadmin_javascript.js"></script>
