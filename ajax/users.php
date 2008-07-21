@@ -31,7 +31,7 @@ if ($_POST['op'] == "add") {
       $groups[] = $group;
    }
 
-   NP_executeSelect("SELECT g.group_name AS group_name FROM npadmin_users u, npadmin_groups g, npadmin_users_groups ug WHERE u.user = ug.user AND ug.group_name = g.group_name AND u.user = '".$_POST['user']."'" , createGroupList);
+   NP_executeSelect("SELECT g.group_name AS group_name FROM npadmin_users u, npadmin_groups g, npadmin_users_groups ug WHERE u.user = ug.user AND ug.group_name = g.group_name AND u.user = '".$_POST['user']."' ORDER BY 1" , createGroupList);
 
    echo json_encode($groups);
 
@@ -43,7 +43,7 @@ if ($_POST['op'] == "add") {
       $groups[] = $group;
    }
 
-   NP_executeSelect("SELECT group_name FROM npadmin_groups WHERE group_name NOT IN (SELECT g.group_name AS group_name FROM npadmin_users u, npadmin_groups g, npadmin_users_groups ug WHERE u.user = ug.user AND ug.group_name = g.group_name AND u.user = '".$_POST['user']."')" , createGroupList);
+   NP_executeSelect("SELECT group_name FROM npadmin_groups WHERE group_name NOT IN (SELECT g.group_name AS group_name FROM npadmin_users u, npadmin_groups g, npadmin_users_groups ug WHERE u.user = ug.user AND ug.group_name = g.group_name AND u.user = '".$_POST['user']."') ORDER BY 1" , createGroupList);
 
    echo json_encode($groups);
 
@@ -66,7 +66,7 @@ if ($returnList) {
       $users[] = $user;
    }
 
-   NP_executeSelect("SELECT * FROM npadmin_users", createUserList);
+   NP_executeSelect("SELECT * FROM npadmin_users ORDER BY 1", createUserList);
 
    echo json_encode($users); 
 } 

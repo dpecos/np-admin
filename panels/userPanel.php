@@ -83,6 +83,7 @@ li.li_assigned_groups {
    var dataSource;
    var columnDefs;
    var userDatatable;
+   var user_list;
     
    function changeTabEventHandler(e) {
    }
@@ -105,7 +106,16 @@ li.li_assigned_groups {
             fields: ["user","creation_date","email","real_name"]
       };
       dataSource.doBeforeCallback = function(oRequest , oFullResponse , oParsedResponse) {
-         var user_list = document.getElementById("user_list");
+         user_list.getMenu().clearContent();
+         user_list.set("label", "Select user");
+         emptyList("unassigned_groups");
+         emptyList("assigned_groups");
+         
+         for (id in oParsedResponse.results) {
+            var user = oParsedResponse.results[id];
+            user_list.getMenu().addItem({ text: user.user, value: user.user, onclick: { fn: populateGroupsLists } });
+         }
+         user_list.getMenu().render(document.body);
          return oParsedResponse;
       };
 
@@ -125,8 +135,8 @@ li.li_assigned_groups {
                      case 0: 
                          var oRecord = p_myDataTable.getRecord(elRow);
                          box_question("userdel_question", "Are you sure you want to delete the selected user?", function() {
-                            deleteUsersConfirm(oRecord.getData("user"));
                             this.hide(); 
+                            deleteUsersConfirm(oRecord.getData("user"));
                          });
                  }
              }
@@ -137,6 +147,11 @@ li.li_assigned_groups {
       contextMenu.addItems(["Delete Item"]);
       contextMenu.render("user_datatable");
       contextMenu.clickEvent.subscribe(onContextMenuClick, userDatatable);
+      
+      user_list = new YAHOO.widget.Button("user_list", {
+            type: "menu",  
+            menu: "user_list_select"
+      });    
       
       new YAHOO.util.DDTarget("unassigned_groups");
       new YAHOO.util.DDTarget("assigned_groups");
@@ -181,7 +196,7 @@ li.li_assigned_groups {
    }
      
    function deleteUsersConfirm(list) {
-      if (list == null) { 
+      if (!YAHOO.lang.isString(list)) {
          var list = "";
          var rows = userDatatable.getSelectedRows();
          for (var id in rows) {  
@@ -191,7 +206,6 @@ li.li_assigned_groups {
          list = list.substring(0, list.length - 1);
          this.hide();
       }
-     
 
       var postdata = "op=delete&list=" + list;
       var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= $PWD ?>ajax/users.php", {success:deleteUsersCallback}, postdata);
@@ -350,7 +364,10 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
 
 })();*/
 
-   function populateGroupsLists(user) {
+   function populateGroupsLists(p_sType, p_aArgs, p_oItem) {
+      user = p_oItem.cfg.getProperty("text");
+      user_list.set("label", user);
+
       emptyList("unassigned_groups");
       emptyList("assigned_groups");
       var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= $PWD ?>ajax/users.php", {success:groupListCallback, argument:["unassigned_groups"]}, "op=listUnassignedGroups&user="+user);
@@ -409,7 +426,8 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
            </table>
         </div>
         <div>  
-            <select id="user_list" onchange="javascript:populateGroupsLists(this.value)"></select>
+            <input type="button" id="user_list" name="user_list" value="Select user"/>
+            <select id="user_list_select" name="user_list_select"><option>kk</option></select>
             <table id="user_form_table">
                <tr><td>
                  <h3>Unassigned groups</h3>

@@ -70,8 +70,8 @@ function html_head() {
                      case 0: 
                          var oRecord = p_myDataTable.getRecord(elRow);
                          box_question("groupdel_question", "Are you sure you want to delete the selected group?", function() {
-                            deleteGroupsConfirm(oRecord.getData("group_name"));
                             this.hide(); 
+                            deleteGroupsConfirm(oRecord.getData("group_name"));                         
                          });
                  }
              }
@@ -123,7 +123,7 @@ function html_head() {
    }
      
    function deleteGroupsConfirm(list) {
-      if (list == null) { 
+      if (!YAHOO.lang.isString(list)) {
          var list = "";
          var rows = groupDatatable.getSelectedRows();
          for (var id in rows) {  
@@ -134,7 +134,6 @@ function html_head() {
          this.hide();
       }
      
-
       var postdata = "op=delete&list=" + list;
       var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= $PWD ?>ajax/groups.php", {success:deleteGroupsCallback}, postdata);
    }

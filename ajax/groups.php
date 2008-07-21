@@ -35,7 +35,7 @@ if ($returnList) {
       $groups[] = $group;
    }
 
-   NP_executeSelect("SELECT * FROM npadmin_groups", createGroupList);
+   NP_executeSelect("SELECT * FROM npadmin_groups ORDER BY 1", createGroupList);
 
    echo json_encode($groups); 
 } 
