@@ -80,3 +80,12 @@ String.prototype.rtrim = function() {
 String.prototype.trim = function() {
    return this.replace(/^\s+|\s+$/g,"");
 }
+
+function emptyList(listId) {
+   var list = document.getElementById(listId);
+   if (list) {
+      while (list.firstChild) {
+         list.removeChild(list.firstChild);
+      }
+   }
+}

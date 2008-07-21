@@ -13,7 +13,7 @@ function npadmin_logout() {
       $_SESSION['npadmin_logindata']->logout();
 }
 
-function npadmin_logindata() {
+function npadmin_loginData() {
    session_start();
    if (isset($_SESSION)) {
       return $_SESSION['npadmin_logindata'];
@@ -23,12 +23,12 @@ function npadmin_logindata() {
 }
 
 function npadmin_isUserLoggedIn() {
-   return npadmin_logindata() != null;
+   return npadmin_loginData() != null;
 }
 
-function npadmin_userallowed() {
+function npadmin_userAllowed() {
    session_start();
-   if (($login = npadmin_logindata()) != null) {
+   if (($login = npadmin_loginData()) != null) {
       return $login->getUser()->user == "admin";
    } else {
       return false;

@@ -76,7 +76,7 @@ YAHOO.util.Event.onDOMReady(function () {
                 itemdata: [
                   [
                      { text: "Users", helptext: "Ctrl + u", url: "<?= $PWD ?>panels/userPanel.php"},
-                     { text: "Groups", helptext: "Ctrl + g" }
+                     { text: "Groups", helptext: "Ctrl + g", url: "<?= $PWD ?>panels/groupPanel.php" }
                   ], [
                      { text: "Menus", helptext: "Ctrl + m"},
                   ]

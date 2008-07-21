@@ -23,9 +23,33 @@ if ($_POST['op'] == "add") {
    }
    echo "OK";
    
+} else if ($_POST['op'] == "listAssignedGroups") {
+   $groups = array();
+
+   function createGroupList($group) {
+      global $groups;
+      $groups[] = $group;
+   }
+
+   NP_executeSelect("SELECT g.group_name AS group_name FROM npadmin_users u, npadmin_groups g, npadmin_users_groups ug WHERE u.user = ug.user AND ug.group_name = g.group_name AND u.user = '".$_POST['user']."'" , createGroupList);
+
+   echo json_encode($groups);
+
+} else if ($_POST['op'] == "listUnassignedGroups") {
+   $groups = array();
+
+   function createGroupList($group) {
+      global $groups;
+      $groups[] = $group;
+   }
+
+   NP_executeSelect("SELECT group_name FROM npadmin_groups WHERE group_name NOT IN (SELECT g.group_name AS group_name FROM npadmin_users u, npadmin_groups g, npadmin_users_groups ug WHERE u.user = ug.user AND ug.group_name = g.group_name AND u.user = '".$_POST['user']."')" , createGroupList);
+
+   echo json_encode($groups);
+
 } else if ($_POST['op'] == "list" || $_GET['op'] == "list") {
    $returnList = true;
-   
+      
 } else if ($_POST['op'] == "login") {
    echo npadmin_login($_POST['user'], $_POST['password']) ? "OK" : "ERROR";
 

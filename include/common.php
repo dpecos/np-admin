@@ -14,6 +14,8 @@ require_once($PWD."API.php");
 
 __NP_initDDBB($ddbb_settings);
 require_once($PWD."classes/User.sql.php");
+require_once($PWD."classes/Group.sql.php");
+require_once($PWD."classes/UserGroup.sql.php");
 
 function __autoload($class_name) {
    global $PWD;
