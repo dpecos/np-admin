@@ -90,7 +90,8 @@ YAHOO.util.Event.onDOMReady(function () {
              itemdata: [
                [ 
                  {text: "DDBB settings"},
-                 {text: "Application settings"}
+                 {text: "Application settings"},
+                 {text: "NP-Admin settings"}
                ]
              ]
           }

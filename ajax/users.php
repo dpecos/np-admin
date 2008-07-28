@@ -46,6 +46,22 @@ if ($_POST['op'] == "add") {
    NP_executeSelect("SELECT group_name FROM npadmin_groups WHERE group_name NOT IN (SELECT g.group_name AS group_name FROM npadmin_users u, npadmin_groups g, npadmin_users_groups ug WHERE u.user = ug.user AND ug.group_name = g.group_name AND u.user = '".$_POST['user']."') ORDER BY 1" , createGroupList);
 
    echo json_encode($groups);
+   
+} else if ($_POST['op'] == "assignGroups") {
+   $user = $_POST['user'];   
+   $groups = split(",", $_POST['list']);
+   
+   $sql = "DELETE FROM ".$ddbb_table['UserGroup']." WHERE ".$ddbb_mapping['UserGroup']['user']." = ".encodeSQLValue($user, $ddbb_types['UserGroup']['user']); 
+   NP_executeDelete($sql);
+   
+   foreach ($groups as $group_name) {
+      if ($group_name != "") {
+         $ug = new UserGroup(array("group_name" => $group_name, "user" => $user));
+         $ug->store();
+      }
+   }
+   
+   echo "OK";
 
 } else if ($_POST['op'] == "list" || $_GET['op'] == "list") {
    $returnList = true;

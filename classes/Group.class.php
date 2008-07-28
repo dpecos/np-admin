@@ -14,11 +14,15 @@ class Group {
    
    public function delete() {
       global $ddbb_table, $ddbb_mapping, $ddbb_types;
-      if (strlen($this->group_name) == 0)
-         $sql = "DELETE FROM ".$ddbb_table['Group']." WHERE ".$ddbb_mapping['Group']['group_name']." = ''";      
-      else
-         $sql = "DELETE FROM ".$ddbb_table['Group']." WHERE ".$ddbb_mapping['Group']['group_name']." = ".encodeSQLValue($this->group_name, $ddbb_types['Group']['group_name']);      
-      return (NP_executeDelete($sql) > 0);
+      if (strlen($this->group_name) == 0) {
+         $sql_1 = "DELETE FROM ".$ddbb_table['Group']." WHERE ".$ddbb_mapping['Group']['group_name']." = ''";
+         $sql_2 = "DELETE FROM ".$ddbb_table['UserGroup']." WHERE ".$ddbb_mapping['UserGroup']['group_name']." = ''";            
+      } else {
+         $sql_1 = "DELETE FROM ".$ddbb_table['Group']." WHERE ".$ddbb_mapping['Group']['group_name']." = ".encodeSQLValue($this->group_name, $ddbb_types['Group']['group_name']);
+         $sql_2 = "DELETE FROM ".$ddbb_table['UserGroup']." WHERE ".$ddbb_mapping['UserGroup']['group_name']." = ".encodeSQLValue($this->group_name, $ddbb_types['UserGroup']['group_name']);            
+      }
+      NP_executeDelete($sql_2);
+      return (NP_executeDelete($sql_1) > 0);
    }
 }
 ?>

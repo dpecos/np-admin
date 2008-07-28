@@ -1,13 +1,7 @@
 <?
 $PWD = "../";
 require_once($PWD."include/common.php");
-
-if (!npadmin_userAllowed()) {
-   if (npadmin_loginData() == null)
-      redirect ($PWD."login.php?referer=".$_SERVER["PHP_SELF"]);
-   else
-      echo "User unauthorized!";
-}
+npadmin_security(array("Administrators"));
 ?>
 
 <?
@@ -24,8 +18,26 @@ function html_head() {
    padding: 3px;
 }
 
+#groups_form_table {
+   margin-top: 5px;
+   margin-bottom: 5px;
+}
+#groups_form_table td {
+   padding: 3px;
+}
+
 #user_datatable {
    margin-bottom: 10px;
+}
+
+.yui-button#delUserButton button {
+   padding-left: 2em;
+   background: url(<?= $PWD ?>static/img/del.gif) 5% 50% no-repeat;
+}
+
+.yui-button#addUserButton button {
+   padding-left: 2em;
+   background: url(<?= $PWD ?>static/img/add.gif) 5% 50% no-repeat;
 }
 </style>
 
@@ -39,6 +51,7 @@ ul.draglist {
     border: 1px solid gray;
     list-style: none;
     margin:0;
+    margin-right: 10px;
     padding:0;
 }
 
@@ -75,6 +88,11 @@ li.li_assigned_groups {
     background-color: #D8D4E2;
     border:1px solid #6B4C86;
 }
+
+.yui-button#saveGroupsButton button {
+   padding-left: 2em;
+   background: url(<?= $PWD ?>static/img/save.gif) 5% 50% no-repeat;
+}
 </style>
 
 
@@ -83,6 +101,7 @@ li.li_assigned_groups {
    var dataSource;
    var columnDefs;
    var userDatatable;
+   var addUserDialog;
    var user_list;
     
    function changeTabEventHandler(e) {
@@ -123,6 +142,31 @@ li.li_assigned_groups {
       userDatatable.subscribe("rowMouseoverEvent", userDatatable.onEventHighlightRow);
       userDatatable.subscribe("rowMouseoutEvent", userDatatable.onEventUnhighlightRow);
       userDatatable.subscribe("rowClickEvent", userDatatable.onEventSelectRow);
+      var delUserButton = new YAHOO.widget.Button({ 
+            label:"Delete selected users", 
+            id:"delUserButton", 
+            container:"user_buttons" });
+      delUserButton.on("click", deleteUsers);
+      var addUserButton = new YAHOO.widget.Button({ 
+            label:"Create new user...", 
+            id:"addUserButton", 
+            container:"user_buttons" });
+      addUserButton.on("click", showNewUserDialog);
+
+      addUserDialog = new YAHOO.widget.Dialog("user_form_table", { 
+			   effect: {effect:YAHOO.widget.ContainerEffect.FADE, duration:0.25},
+			   fixedcenter: true,
+			   draggable: true,
+			   constraintoviewport: true,
+			   text: "Create new user",
+			   modal: true,
+			   close: false,
+            buttons: [ 
+               { text:"Cancel", handler:defaultButtonHandler },
+	            { text:"Add", handler:addUser, isDefault:true } 
+	         ]
+			 });
+	   addUserDialog.setHeader("Add user");
 
       var onContextMenuClick = function(p_sType, p_aArgs, p_myDataTable) {
          var task = p_aArgs[1];
@@ -138,13 +182,18 @@ li.li_assigned_groups {
                             this.hide(); 
                             deleteUsersConfirm(oRecord.getData("user"));
                          });
+                     case 1:
+                         var oRecord = p_myDataTable.getRecord(elRow);
+                         var user = oRecord.getData("user");
+                         recoverDataGroupsLists(user);
+                         tabView.set("activeTab",tabView.getTab(1));
                  }
              }
          }
       };
 
       var contextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", { trigger:userDatatable.getTbodyEl() });
-      contextMenu.addItems(["Delete Item"]);
+      contextMenu.addItems(["Delete Item", "Manage groups"]);
       contextMenu.render("user_datatable");
       contextMenu.clickEvent.subscribe(onContextMenuClick, userDatatable);
       
@@ -155,8 +204,18 @@ li.li_assigned_groups {
       
       new YAHOO.util.DDTarget("unassigned_groups");
       new YAHOO.util.DDTarget("assigned_groups");
+      var saveGroupsButton = new YAHOO.widget.Button({ 
+            label:"Save", 
+            id:"saveGroupsButton", 
+            container:"groups_buttons" });
+      saveGroupsButton.on("click", assignGroups);
 
    });
+   
+   function showNewUserDialog() {
+      addUserDialog.render(document.body);
+      addUserDialog.show();
+   }
    
    function addUser() {
       var formObject = document.getElementById('user_form');
@@ -171,6 +230,7 @@ li.li_assigned_groups {
    function addUserCallback(response) {
       
       if (response.responseText.trim() == "OK") {
+         addUserDialog.hide();
          box_info("useradd_result", "User added correctly!");
         
          var formObject = document.getElementById('user_form');
@@ -216,7 +276,7 @@ li.li_assigned_groups {
          var count = userDatatable.getRecordSet().getLength();
          userDatatable.deleteRows(0, count);
 
-         dataSource.sendRequest("op=list", {success : userDatatable.onDataReturnAppendRows, scope: userDatatable})
+         dataSource.sendRequest("op=list", {success : userDatatable.onDataReturnAppendRows, scope: userDatatable});
       } else {
          box_error("userdel_result", response.responseText);
       }
@@ -225,27 +285,6 @@ li.li_assigned_groups {
 </script>
 
 <script type="text/javascript">
-
-    /*showOrder: function() {
-        var parseList = function(ul, title) {
-            var items = ul.getElementsByTagName("li");
-            var out = title + ": ";
-            for (i=0;i<items.length;i=i+1) {
-                out += items[i].id + " ";
-            }
-            return out;
-        };
-
-        var ul1=Dom.get("ul1"), ul2=Dom.get("ul2");
-        alert(parseList(ul1, "List 1") + "\n" + parseList(ul2, "List 2"));
-
-    },
-};*/
-
-//////////////////////////////////////////////////////////////////////////////
-// custom drag and drop implementation
-//////////////////////////////////////////////////////////////////////////////
-
 DDList = function(id, sGroup, config) {
     DDList.superclass.constructor.call(this, id, sGroup, config);
 
@@ -360,12 +399,13 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
     }
 });
 
-/*Event.onDOMReady(YAHOO.example.DDApp.init, YAHOO.example.DDApp, true);
-
-})();*/
 
    function populateGroupsLists(p_sType, p_aArgs, p_oItem) {
       user = p_oItem.cfg.getProperty("text");
+      recoverDataGroupsLists(user);
+   }
+   
+   function recoverDataGroupsLists(user) {
       user_list.set("label", user);
 
       emptyList("unassigned_groups");
@@ -393,10 +433,34 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
       }   
    }
    
+   function assignGroups() {
+      var user = user_list.get("label");
+      if (user != "Select user") {
+         var parseList = function(listName) {
+              ul = YAHOO.util.Dom.get(listName)
+              var items = ul.getElementsByTagName("li");
+              var list = "";
+              for (i=0; i<items.length; i=i+1) {
+                  list += items[i].innerHTML + ",";
+              }
+              list = list.substring(0, list.length - 1);
+              return list;
+          };
+
+          var list = parseList("assigned_groups");
+          var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= $PWD ?>ajax/users.php", {success:assignGroupsCallback, argument:[user]}, "op=assignGroups&user="+user+"&list="+list);
+       }
+   }
+
+   function assignGroupsCallback(response, user) {
+      var user = response.argument[0];
+      box_info("user_groups_info", "Groups configuration saved correctly!");
+      recoverDataGroupsLists(user);
+   }   
 </script>
 
 <?
-}
+} // html_head();
 ?>
 <? require_once($PWD."include/header.php"); ?>
 
@@ -405,30 +469,17 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
 <div id="mainTabs" class="yui-navset">
     <ul class="yui-nav">
         <li class="selected"><a href="#tab1"><em>List of users</em></a></li>
-        <li><a href="#tab2"><em>Add new user</em></a></li>
-        <li><a href="#tab3"><em>User's groups</em></a></li>
+        <li><a href="#tab2"><em>User's groups</em></a></li>
     </ul>            
     <div class="yui-content">
         <div>
            <div id="user_datatable"></div>
-           <input type="button" value="Delete selected" onclick="javascript:deleteUsers()"/>
-        </div>
-        <div>
-           <table id="user_form_table">
-              <form id="user_form">
-                 <tr><td>User name:</td><td><input type="text" name="user"</td><tr>
-                 <tr><td>Password:</td><td><input type="password" name="password"</td><tr>
-                 <tr><td>Real Name:</td><td><input type="text" name="real_name"</td><tr>
-                 <tr><td>Email:</td><td><input type="text" name="email"</td><tr>
-                 <input type="hidden" name="op" value="add"/>
-              </form>
-              <tr><td colspan="2"><input type="button" value="Create user" onclick="javascript:addUser()"/></td></tr>
-           </table>
+           <div id="user_buttons"></div>
         </div>
         <div>  
-            <input type="button" id="user_list" name="user_list" value="Select user"/>
-            <select id="user_list_select" name="user_list_select"><option>kk</option></select>
-            <table id="user_form_table">
+            User: <input type="button" id="user_list" name="user_list" value="Select user"/>
+            <select id="user_list_select" name="user_list_select"></select>
+            <table id="groups_form_table">
                <tr><td>
                  <h3>Unassigned groups</h3>
                  <ul id="unassigned_groups" class="draglist"></ul>
@@ -437,9 +488,25 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
                  <ul id="assigned_groups" class="draglist"></ul>
                </td></tr>
             </table>
-            <input type="button" value="Save" onclick="javascript:populateGroupsLists('admin')"/>
+            <div id="groups_buttons"/>
         </div>
     </div>
+</div>
+
+<div style="visibility: hidden; display:none">
+  <div id="user_form_table">
+     <div class="bd">
+     <form id="user_form">
+        <table>
+           <tr><td>User name:</td><td><input type="text" name="user"/></td><tr>
+           <tr><td>Password:</td><td><input type="password" name="password"/></td><tr>
+           <tr><td>Real Name:</td><td><input type="text" name="real_name"/></td><tr>
+           <tr><td>Email:</td><td><input type="text" name="email"/></td><tr>
+        </table>
+        <input type="hidden" name="op" value="add"/>
+     </form>
+     </div>
+  </div>
 </div>
 
 <? require_once($PWD."include/footer.php"); ?>

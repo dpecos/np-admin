@@ -1,31 +1,40 @@
-function box(id, text, icon) {
+function box(id, title, text, icon) {
    var dialog = new YAHOO.widget.SimpleDialog(id, 
 			 { width: "300px",
 			   effect: {effect:YAHOO.widget.ContainerEffect.FADE, duration:0.25},
 			   fixedcenter: true,
 			   visible: false,
 			   draggable: true,
-			   close: true,
-			   text: text,
+			   close: false,
 			   icon: icon,
+			   text: text,
 			   constraintoviewport: true,
-			   modal: true,
+			   modal: true
 			 } );
-  return dialog;
+   dialog.setHeader(title);  
+   return dialog;
 }
 
 function defaultButtonHandler() {
-   this.hide();
+   if (this.form) {
+      this.cancel();
+      this.form.reset();
+   } else
+      this.hide();
 }
 
 function box_block(id, text) {
-   dialog = box(id, text, YAHOO.widget.SimpleDialog.ICON_BLOCK);
+   dialog = box(id, "Message", text, YAHOO.widget.SimpleDialog.ICON_BLOCK);
+   var buttons = [ 
+      { text:"OK", handler:defaultButtonHandler, isDefault:true }
+	];
+	dialog.cfg.queueProperty("buttons", buttons);
 	dialog.render(document.body);
    dialog.show();
 }
 
 function box_info(id, text) {
-   dialog = box(id, text, YAHOO.widget.SimpleDialog.ICON_INFO);
+   dialog = box(id, "Information", text, YAHOO.widget.SimpleDialog.ICON_INFO);
    var buttons = [ 
       { text:"OK", handler:defaultButtonHandler, isDefault:true }
 	];
@@ -35,7 +44,7 @@ function box_info(id, text) {
 }
 
 function box_warn(id, text) {
-   dialog = box(id, text, YAHOO.widget.SimpleDialog.ICON_WARN);
+   dialog = box(id, "Warning", text, YAHOO.widget.SimpleDialog.ICON_WARN);
    var buttons = [ 
       { text:"OK", handler:defaultButtonHandler, isDefault:true }
 	];
@@ -45,7 +54,7 @@ function box_warn(id, text) {
 }
 
 function box_error(id, text) {
-   dialog = box(id, text, YAHOO.widget.SimpleDialog.ICON_ALARM);
+   dialog = box(id, "Error", text, YAHOO.widget.SimpleDialog.ICON_ALARM);
    var buttons = [ 
       { text:"OK", handler:defaultButtonHandler, isDefault:true }
 	];
@@ -55,7 +64,7 @@ function box_error(id, text) {
 }
 
 function box_question(id, text, handleYes, handleNo) {
-   dialog = box(id, text, YAHOO.widget.SimpleDialog.ICON_HELP, {});
+   dialog = box(id, "Question", text, YAHOO.widget.SimpleDialog.ICON_HELP, {});
    
    if (handleYes == null) handleYes = defaultButtonHandler;
    if (handleNo == null) handleNo = defaultButtonHandler;

@@ -1,13 +1,7 @@
 <?
 $PWD = "../";
 require_once($PWD."include/common.php");
-
-if (!npadmin_userAllowed()) {
-   if (npadmin_loginData() == null)
-      redirect ($PWD."login.php?referer=".$_SERVER["PHP_SELF"]);
-   else
-      echo "User unauthorized!";
-}
+npadmin_security(array("Administrators"));
 ?>
 
 <?
@@ -27,12 +21,23 @@ function html_head() {
 #group_datatable {
    margin-bottom: 10px;
 }
+
+.yui-button#delGroupButton button {
+   padding-left: 2em;
+   background: url(<?= $PWD ?>static/img/del.gif) 5% 50% no-repeat;
+}
+
+.yui-button#addGroupButton button {
+   padding-left: 2em;
+   background: url(<?= $PWD ?>static/img/add.gif) 5% 50% no-repeat;
+}
 </style>
 
 <script> 
    var tabView;
    var dataSource;
    var columnDefs;
+   var addGroupDialog;
    var groupDatatable;
     
    function changeTabEventHandler(e) {
@@ -58,7 +63,33 @@ function html_head() {
       groupDatatable.subscribe("rowMouseoverEvent", groupDatatable.onEventHighlightRow);
       groupDatatable.subscribe("rowMouseoutEvent", groupDatatable.onEventUnhighlightRow);
       groupDatatable.subscribe("rowClickEvent", groupDatatable.onEventSelectRow);
-
+      var delGroupButton = new YAHOO.widget.Button({ 
+            label:"Delete selected groups", 
+            id:"delGroupButton", 
+            container:"group_buttons" });
+      delGroupButton.on("click", deleteGroups);
+      var addGroupButton = new YAHOO.widget.Button({ 
+            label:"Create new group...", 
+            id:"addGroupButton", 
+            container:"group_buttons" });
+      addGroupButton.on("click", showNewGroupDialog);
+      
+      addGroupDialog = new YAHOO.widget.Dialog("group_form_table", { 
+			   effect: {effect:YAHOO.widget.ContainerEffect.FADE, duration:0.25},
+			   fixedcenter: true,
+			   draggable: true,
+			   constraintoviewport: true,
+			   text: "Create new group",
+			   modal: true,
+			   close: false,
+            buttons: [ 
+               { text:"Cancel", handler:defaultButtonHandler },
+	            { text:"Add", handler:addGroup, isDefault:true } 
+	         ],
+	         form: YAHOO.util.Dom.get("group_form")
+			 });
+	   addGroupDialog.setHeader("Add group");
+			 
       var onContextMenuClick = function(p_sType, p_aArgs, p_myDataTable) {
          var task = p_aArgs[1];
          if(task) {
@@ -85,6 +116,11 @@ function html_head() {
 
    });
    
+   function showNewGroupDialog() {
+      addGroupDialog.render(document.body);
+      addGroupDialog.show();
+   }
+   
    function addGroup() {
       var formObject = document.getElementById('group_form');
       if (formObject.group_name.value.trim().length == 0)
@@ -98,6 +134,7 @@ function html_head() {
    function addGroupCallback(response) {
       
       if (response.responseText.trim() == "OK") {
+         addGroupDialog.hide();
          box_info("groupadd_result", "Group added correctly!");
         
          var formObject = document.getElementById('group_form');
@@ -160,24 +197,28 @@ function html_head() {
 <div id="mainTabs" class="yui-navset">
     <ul class="yui-nav">
         <li class="selected"><a href="#tab1"><em>List of groups</em></a></li>
-        <li><a href="#tab2"><em>Add new group</em></a></li>
     </ul>            
     <div class="yui-content">
         <div>
            <div id="group_datatable"></div>
-           <input type="button" value="Delete selected" onclick="javascript:deleteGroups()"/>
-        </div>
-        <div>
-           <table id="group_form_table">
-              <form id="group_form">
-                 <tr><td>Group name:</td><td><input type="text" name="group_name"</td><tr>
-                 <tr><td>Description:</td><td><input type="text" name="description"</td><tr>
-                 <input type="hidden" name="op" value="add"/>
-              </form>
-              <tr><td colspan="2"><input type="button" value="Create group" onclick="javascript:addGroup()"/></td></tr>
-           </table>
+           <div id="group_buttons"/>
         </div>
     </div>
 </div>
+
+<div style="visibility: hidden; display:none">
+  <div id="group_form_table">
+     <div class="bd">
+        <form id="group_form">
+           <table >
+              <tr><td>Group name:</td><td><input type="text" name="group_name"</td><tr>
+              <tr><td>Description:</td><td><input type="text" name="description"</td><tr>
+              <input type="hidden" name="op" value="add"/>
+           </table>
+        </form>
+     </div>
+  </div>
+</div> 
+        
 
 <? require_once($PWD."include/footer.php"); ?>
