@@ -2,6 +2,12 @@
 $PWD = "../";
 require_once($PWD."include/common.php");
 
+header("Cache-Control: no-cache");
+header("Pragma: no-cache");
+header("Expires: Mon, 01 Jan 2000 01:00:00 GMT");
+
+npadmin_security(array("Administrators"), false);
+
 $returnList = false;
 
 if ($_POST['op'] == "add") {

@@ -3,7 +3,7 @@
    em#npadminlabel {
        text-indent: -6em;
        display: block;
-       background: url(http://netpecos.org/favicon.ico) center center no-repeat;
+       background: url(/favicon.ico) center center no-repeat;
        width: 2em;
        overflow: hidden;
    }

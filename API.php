@@ -43,14 +43,14 @@ function npadmin_loginForm() {
    exit();
 }
 
-function npadmin_security($groups = null) {
+function npadmin_security($groups = null, $showLoginForm = true) {
    session_start();
    $login = npadmin_loginData();
-   if ($login == null) {
-      npadmin_loginForm();
-   } else if ($groups != null && !$login->isAllowed($groups)) {
-      //npadmin_loginForm();
-      die("You are not allowed to access this page");
+   if ($login == null || $groups != null && !$login->isAllowed($groups)) {
+      if ($showLoginForm)
+         npadmin_loginForm();
+      else 
+         die("You are not allowed to access this page");      
    }
 }
 ?>

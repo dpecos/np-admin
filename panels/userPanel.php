@@ -119,6 +119,7 @@ li.li_assigned_groups {
 	   ]; 
 	        
 	   dataSource = new YAHOO.util.DataSource("<?= $PWD ?>ajax/users.php?");
+	   dataSource.connMethodPost = true;
 	   dataSource.responseType = YAHOO.util.DataSource.TYPE_JSON; 
       dataSource.connXhrMode = "queueRequests"; 
       dataSource.responseSchema = {
@@ -182,11 +183,13 @@ li.li_assigned_groups {
                             this.hide(); 
                             deleteUsersConfirm(oRecord.getData("user"));
                          });
+                         break;
                      case 1:
                          var oRecord = p_myDataTable.getRecord(elRow);
                          var user = oRecord.getData("user");
                          recoverDataGroupsLists(user);
                          tabView.set("activeTab",tabView.getTab(1));
+                         break;
                  }
              }
          }
@@ -477,24 +480,24 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
            <div id="user_buttons"></div>
         </div>
         <div>  
-            User: <input type="button" id="user_list" name="user_list" value="Select user"/>
-            <select id="user_list_select" name="user_list_select"></select>
-            <table id="groups_form_table">
-               <tr><td>
+           User: <input type="button" id="user_list" name="user_list" value="Select user"/>
+           <select id="user_list_select" name="user_list_select"></select>
+           <table id="groups_form_table">
+              <tr><td>
                  <h3>Unassigned groups</h3>
                  <ul id="unassigned_groups" class="draglist"></ul>
-               </td><td>
+              </td><td>
                  <h3>Assigned groups</h3>
                  <ul id="assigned_groups" class="draglist"></ul>
-               </td></tr>
-            </table>
-            <div id="groups_buttons"/>
+              </td></tr>
+           </table>
+           <div id="groups_buttons"/>
         </div>
     </div>
 </div>
 
 <div style="visibility: hidden; display:none">
-  <div id="user_form_table">
+   <div id="user_form_table">
      <div class="bd">
      <form id="user_form">
         <table>
@@ -506,7 +509,7 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
         <input type="hidden" name="op" value="add"/>
      </form>
      </div>
-  </div>
+   </div>
 </div>
 
 <? require_once($PWD."include/footer.php"); ?>

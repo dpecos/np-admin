@@ -1,3 +1,6 @@
+<?
+$PWD = "../";
+?>
 <html>
    <head>
       <? global $yui; $yui->dependencies(); ?>
@@ -57,9 +60,6 @@
             }
          }
       </script>
-
-      <!--link rel="stylesheet" type="text/css" href="<?= $PWD ?>npadmin_styles.css"/-->
-      <script language="javascript" src="<?= $PWD ?>npadmin_javascript.js"></script>
       
    </head>
    

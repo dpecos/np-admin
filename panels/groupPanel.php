@@ -53,6 +53,7 @@ function html_head() {
 	   ]; 
 	        
 	   dataSource = new YAHOO.util.DataSource("<?= $PWD ?>ajax/groups.php?");
+  	   dataSource.connMethodPost = true;
 	   dataSource.responseType = YAHOO.util.DataSource.TYPE_JSON; 
       dataSource.connXhrMode = "queueRequests"; 
       dataSource.responseSchema = {
@@ -104,6 +105,7 @@ function html_head() {
                             this.hide(); 
                             deleteGroupsConfirm(oRecord.getData("group_name"));                         
                          });
+                         break;
                  }
              }
          }
