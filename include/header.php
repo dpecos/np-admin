@@ -15,8 +15,8 @@
       
       <? require_once($PWD."include/menu.php") ?>
       
-      <link rel="stylesheet" type="text/css" href="<?= $PWD ?>static/npadmin_styles.css"/>
-      <script language="javascript" src="<?= $PWD ?>static/npadmin_javascript.js"></script>
+      <link rel="stylesheet" type="text/css" href="<?= npadmin_setting('BASE_URL') ?>/static/npadmin_styles.css"/>
+      <script language="javascript" src="<?= npadmin_setting('BASE_URL') ?>/static/npadmin_javascript.js"></script>
       
       <? if (function_exists("html_head")) html_head() ?>
       

@@ -13,7 +13,7 @@ $PWD = "../";
             padding-bottom: 0px;
          }
       </style>
-      <script language="javascript" src="<?= $PWD ?>static/npadmin_javascript.js"></script>
+      <script language="javascript" src="<?= npadmin_setting('BASE_URL') ?>/static/npadmin_javascript.js"></script>
       <script>
          var loginDialog = null;
          YAHOO.util.Event.addListener(window, "load", function() {
@@ -42,7 +42,7 @@ $PWD = "../";
                box_block("userlogin_block", "All the required fields have to be filled");
             else {
                YAHOO.util.Connect.setForm(formObject); 
-               var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= $PWD ?>ajax/users.php", {success:loginCallback});
+               var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('BASE_URL') ?>/ajax/users.php", {success:loginCallback});
             }
          }
          

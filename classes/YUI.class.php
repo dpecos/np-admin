@@ -6,10 +6,8 @@ class YUI {
 	private $loadComponents;
 
 	public function __construct($path = null) {
-	   if (isset($path))
-   	   $this->path = $path;
-   	else 
-   	   $this->path = "http://yui.yahooapis.com/2.5.2/build/";
+   	$this->path = $path;
+
    	   
 		$this->css = array (
 		   "standar" => array("reset/reset.css", "fonts/fonts.css"),

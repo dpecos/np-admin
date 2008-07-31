@@ -45,7 +45,7 @@ function logout() {
 }
 
 function logoutConfirm() {
-   var transaction = YAHOO.util.Connect.asyncRequest('GET', "<?= $PWD ?>ajax/users.php?op=logout", {success: function() {document.location.href = "/~dani/np-admin/"}} );
+   var transaction = YAHOO.util.Connect.asyncRequest('GET', "<?= npadmin_setting('BASE_URL') ?>/ajax/users.php?op=logout", {success: function() {document.location.href = "<?= npadmin_setting('BASE_URL') ?>"}} );
 }
 
          
@@ -58,11 +58,11 @@ function createMenuList($data, $parentId) {
 }
    
 function createMenus($parentId = 0) {
-   global $ddbb_table, $ddbb_mapping, $menus, $PWD;
+   global $ddbb_table, $ddbb_mapping, $ddbb_types, $menus, $PWD;
 
    $menus[$parentId] = array();
 echo 
-   NP_executeSelect("SELECT * FROM ".$ddbb_table['Menu']." WHERE ".$ddbb_mapping['Menu']['parentId']." = ".encodeSQLValue($parentId, $ddbb_types['Menu']['parentId'])." ORDER BY ".$ddbb_mapping['Menu']['parentId'].", `".$ddbb_mapping['Menu']['order']."`", createMenuList, array($parentId));
+   NP_executeSelect("SELECT * FROM ".$ddbb_table['Menu']." WHERE ".$ddbb_mapping['Menu']['parentId']." = ".encodeSQLValue($parentId, $ddbb_types['Menu']['parentId'])." ORDER BY ".$ddbb_mapping['Menu']['parentId'].", `".$ddbb_mapping['Menu']['order']."`", "createMenuList", array($parentId));
 
    if (sizeof($menus[$parentId]) > 0) {
       foreach ($menus[$parentId] as $menu) { 
@@ -73,7 +73,7 @@ echo
 {    
 text: "<?= $menu->text ?>",
 <? if ($menu->url != null) { ?>
-url: "<?= $PWD.$menu->url ?>"
+url: "<?= npadmin_setting('BASE_URL').'/'.$menu->url ?>"
 <? } else { ?>
 submenu: {
    id: "menu_<?= $menu->id ?>",

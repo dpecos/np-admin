@@ -24,12 +24,12 @@ function html_head() {
 
 .yui-button#delGroupButton button {
    padding-left: 2em;
-   background: url(<?= $PWD ?>static/img/del.gif) 5% 50% no-repeat;
+   background: url(<?= npadmin_setting('BASE_URL') ?>/static/img/del.gif) 5% 50% no-repeat;
 }
 
 .yui-button#addGroupButton button {
    padding-left: 2em;
-   background: url(<?= $PWD ?>static/img/add.gif) 5% 50% no-repeat;
+   background: url(<?= npadmin_setting('BASE_URL') ?>/static/img/add.gif) 5% 50% no-repeat;
 }
 </style>
 
@@ -52,7 +52,7 @@ function html_head() {
          {key:"description", label:"Description", sortable:true},
 	   ]; 
 	        
-	   dataSource = new YAHOO.util.DataSource("<?= $PWD ?>ajax/groups.php?");
+	   dataSource = new YAHOO.util.DataSource("<?= npadmin_setting('BASE_URL') ?>/ajax/groups.php?");
   	   dataSource.connMethodPost = true;
 	   dataSource.responseType = YAHOO.util.DataSource.TYPE_JSON; 
       dataSource.connXhrMode = "queueRequests"; 
@@ -129,7 +129,7 @@ function html_head() {
          box_block("groupadd_block", "All the required fields have to be filled");
       else {
          YAHOO.util.Connect.setForm(formObject); 
-         var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= $PWD ?>ajax/groups.php", {success:addGroupCallback});
+         var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('BASE_URL') ?>/ajax/groups.php", {success:addGroupCallback});
       }
    }
    
@@ -174,7 +174,7 @@ function html_head() {
       }
      
       var postdata = "op=delete&list=" + list;
-      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= $PWD ?>ajax/groups.php", {success:deleteGroupsCallback}, postdata);
+      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('BASE_URL') ?>/ajax/groups.php", {success:deleteGroupsCallback}, postdata);
    }
    
    function deleteGroupsCallback(response) {

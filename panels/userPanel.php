@@ -32,12 +32,12 @@ function html_head() {
 
 .yui-button#delUserButton button {
    padding-left: 2em;
-   background: url(<?= $PWD ?>static/img/del.gif) 5% 50% no-repeat;
+   background: url(<?= npadmin_setting('BASE_URL') ?>/static/img/del.gif) 5% 50% no-repeat;
 }
 
 .yui-button#addUserButton button {
    padding-left: 2em;
-   background: url(<?= $PWD ?>static/img/add.gif) 5% 50% no-repeat;
+   background: url(<?= npadmin_setting('BASE_URL') ?>/static/img/add.gif) 5% 50% no-repeat;
 }
 </style>
 
@@ -91,7 +91,7 @@ li.li_assigned_groups {
 
 .yui-button#saveGroupsButton button {
    padding-left: 2em;
-   background: url(<?= $PWD ?>static/img/save.gif) 5% 50% no-repeat;
+   background: url(<?= npadmin_setting('BASE_URL') ?>/static/img/save.gif) 5% 50% no-repeat;
 }
 </style>
 
@@ -118,7 +118,7 @@ li.li_assigned_groups {
          {key:"real_name", label:"Real name", sortable:true},
 	   ]; 
 	        
-	   dataSource = new YAHOO.util.DataSource("<?= $PWD ?>ajax/users.php?");
+	   dataSource = new YAHOO.util.DataSource("<?= npadmin_setting('BASE_URL') ?>/ajax/users.php?");
 	   dataSource.connMethodPost = true;
 	   dataSource.responseType = YAHOO.util.DataSource.TYPE_JSON; 
       dataSource.connXhrMode = "queueRequests"; 
@@ -226,7 +226,7 @@ li.li_assigned_groups {
          box_block("useradd_block", "All the required fields have to be filled");
       else {
          YAHOO.util.Connect.setForm(formObject); 
-         var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= $PWD ?>ajax/users.php", {success:addUserCallback});
+         var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('BASE_URL') ?>/ajax/users.php", {success:addUserCallback});
       }
    }
    
@@ -271,7 +271,7 @@ li.li_assigned_groups {
       }
 
       var postdata = "op=delete&list=" + list;
-      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= $PWD ?>ajax/users.php", {success:deleteUsersCallback}, postdata);
+      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('BASE_URL') ?>/ajax/users.php", {success:deleteUsersCallback}, postdata);
    }
    
    function deleteUsersCallback(response) {
@@ -413,8 +413,8 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
 
       emptyList("unassigned_groups");
       emptyList("assigned_groups");
-      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= $PWD ?>ajax/users.php", {success:groupListCallback, argument:["unassigned_groups"]}, "op=listUnassignedGroups&user="+user);
-      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= $PWD ?>ajax/users.php", {success:groupListCallback, argument:["assigned_groups"]}, "op=listAssignedGroups&user="+user);   
+      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('BASE_URL') ?>/ajax/users.php", {success:groupListCallback, argument:["unassigned_groups"]}, "op=listUnassignedGroups&user="+user);
+      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('BASE_URL') ?>/ajax/users.php", {success:groupListCallback, argument:["assigned_groups"]}, "op=listAssignedGroups&user="+user);   
    }
    
    function groupListCallback(response) {
@@ -451,7 +451,7 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
           };
 
           var list = parseList("assigned_groups");
-          var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= $PWD ?>ajax/users.php", {success:assignGroupsCallback, argument:[user]}, "op=assignGroups&user="+user+"&list="+list);
+          var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('BASE_URL') ?>/ajax/users.php", {success:assignGroupsCallback, argument:[user]}, "op=assignGroups&user="+user+"&list="+list);
        }
    }
 
