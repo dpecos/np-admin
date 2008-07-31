@@ -6,7 +6,7 @@ header("Cache-Control: no-cache");
 header("Pragma: no-cache");
 header("Expires: Mon, 01 Jan 2000 01:00:00 GMT");
 
-if ($_POST['op'] == "login" || $_POST['op'] == "logout" || $_GET['op'] == "logout") {
+if (isset($_POST['op']) && ($_POST['op'] == "login" || $_POST['op'] == "logout") || isset($_GET['op']) && $_GET['op'] == "logout") {
       
    if ($_POST['op'] == "login") {
       echo npadmin_login($_POST['user'], $_POST['password']) ? "OK" : "ERROR";
@@ -21,6 +21,9 @@ if ($_POST['op'] == "login" || $_POST['op'] == "logout" || $_GET['op'] == "logou
    npadmin_security(array("Administrators"), false);
 
    $returnList = false;
+
+   if (!isset($_POST['op']))
+      exit;
 
    if ($_POST['op'] == "add") {
       $user = new User($_POST);
@@ -49,7 +52,7 @@ if ($_POST['op'] == "login" || $_POST['op'] == "logout" || $_GET['op'] == "logou
          $groups[] = $group;
       }
 
-      NP_executeSelect("SELECT g.group_name AS group_name FROM npadmin_users u, npadmin_groups g, npadmin_users_groups ug WHERE u.user = ug.user AND ug.group_name = g.group_name AND u.user = '".$_POST['user']."' ORDER BY 1" , createGroupList);
+      NP_executeSelect("SELECT g.group_name AS group_name FROM npadmin_users u, npadmin_groups g, npadmin_users_groups ug WHERE u.user = ug.user AND ug.group_name = g.group_name AND u.user = '".$_POST['user']."' ORDER BY 1" , "createGroupList");
 
       echo json_encode($groups);
 
@@ -61,7 +64,7 @@ if ($_POST['op'] == "login" || $_POST['op'] == "logout" || $_GET['op'] == "logou
          $groups[] = $group;
       }
 
-      NP_executeSelect("SELECT group_name FROM npadmin_groups WHERE group_name NOT IN (SELECT g.group_name AS group_name FROM npadmin_users u, npadmin_groups g, npadmin_users_groups ug WHERE u.user = ug.user AND ug.group_name = g.group_name AND u.user = '".$_POST['user']."') ORDER BY 1" , createGroupList);
+      NP_executeSelect("SELECT group_name FROM npadmin_groups WHERE group_name NOT IN (SELECT g.group_name AS group_name FROM npadmin_users u, npadmin_groups g, npadmin_users_groups ug WHERE u.user = ug.user AND ug.group_name = g.group_name AND u.user = '".$_POST['user']."') ORDER BY 1" , "createGroupList");
 
       echo json_encode($groups);
       
@@ -93,7 +96,7 @@ if ($_POST['op'] == "login" || $_POST['op'] == "logout" || $_GET['op'] == "logou
          $users[] = $user;
       }
 
-      NP_executeSelect("SELECT * FROM npadmin_users ORDER BY 1", createUserList);
+      NP_executeSelect("SELECT * FROM npadmin_users ORDER BY 1", "createUserList");
 
       echo json_encode($users); 
    } 
