@@ -3,7 +3,7 @@
    em#npadminlabel {
        text-indent: -6em;
        display: block;
-       background: url(/favicon.ico) center center no-repeat;
+       background: url(<?= $PWD ?>/favicon.ico) center center no-repeat;
        width: 2em;
        overflow: hidden;
    }
@@ -49,6 +49,48 @@ function logoutConfirm() {
 }
 
          
+<?
+$menus = array();
+
+function createMenuList($data, $parentId) {
+   global $menus;
+   $menus[$parentId][] = new Menu($data);
+}
+   
+function createMenus($parentId = 0) {
+   global $ddbb_table, $ddbb_mapping, $menus, $PWD;
+
+   $menus[$parentId] = array();
+echo 
+   NP_executeSelect("SELECT * FROM ".$ddbb_table['Menu']." WHERE ".$ddbb_mapping['Menu']['parentId']." = ".encodeSQLValue($parentId, $ddbb_types['Menu']['parentId'])." ORDER BY ".$ddbb_mapping['Menu']['parentId'].", `".$ddbb_mapping['Menu']['order']."`", createMenuList, array($parentId));
+
+   if (sizeof($menus[$parentId]) > 0) {
+      foreach ($menus[$parentId] as $menu) { 
+         if ($menu->text === NULL) {
+            echo "], [ ";
+         } else {
+?>
+{    
+text: "<?= $menu->text ?>",
+<? if ($menu->url != null) { ?>
+url: "<?= $PWD.$menu->url ?>"
+<? } else { ?>
+submenu: {
+   id: "menu_<?= $menu->id ?>",
+   itemdata: [
+   [<? createMenus($menu->id); ?>]
+   ]
+}
+               <? } ?>
+           },
+<? 
+         }
+      }
+   } else {
+      echo "{ }";
+   }
+}
+?>
 YAHOO.util.Event.onDOMReady(function () {
 
     var aItemData = [
@@ -63,40 +105,8 @@ YAHOO.util.Event.onDOMReady(function () {
                 ]
             } 
         },
-        
-        {   
-            text: "Home",
-            url: "<?= $PWD ?>index.php"
-        },     
+        <? createMenus(); ?>
 
-        { 
-            text: "Management", 
-            submenu: {  
-                id: "management", 
-                itemdata: [
-                  [
-                     { text: "Users", helptext: "Ctrl + u", url: "<?= $PWD ?>panels/userPanel.php"},
-                     { text: "Groups", helptext: "Ctrl + g", url: "<?= $PWD ?>panels/groupPanel.php" }
-                  ], [
-                     { text: "Menus", helptext: "Ctrl + m"},
-                  ]
-                ] 
-            }           
-        },
-
-        { text: "Configuration", disabled: false,
-          submenu: {
-             id: "configuration",
-             itemdata: [
-               [ 
-                 {text: "DDBB settings"},
-                 {text: "Application settings"},
-                 {text: "NP-Admin settings"}
-               ]
-             ]
-          }
-        },
-        
         { text: "Logout", classname: "menu_logout", onclick: { fn: logout }, disabled: false}
     ];
 

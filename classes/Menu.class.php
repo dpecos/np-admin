@@ -25,8 +25,5 @@ class Menu {
       return (NP_executeDelete($sql_1) > 0);
    }
    
-   public function toString() {
-      return $this->user;
-   }
 }
 ?>
