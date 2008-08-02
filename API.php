@@ -19,7 +19,10 @@ function npadmin_loginData() {
    if (session_id() === "")
       session_start();
    if (isset($_SESSION)) {
-      return $_SESSION['npadmin_logindata'];
+      if (isset($_SESSION['npadmin_logindata']))
+         return $_SESSION['npadmin_logindata'];
+      else 
+         return null;
    } else {
       return null;
    }
