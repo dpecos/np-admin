@@ -12,10 +12,7 @@ class LoginData {
    private function storeInSession($name, $data) {
       $_SESSION[$name] = $data;
    }
-   
-   public function __construct() {
-   }
-   
+     
    public function getUser() {
       return $this->user;
    }

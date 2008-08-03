@@ -106,8 +106,12 @@ YAHOO.util.Event.onDOMReady(function () {
             } 
         },
         <? createMenus(); ?>
-
-        { text: "Logout", classname: "menu_logout", onclick: { fn: logout }, disabled: false}
+        <? 
+        $login = npadmin_loginData();
+        if ($login != null) {
+        ?>
+        { text: "Logout (<?= $login->getUser()->user ?>)", classname: "menu_logout", onclick: { fn: logout }, disabled: false}
+        <? } ?>
     ];
 
     var oMenuBar = new YAHOO.widget.MenuBar("npadmin_menubar", { 

@@ -1,11 +1,14 @@
 <?
 require_once($PWD."include/common.php");
 
+if (session_id() === "")
+   session_start();
+      
 function npadmin_login($user, $password) {
    if (session_id() === "")
       session_start();
    $loginData = new LoginData();
-   return $loginData->login($user, $password);
+   return $loginData->login($user, sha1($password));
 }
 
 function npadmin_logout() {

@@ -99,7 +99,7 @@ function emptyList(listId) {
    }
 }
 
-Array.prototype.sort=function()
+Array.prototype.sort = function()
 {
    var tmp;
    for(var i=0;i<this.length;i++)
@@ -159,7 +159,7 @@ Array.prototype.shuffle = function()
       arr[i]=arr[j];          
       arr[j]=t;      
    }  
-}    
+};
  
 /* Removes redundant elements from the array */  
 Array.prototype.unique = function()
@@ -171,7 +171,7 @@ Array.prototype.unique = function()
          a[a.length] = this[i];          
    }      
    return a;  
-}    
+};
  
 /* Returns the index of the element matched from the behind */  
 Array.prototype.lastIndexOf = function(n)
@@ -182,4 +182,4 @@ Array.prototype.lastIndexOf = function(n)
          return i;          
    }      
    return -1;  
-}
+};

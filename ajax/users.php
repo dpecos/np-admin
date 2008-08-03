@@ -26,6 +26,7 @@ if (isset($_POST['op']) && ($_POST['op'] == "login" || $_POST['op'] == "logout")
       exit;
 
    if ($_POST['op'] == "add") {
+      $_POST['password'] = sha1($_POST['password']);
       $user = new User($_POST);
       if ($user->store())
          echo "OK";

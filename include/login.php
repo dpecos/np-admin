@@ -12,8 +12,15 @@ $PWD = "../";
             padding: 10px;
             padding-bottom: 0px;
          }
+         .page_title {
+            text-align: center;
+            color: red;
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 35px;
+            margin-bottom: 15px;
+         }
       </style>
-      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/npadmin_javascript.js"></script>
       <script>
          var loginDialog = null;
          YAHOO.util.Event.addListener(window, "load", function() {
@@ -60,13 +67,15 @@ $PWD = "../";
             }
          }
       </script>
-      
+      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/npadmin_javascript.js"></script>
    </head>
    
    <body class="yui-skin-sam">
    
       <div id="main_body">
-         
+         <? if (npadmin_loginData() != null) { ?>
+         <div class="page_title">You are not allowed to access this page</div>
+         <? } ?>
          <div style="visibility: hidden; display:none">
            <div id="login_form_table">
               <div class="bd">
