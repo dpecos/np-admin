@@ -3,7 +3,7 @@
    em#npadminlabel {
        text-indent: -6em;
        display: block;
-       background: url(<?= $PWD ?>/favicon.ico) center center no-repeat;
+       background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/favicon.ico) center center no-repeat;
        width: 2em;
        overflow: hidden;
    }
@@ -45,7 +45,7 @@ function logout() {
 }
 
 function logoutConfirm() {
-   var transaction = YAHOO.util.Connect.asyncRequest('GET', "<?= npadmin_setting('BASE_URL') ?>/ajax/users.php?op=logout", {success: function() {document.location.href = "<?= npadmin_setting('BASE_URL') ?>"}} );
+   var transaction = YAHOO.util.Connect.asyncRequest('GET', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/users.php?op=logout", {success: function() {document.location.href = "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>"}} );
 }
 
          
@@ -73,7 +73,7 @@ echo
 {    
 text: "<?= $menu->text ?>",
 <? if ($menu->url != null) { ?>
-url: "<?= npadmin_setting('BASE_URL').'/'.$menu->url ?>"
+url: "<?= npadmin_setting('NP-ADMIN', 'BASE_URL').'/'.$menu->url ?>"
 <? } else { ?>
 submenu: {
    id: "menu_<?= $menu->id ?>",

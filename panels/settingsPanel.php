@@ -19,17 +19,18 @@ function html_head() {
 }
 
 #settings_datatable {
+   margin-top: 10px;
    margin-bottom: 10px;
 }
 
 .yui-button#delSettingButton button {
    padding-left: 2em;
-   background: url(<?= npadmin_setting('BASE_URL') ?>/static/img/del.gif) 5% 50% no-repeat;
+   background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/del.gif) 5% 50% no-repeat;
 }
 
 .yui-button#addSettingButton button {
    padding-left: 2em;
-   background: url(<?= npadmin_setting('BASE_URL') ?>/static/img/add.gif) 5% 50% no-repeat;
+   background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/add.gif) 5% 50% no-repeat;
 }
 </style>
 
@@ -39,6 +40,7 @@ function html_head() {
    var columnDefs;
    var addSettingDialog
    var settingsDatatable;
+   var type_list;
     
    function changeTabEventHandler(e) {
    }
@@ -49,18 +51,45 @@ function html_head() {
          tabView = new YAHOO.widget.TabView('mainTabs');
          
          columnDefs = [
+            {key:"type", label:"Type", sortable: true},
             {key:"name", label:"Name", sortable: true},
+            {key:"default_value", editor:"textbox", label:"Default Value"},
             {key:"value", editor:"textbox", label: "Value"}
          ];
 
-         dataSource = new YAHOO.util.DataSource("<?= npadmin_setting('BASE_URL') ?>/ajax/settings.php?");
+         dataSource = new YAHOO.util.DataSource("<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/settings.php?");
          dataSource.connMethodPost = true;
          dataSource.responseType = YAHOO.util.DataSource.TYPE_JSON; 
          dataSource.connXhrMode = "queueRequests"; 
          dataSource.responseSchema = {
-            fields: ["name","value"]
+            fields: ["type", "name", "default_value", "value"]
          };
-
+         dataSource.doBeforeCallback = function(oRequest , oFullResponse , oParsedResponse) {
+            if (oRequest.indexOf("type") < 0) {
+               type_list.getMenu().clearContent();
+               type_list.set("label", "ALL");
+               
+               var types = new Array();
+               var menu = new Array();
+               menu[0] = {text: "ALL", onclick: { fn: showTypeSettings }};
+               
+               for (id in oParsedResponse.results) {
+                  var setting = oParsedResponse.results[id];
+                  if (typeof(setting) != "function") {
+                     if (!types.contains(setting.type)) {
+                        types[types.length] = setting.type;
+                        menu[menu.length] = {text: setting.type, onclick: { fn: showTypeSettings }};
+                     }
+                  }
+               }
+               
+               type_list.getMenu().addItems(menu);
+               
+               type_list.getMenu().render(document.body);
+            }
+            return oParsedResponse;
+         };
+      
          settingsDatatable = new YAHOO.widget.DataTable("settings_datatable", columnDefs, dataSource, {initialRequest:"op=list"});
          settingsDatatable.subscribe("rowMouseoverEvent", settingsDatatable.onEventHighlightRow);
          settingsDatatable.subscribe("rowMouseoutEvent", settingsDatatable.onEventUnhighlightRow);
@@ -83,10 +112,14 @@ function html_head() {
             var oNewValue = oArgs.newData;
             
             var oRecord = settingsDatatable.getRecord(elRow);
-            var name = oRecord.getData("name");
 
-            var postdata = "op=update&name=" + name + "&value=" + oNewValue;
-            var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('BASE_URL') ?>/ajax/settings.php", {success:updateSettingsCallback}, postdata);
+            var postdata = "op=update&name=" + oRecord.getData("name") + "&type=" + oRecord.getData("type");
+            if (elCell.yuiColumnKey == "value") {
+               postdata += "&value=" + oNewValue + "&default_value=" + oRecord.getData("default_value");
+            } else {
+               postdata += "&default_value=" + oNewValue + "&value=" + oRecord.getData("value");
+            }
+            var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/settings.php", {success:updateSettingsCallback}, postdata);
 
             // Grab the row el and the 2 colors
 
@@ -145,7 +178,7 @@ function html_head() {
                             var oRecord = p_myDataTable.getRecord(elRow);
                             box_question("settingdel_question", "Are you sure you want to delete the selected setting?", function() {
                                this.hide(); 
-                               deleteSettingsConfirm(oRecord.getData("name"));                         
+                               deleteSettingsConfirm(oRecord.getData("type") + "#" + oRecord.getData("name"));                         
                             });
                             break;
                     }
@@ -157,8 +190,21 @@ function html_head() {
          contextMenu.addItems(["Delete Setting"]);
          contextMenu.render("settings_datatable");
          contextMenu.clickEvent.subscribe(onContextMenuClick, settingsDatatable);
+         
+         type_list = new YAHOO.widget.Button("type_list", {
+            type: "menu",  
+            menu: "type_list_select"
+         });
       };
    });   
+   
+   function showTypeSettings(p_sType, p_aArgs, p_oItem) {
+      var type = p_oItem.cfg.getProperty("text");
+      var count = settingsDatatable.getRecordSet().getLength();
+      settingsDatatable.deleteRows(0,count);
+      type_list.set("label", type);
+      dataSource.sendRequest("op=list&type=" + type, {success : settingsDatatable.onDataReturnAppendRows, scope: settingsDatatable})
+   }
       
    function showNewSettingDialog() {
       addSettingDialog.render(document.body);
@@ -171,7 +217,7 @@ function html_head() {
          box_block("settingadd_block", "All the required fields have to be filled");
       else {
          YAHOO.util.Connect.setForm(formObject); 
-         var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('BASE_URL') ?>/ajax/settings.php", {success:addSettingCallback});
+         var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/settings.php", {success:addSettingCallback});
       }
    }
    
@@ -220,14 +266,15 @@ function html_head() {
          var rows = settingsDatatable.getSelectedRows();
          for (var id in rows) {  
             var record = settingsDatatable.getRecord(rows[id]);
-            list += record.getData("name") + ",";
+            if (record != null)
+               list += record.getData("type") + "#" + record.getData("name") + ",";
          }
          list = list.substring(0, list.length - 1);
          this.hide();
       }
      
       var postdata = "op=delete&list=" + list;
-      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('BASE_URL') ?>/ajax/settings.php", {success:deleteSettingsCallback}, postdata);
+      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/settings.php", {success:deleteSettingsCallback}, postdata);
    }
    
    function deleteSettingsCallback(response) {
@@ -254,6 +301,8 @@ function html_head() {
     </ul>            
     <div class="yui-content">
         <div>
+           Type: <input type="button" id="type_list" name="type_list" value="ALL"/>
+           <select id="type_list_select" name="type_list_select"></select>
            <div id="settings_datatable"></div>
            <div id="setting_buttons"/>
         </div>
@@ -265,7 +314,9 @@ function html_head() {
      <div class="bd">
         <form id="setting_form">
            <table >
-              <tr><td>Name:</td><td><input type="text" name="name"</td><tr>
+              <tr><td>Type:</td><td><input type="text" name="type"</td><tr>               
+              <tr><td>Name:</td><td><input type="text" name="name"</td>
+              <tr><td>Default value:</td><td><input type="text" name="default_value"</td><tr>
               <tr><td>Value:</td><td><input type="text" name="value"</td><tr>
               <input type="hidden" name="op" value="add"/>
            </table>

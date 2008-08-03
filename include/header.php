@@ -15,8 +15,36 @@
       
       <? require_once($PWD."include/menu.php") ?>
       
-      <link rel="stylesheet" type="text/css" href="<?= npadmin_setting('BASE_URL') ?>/static/npadmin_styles.css"/>
-      <script language="javascript" src="<?= npadmin_setting('BASE_URL') ?>/static/npadmin_javascript.js"></script>
+      <style>
+         html {
+            background-color: <?= npadmin_setting('NP-ADMIN', 'BG_COLOR') ?>; //#dfb8df;            
+         }
+
+         #npadmin_menubar {
+            margin-bottom: 10px;   
+         }
+
+         .menu_logout {
+           float: right;
+         }
+
+         #main_body {
+            margin: 20px;
+            background-color: #FFFFFF; 
+            padding: 15px;
+            border: #000000 1px solid;
+            height: 80%;
+         }
+
+         .page_title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 5px;
+            margin-bottom: 15px;
+         }
+      </style>
+      
+      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/npadmin_javascript.js"></script>
       
       <? if (function_exists("html_head")) html_head() ?>
       

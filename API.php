@@ -63,17 +63,17 @@ function npadmin_security($groups = null, $showLoginForm = true) {
 
 $_settingsCache = array();
 
-function npadmin_setting($name) {
+function npadmin_setting($type, $name) {
    global $_settingsCache;
    
-   if (!in_array($name, $_settingsCache)) {
-      $setting = new Setting($name);
+   if (!in_array($type."_".$name, $_settingsCache)) {
+      $setting = new Setting($name, $type);
       if ($setting->value !== null)
-         $_settingsCache[$name] = $setting->value;
+         $_settingsCache[$type."_".$name] = $setting->value;
       else 
-         $_settingsCache[$name] = $setting->defaultValue;
+         $_settingsCache[$type."_".$name] = $setting->defaultValue;
       //print_r($setting);
    }
-   return $_settingsCache[$name];
+   return $_settingsCache[$type."_".$name];
 }
 ?>

@@ -27,9 +27,10 @@ if ($_POST['op'] == "add") {
 } else if ($_POST['op'] == "delete") {
    $list = split(",", $_POST['list']);
    foreach ($list as $id) {
-      $setting = new Setting($id);
+      $d = split("#", $id);
+      $setting = new Setting($d[1], $d[0]);
       if (!$setting->delete()) {
-         echo "ERROR: Unable to delete setting '".$id."'";
+         echo "ERROR: Unable to delete setting '".$id[1]."'";
          return;
       }
    }
@@ -47,7 +48,12 @@ if ($returnList) {
       $settings[] = $setting;
    }
 
-   NP_executeSelect("SELECT * FROM npadmin_settings ORDER BY 1", "createSettingsList");
+   if (in_array('type', array_keys($_POST)) && isset($_POST['type']) && $_POST['type'] != "ALL")
+      $sql = "SELECT * FROM npadmin_settings WHERE ".$ddbb_mapping['Setting']['type']." = ".encodeSQLValue($_POST['type'], $ddbb_types['Setting']['type'])." ORDER BY type, name";
+   else 
+      $sql = "SELECT * FROM npadmin_settings ORDER BY type, name";
+      
+   NP_executeSelect($sql, "createSettingsList");
 
    echo json_encode($settings); 
 } 

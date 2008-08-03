@@ -35,7 +35,7 @@ function __autoload($class_name) {
    require_once($PWD."classes/".$class_name.".class.php");
 }
 
-$yui = new YUI(npadmin_setting('YUI_PATH'));
+$yui = new YUI(npadmin_setting('NP-ADMIN', 'YUI_PATH'));
 
 $yui->add("standar");
 $yui->add("menu");
