@@ -16,7 +16,8 @@ class YUI {
 			"menu" => array("menu/assets/skins/sam/menu.css"),
 			"datatable" => array("datatable/assets/skins/sam/datatable.css"),
 			"logger" => array("logger/assets/skins/sam/logger.css"),
-			"simpledialog" => array("container/assets/skins/sam/container.css", "button/assets/skins/sam/button.css")
+			"simpledialog" => array("container/assets/skins/sam/container.css", "button/assets/skins/sam/button.css"),
+			"treeview" => array("treeview/assets/skins/sam/treeview.css")
 		);
 		
 		$this->js = array(
@@ -29,7 +30,8 @@ class YUI {
 		   "events" => array("event/event-min.js"),
 		   "json" => array("yahoo/yahoo-min.js", "json/json-min.js"),
 		   "logger" => array("yahoo-dom-event/yahoo-dom-event.js", "logger/logger-min.js"),
-		   "simpledialog" => array("yahoo-dom-event/yahoo-dom-event.js", "animation/animation-min.js", "dragdrop/dragdrop-min.js", "element/element-beta-min.js", "button/button-min.js", "container/container-min.js")
+		   "simpledialog" => array("yahoo-dom-event/yahoo-dom-event.js", "animation/animation-min.js", "dragdrop/dragdrop-min.js", "element/element-beta-min.js", "button/button-min.js", "container/container-min.js"),
+		   "treeview" => array("yahoo/yahoo-min.js", "event/event-min.js", "treeview/treeview-min.js")
 		);
 		
 		$this->loadComponents = array();

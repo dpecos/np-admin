@@ -46,6 +46,7 @@ $yui->add("datatable");
 $yui->add("ajax");
 $yui->add("event");
 $yui->add("json");
+$yui->add("treeview");
 
 $yui_logging = false;
 ?>
