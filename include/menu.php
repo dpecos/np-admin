@@ -58,11 +58,11 @@ function createMenuList($data, $parentId) {
 }
    
 function createMenus($parentId = 0) {
-   global $ddbb_table, $ddbb_mapping, $ddbb_types, $menus, $PWD;
+   global $ddbb, $menus, $PWD;
 
    $menus[$parentId] = array();
-echo 
-   NP_executeSelect("SELECT * FROM ".$ddbb_table['Menu']." WHERE ".$ddbb_mapping['Menu']['parentId']." = ".encodeSQLValue($parentId, $ddbb_types['Menu']['parentId'])." ORDER BY ".$ddbb_mapping['Menu']['parentId'].", `".$ddbb_mapping['Menu']['order']."`", "createMenuList", array($parentId));
+
+   $ddbb->executeSelectQuery("SELECT * FROM ".$ddbb->getTable('Menu')." WHERE ".$ddbb->getMapping('Menu','parentId')." = ".NP_DDBB::encodeSQLValue($parentId, $ddbb->getType('Menu','parentId'))." ORDER BY ".$ddbb->getMapping('Menu','parentId').", `".$ddbb->getMapping('Menu','order')."`", "createMenuList", array($parentId));
 
    if (sizeof($menus[$parentId]) > 0) {
       foreach ($menus[$parentId] as $menu) { 

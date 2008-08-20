@@ -1,21 +1,18 @@
 <?
-global $PWD, $ddbb_table, $ddbb_mapping, $ddbb_types, $ddbb_settings;
-
-$ddbb_table = array();
-$ddbb_mapping = array();
-$ddbb_types = array();	
+global $PWD, $ddbb, $ddbb_settings;
 
 error_reporting(E_ALL);
 ini_set('display_errors', '1'); 
 
 require_once($PWD."config/ddbb.php");
 require_once($PWD."lib/np-lib/NPLib_Object.php");
-require_once($PWD."lib/np-lib/NPLib_Sql.php");
+require_once($PWD."lib/np-lib/NPLib_Sql_2.php");
 require_once($PWD."lib/np-lib/NPLib_Net.php");
 require_once($PWD."lib/np-lib/NPLib_String.php");
 require_once($PWD."API.php");
 
-__NP_initDDBB($ddbb_settings);
+$ddbb = new NP_DDBB($ddbb_settings);
+
 require_once($PWD."classes/Setting.sql.php");
 require_once($PWD."classes/User.sql.php");
 require_once($PWD."classes/Group.sql.php");

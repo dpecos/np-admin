@@ -2,35 +2,35 @@
 
 class Setting {
    public function __construct($data, $type = null) {     
-      global $ddbb_table, $ddbb_mapping, $ddbb_types;
+      global $ddbb;
       if (!is_array($data)) {
-         $data = NP_executePKSelect("SELECT * FROM ".$ddbb_table['Setting']." WHERE ".$ddbb_mapping['Setting']['name']." = ".encodeSQLValue($data, $ddbb_types['Setting']['name'])." AND ".$ddbb_mapping['Setting']['type']." = ".encodeSQLValue($type, $ddbb_types['Setting']['type']));
+         $data = $ddbb->executePKSelectQuery("SELECT * FROM ".$ddbb->getTable('Setting')." WHERE ".$ddbb->getMapping('Setting', 'name')." = ".NP_DDBB::encodeSQLValue($data, $ddbb->getType('Setting', 'name'))." AND ".$ddbb->getMapping('Setting','type')." = ".NP_DDBB::encodeSQLValue($type, $ddbb->getType('Setting','type')));
       }   
-      NP_loadData($this, $data, $ddbb_mapping['Setting'], $ddbb_types['Setting']);
+      $ddbb->loadData($this, $data);
    }
    
    public function store() {
-      global $ddbb_table, $ddbb_mapping, $ddbb_types;
-      NP_insertObject($this, $ddbb_table, $ddbb_mapping, $ddbb_types);
+      global $ddbb;
+      $ddbb->insertObject($this);
       return true;
    }
    
    public function update() {
-      global $ddbb_table, $ddbb_mapping, $ddbb_types;
+      global $ddbb;
       
-      $sql = "UPDATE ".$ddbb_table['Setting']." SET ".$ddbb_mapping['Setting']['value']."=".encodeSQLValue($this->value, $ddbb_types['Setting']['value']).", ".$ddbb_mapping['Setting']['defaultValue']."=".encodeSQLValue($this->defaultValue, $ddbb_types['Setting']['defaultValue'])." WHERE ".$ddbb_mapping['Setting']['name']." = ".encodeSQLValue($this->name, $ddbb_types['Setting']['name'])." AND ".$ddbb_mapping['Setting']['type']." = ".encodeSQLValue($this->type, $ddbb_types['Setting']['type']);
+      $sql = "UPDATE ".$ddbb->getTable('Setting')." SET ".$ddbb->getMapping('Setting', 'value')."=".NP_DDBB::encodeSQLValue($this->value, $ddbb->getType('Setting', 'value')).", ".$ddbb->getMapping('Setting', 'defaultValue')."=".NP_DDBB::encodeSQLValue($this->defaultValue, $ddbb->getType('Setting', 'defaultValue'))." WHERE ".$ddbb->getMapping('Setting', 'name')." = ".NP_DDBB::encodeSQLValue($this->name, $ddbb->getType('Setting', 'name'))." AND ".$ddbb->getMapping('Setting', 'type')." = ".NP_DDBB::encodeSQLValue($this->type, $ddbb->getType('Setting', 'type'));
 
-      NP_executeInsertUpdate($sql);
+      $ddbb->executeInsertUpdateQuery($sql);
 
       return true;
    }
    
    public function delete() {
-      global $ddbb_table, $ddbb_mapping, $ddbb_types;
+      global $ddbb;
 
-      $sql = "DELETE FROM ".$ddbb_table['Setting']." WHERE ".$ddbb_mapping['Setting']['name']." = ".encodeSQLValue($this->name, $ddbb_types['Setting']['name'])." AND ".$ddbb_mapping['Setting']['type']." = ".encodeSQLValue($this->type, $ddbb_types['Setting']['type']);
+      $sql = "DELETE FROM ".$ddbb->getTable('Setting')." WHERE ".$ddbb->getMapping('Setting', 'name')." = ".NP_DDBB::encodeSQLValue($this->name, $ddbb->getType('Setting', 'name'))." AND ".$ddbb->getMapping('Setting', 'type')." = ".NP_DDBB::encodeSQLValue($this->type, $ddbb->getType('Setting', 'type'));
 
-      return (NP_executeDelete($sql) > 0);
+      return ($ddbb->executeDeleteQuery($sql) > 0);
    }
    
 }

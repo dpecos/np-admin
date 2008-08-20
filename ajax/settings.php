@@ -49,11 +49,11 @@ if ($returnList) {
    }
 
    if (in_array('type', array_keys($_POST)) && isset($_POST['type']) && $_POST['type'] != "ALL")
-      $sql = "SELECT * FROM npadmin_settings WHERE ".$ddbb_mapping['Setting']['type']." = ".encodeSQLValue($_POST['type'], $ddbb_types['Setting']['type'])." ORDER BY type, name";
+      $sql = "SELECT * FROM npadmin_settings WHERE ".$ddbb->getMapping('Setting','type')." = ".NP_DDBB::encodeSQLValue($_POST['type'], $ddbb->getType('Setting','type'))." ORDER BY type, name";
    else 
       $sql = "SELECT * FROM npadmin_settings ORDER BY type, name";
       
-   NP_executeSelect($sql, "createSettingsList");
+   $ddbb->executeSelectQuery($sql, "createSettingsList");
 
    echo json_encode($settings); 
 } 

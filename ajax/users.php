@@ -53,7 +53,7 @@ if (isset($_POST['op']) && ($_POST['op'] == "login" || $_POST['op'] == "logout")
          $groups[] = $group;
       }
 
-      NP_executeSelect("SELECT g.group_name AS group_name FROM npadmin_users u, npadmin_groups g, npadmin_users_groups ug WHERE u.user = ug.user AND ug.group_name = g.group_name AND u.user = '".$_POST['user']."' ORDER BY 1" , "createGroupList");
+      $ddbb->executeSelectQuery("SELECT g.group_name AS group_name FROM npadmin_users u, npadmin_groups g, npadmin_users_groups ug WHERE u.user = ug.user AND ug.group_name = g.group_name AND u.user = '".$_POST['user']."' ORDER BY 1" , "createGroupList");
 
       echo json_encode($groups);
 
@@ -65,7 +65,7 @@ if (isset($_POST['op']) && ($_POST['op'] == "login" || $_POST['op'] == "logout")
          $groups[] = $group;
       }
 
-      NP_executeSelect("SELECT group_name FROM npadmin_groups WHERE group_name NOT IN (SELECT g.group_name AS group_name FROM npadmin_users u, npadmin_groups g, npadmin_users_groups ug WHERE u.user = ug.user AND ug.group_name = g.group_name AND u.user = '".$_POST['user']."') ORDER BY 1" , "createGroupList");
+      $ddbb->executeSelectQuery("SELECT group_name FROM npadmin_groups WHERE group_name NOT IN (SELECT g.group_name AS group_name FROM npadmin_users u, npadmin_groups g, npadmin_users_groups ug WHERE u.user = ug.user AND ug.group_name = g.group_name AND u.user = '".$_POST['user']."') ORDER BY 1" , "createGroupList");
 
       echo json_encode($groups);
       
@@ -73,8 +73,8 @@ if (isset($_POST['op']) && ($_POST['op'] == "login" || $_POST['op'] == "logout")
       $user = $_POST['user'];   
       $groups = split(",", $_POST['list']);
       
-      $sql = "DELETE FROM ".$ddbb_table['UserGroup']." WHERE ".$ddbb_mapping['UserGroup']['user']." = ".encodeSQLValue($user, $ddbb_types['UserGroup']['user']); 
-      NP_executeDelete($sql);
+      $sql = "DELETE FROM ".$ddbb->getTable('UserGroup')." WHERE ".$ddbb->getMapping('UserGroup','user')." = ".NP_DDBB::encodeSQLValue($user, $ddbb->getType('UserGroup','user')); 
+      $ddbb->executeDeleteQuery($sql);
       
       foreach ($groups as $group_name) {
          if ($group_name != "") {
@@ -97,7 +97,7 @@ if (isset($_POST['op']) && ($_POST['op'] == "login" || $_POST['op'] == "logout")
          $users[] = $user;
       }
 
-      NP_executeSelect("SELECT * FROM npadmin_users ORDER BY 1", "createUserList");
+      $ddbb->executeSelectQuery("SELECT * FROM npadmin_users ORDER BY 1", "createUserList");
 
       echo json_encode($users); 
    } 

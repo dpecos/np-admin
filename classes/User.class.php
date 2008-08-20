@@ -2,27 +2,27 @@
 
 class User {
    public function __construct($data = null) {     
-      global $ddbb_table, $ddbb_mapping, $ddbb_types;
-      NP_loadData($this, $data, $ddbb_mapping['User'], $ddbb_types['User']);
+      global $ddbb;
+      $ddbb->loadData($this, $data);
    }
    
    public function store() {
-      global $ddbb_table, $ddbb_mapping, $ddbb_types;
-      NP_insertObject($this, $ddbb_table, $ddbb_mapping, $ddbb_types);
+      global $ddbb;
+      $ddbb->insertObject($this);
       return true;
    }
    
    public function delete() {
-      global $ddbb_table, $ddbb_mapping, $ddbb_types;
+      global $ddbb;
       if (strlen($this->user) == 0) {
-         $sql_1 = "DELETE FROM ".$ddbb_table['User']." WHERE ".$ddbb_mapping['User']['user']." = ''";
-         $sql_2 = "DELETE FROM ".$ddbb_table['UserGroup']." WHERE ".$ddbb_mapping['UserGroup']['user']." = ''";            
+         $sql_1 = "DELETE FROM ".$ddbb->getTable('User')." WHERE ".$ddbb->getMapping('User','user')." = ''";
+         $sql_2 = "DELETE FROM ".$ddbb->getTable('UserGroup')." WHERE ".$ddbb->getMapping('UserGroup','user')." = ''";            
       } else {
-         $sql_1 = "DELETE FROM ".$ddbb_table['User']." WHERE ".$ddbb_mapping['User']['user']." = ".encodeSQLValue($this->user, $ddbb_types['User']['user']);
-         $sql_2 = "DELETE FROM ".$ddbb_table['UserGroup']." WHERE ".$ddbb_mapping['UserGroup']['user']." = ".encodeSQLValue($this->user, $ddbb_types['UserGroup']['user']);            
+         $sql_1 = "DELETE FROM ".$ddbb->getTable('User')." WHERE ".$ddbb->getMapping('User','user')." = ".NP_DDBB::encodeSQLValue($this->user, $ddbb->getType('User','user'));
+         $sql_2 = "DELETE FROM ".$ddbb->getTable('UserGroup')." WHERE ".$ddbb->getMapping('UserGroup','user')." = ".NP_DDBB::encodeSQLValue($this->user, $ddbb->getType('UserGroup','user'));            
       }
-      NP_executeDelete($sql_2);
-      return (NP_executeDelete($sql_1) > 0);
+      $ddbb->executeDeleteQuery($sql_2);
+      return ($ddbb->executeDeleteQuery($sql_1) > 0);
    }
    
    public function toString() {

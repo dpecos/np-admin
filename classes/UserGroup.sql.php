@@ -1,12 +1,15 @@
 <?
-global $npsql_dbconfig, $ddbb_table, $ddbb_mapping, $ddbb_types;
+global $ddbb;
 
-$ddbb_table['UserGroup'] = $npsql_dbconfig["PREFIX"]."users_groups";
+$ddbb_table = "users_groups";
+$ddbb_mapping = array();
+$ddbb_types = array();
 
-$ddbb_mapping['UserGroup']['group_name'] =  "group_name";
-$ddbb_mapping['UserGroup']['user'] =        "user";
+$ddbb_mapping['group_name'] =  "group_name";
+$ddbb_mapping['user'] =        "user";
 
-$ddbb_types['UserGroup']['group_name'] =    "STRING";
-$ddbb_types['UserGroup']['user'] =          "STRING";
+$ddbb_types['group_name'] =    "STRING";
+$ddbb_types['user'] =          "STRING";
 
+$ddbb->addConfig("UserGroup", $ddbb_table, $ddbb_mapping, $ddbb_types);
 ?>

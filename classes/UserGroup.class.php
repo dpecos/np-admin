@@ -2,13 +2,13 @@
 
 class UserGroup {
    public function __construct($data = null) {     
-      global $ddbb_table, $ddbb_mapping, $ddbb_types;
-      NP_loadData($this, $data, $ddbb_mapping['UserGroup'], $ddbb_types['UserGroup']);
+      global $ddbb;
+      $ddbb->loadData($this, $data);
    }
    
    public function store() {
-      global $ddbb_table, $ddbb_mapping, $ddbb_types;
-      NP_insertObject($this, $ddbb_table, $ddbb_mapping, $ddbb_types);
+      global $ddbb;
+      $ddbb->insertObject($this);
       return true;
    }
 }

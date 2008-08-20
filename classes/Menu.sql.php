@@ -1,17 +1,21 @@
 <?
-global $npsql_dbconfig, $ddbb_table, $ddbb_mapping, $ddbb_types;
+global $ddbb;
 
-$ddbb_table['Menu'] = $npsql_dbconfig["PREFIX"]."menus";
+$ddbb_table = "menus";
+$ddbb_mapping = array();
+$ddbb_types = array();
 
-$ddbb_mapping['Menu']['id'] =        "id";
-$ddbb_mapping['Menu']['parentId'] =  "parent_id";
-$ddbb_mapping['Menu']['order'] =     "order";
-$ddbb_mapping['Menu']['text'] =      "text";
-$ddbb_mapping['Menu']['url'] =       "url";
+$ddbb_mapping['id'] =        "id";
+$ddbb_mapping['parentId'] =  "parent_id";
+$ddbb_mapping['order'] =     "order";
+$ddbb_mapping['text'] =      "text";
+$ddbb_mapping['url'] =       "url";
 
-$ddbb_types['Menu']['id'] =        "INT";
-$ddbb_types['Menu']['parentId'] =    "INT";
-$ddbb_types['Menu']['order'] =    "INT";
-$ddbb_types['Menu']['text'] =       "STRING";
-$ddbb_types['Menu']['url'] =        "STRING";
+$ddbb_types['id'] =        "INT";
+$ddbb_types['parentId'] =    "INT";
+$ddbb_types['order'] =    "INT";
+$ddbb_types['text'] =       "STRING";
+$ddbb_types['url'] =        "STRING";
+
+$ddbb->addConfig("Menu", $ddbb_table, $ddbb_mapping, $ddbb_types);
 ?>

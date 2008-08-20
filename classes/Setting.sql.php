@@ -1,15 +1,19 @@
 <?
-global $npsql_dbconfig, $ddbb_table, $ddbb_mapping, $ddbb_types;
+global $ddbb;
 
-$ddbb_table['Setting'] = $npsql_dbconfig["PREFIX"]."settings";
+$ddbb_table = "settings";
+$ddbb_mapping = array();
+$ddbb_types = array();
 
-$ddbb_mapping['Setting']['name'] =        "name";
-$ddbb_mapping['Setting']['type'] =        "type";
-$ddbb_mapping['Setting']['value'] =       "value";
-$ddbb_mapping['Setting']['defaultValue'] =  "default_value";
+$ddbb_mapping['name'] =        "name";
+$ddbb_mapping['type'] =        "type";
+$ddbb_mapping['value'] =       "value";
+$ddbb_mapping['defaultValue'] =  "default_value";
 
-$ddbb_types['Setting']['name'] =          "STRING";
-$ddbb_types['Setting']['type'] =          "STRING";
-$ddbb_types['Setting']['value'] =         "STRING";
-$ddbb_types['Setting']['defaultValue'] =  "STRING";
+$ddbb_types['name'] =          "STRING";
+$ddbb_types['type'] =          "STRING";
+$ddbb_types['value'] =         "STRING";
+$ddbb_types['defaultValue'] =  "STRING";
+
+$ddbb->addConfig("Setting", $ddbb_table, $ddbb_mapping, $ddbb_types);
 ?>

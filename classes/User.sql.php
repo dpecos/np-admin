@@ -1,17 +1,21 @@
 <?
-global $npsql_dbconfig, $ddbb_table, $ddbb_mapping, $ddbb_types;
+global $ddbb;
 
-$ddbb_table['User'] = $npsql_dbconfig["PREFIX"]."users";
+$ddbb_table = "users";
+$ddbb_mapping = array();
+$ddbb_types = array();
 
-$ddbb_mapping['User']['user'] =        "user";
-$ddbb_mapping['User']['password'] =    "password";
-$ddbb_mapping['User']['email'] =       "email";
-$ddbb_mapping['User']['creation_date'] = "creation_date";
-$ddbb_mapping['User']['real_name'] =   "real_name";
+$ddbb_mapping['user'] =        "user";
+$ddbb_mapping['password'] =    "password";
+$ddbb_mapping['email'] =       "email";
+$ddbb_mapping['creation_date'] = "creation_date";
+$ddbb_mapping['real_name'] =   "real_name";
 
-$ddbb_types['User']['user'] =        "STRING";
-$ddbb_types['User']['password'] =    "STRING";
-$ddbb_types['User']['email'] =       "STRING";
-$ddbb_types['User']['creation_date'] = "DATE";
-$ddbb_types['User']['real_name'] =   "STRING";
+$ddbb_types['user'] =        "STRING";
+$ddbb_types['password'] =    "STRING";
+$ddbb_types['email'] =       "STRING";
+$ddbb_types['creation_date'] = "DATE";
+$ddbb_types['real_name'] =   "STRING";
+
+$ddbb->addConfig("User", $ddbb_table, $ddbb_mapping, $ddbb_types);
 ?>
