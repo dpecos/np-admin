@@ -67,16 +67,27 @@ function npadmin_security($groups = null, $showLoginForm = true) {
 $_settingsCache = array();
 
 function npadmin_setting($type, $name) {
-   global $_settingsCache;
+   global $_settingsCache, $ddbb;
    
-   if (!in_array($type."_".$name, $_settingsCache)) {
-      $setting = new Setting($name, $type);
-      if ($setting->value !== null)
-         $_settingsCache[$type."_".$name] = $setting->value;
-      else 
-         $_settingsCache[$type."_".$name] = $setting->defaultValue;
-      //print_r($setting);
+   if (isset($ddbb) && $ddbb->isInitialized()) {
+      
+      if (!in_array($type."_".$name, $_settingsCache)) {
+         $setting = new Setting($name, $type);
+         if ($setting->value !== null)
+            $_settingsCache[$type."_".$name] = $setting->value;
+         else 
+            $_settingsCache[$type."_".$name] = $setting->defaultValue;
+         //print_r($setting);
+      }
+      return $_settingsCache[$type."_".$name];
+      
+   } else {
+      switch ($type."_".$name) {
+         case "NP-ADMIN_BG_COLOR": return "#9999BB"; break;
+         case "NP-ADMIN_YUI_PATH": return "http://yui.yahooapis.com/2.5.2/build/"; break;
+         case "NP-ADMIN_BASE_URL": return "../"; break;
+      }
+      return null;
    }
-   return $_settingsCache[$type."_".$name];
 }
 ?>

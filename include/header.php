@@ -17,7 +17,7 @@
       
       <style>
          html {
-            background-color: <?= npadmin_setting('NP-ADMIN', 'BG_COLOR') ?>; //#dfb8df;            
+            background-color: <?= npadmin_setting('NP-ADMIN', 'BG_COLOR') ?>;            
          }
 
          #npadmin_menubar {

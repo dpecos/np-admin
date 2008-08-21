@@ -1,12 +1,14 @@
 <?php
 
 class Setting {
-   public function __construct($data, $type = null) {     
+   public function __construct($data = null, $type = null) {     
       global $ddbb;
-      if (!is_array($data)) {
-         $data = $ddbb->executePKSelectQuery("SELECT * FROM ".$ddbb->getTable('Setting')." WHERE ".$ddbb->getMapping('Setting', 'name')." = ".NP_DDBB::encodeSQLValue($data, $ddbb->getType('Setting', 'name'))." AND ".$ddbb->getMapping('Setting','type')." = ".NP_DDBB::encodeSQLValue($type, $ddbb->getType('Setting','type')));
-      }   
-      $ddbb->loadData($this, $data);
+      if ($data != null) {
+         if (!is_array($data)) {
+            $data = $ddbb->executePKSelectQuery("SELECT * FROM ".$ddbb->getTable('Setting')." WHERE ".$ddbb->getMapping('Setting', 'name')." = ".NP_DDBB::encodeSQLValue($data, $ddbb->getType('Setting', 'name'))." AND ".$ddbb->getMapping('Setting','type')." = ".NP_DDBB::encodeSQLValue($type, $ddbb->getType('Setting','type')));
+         }   
+         $ddbb->loadData($this, $data);
+      }
    }
    
    public function store() {

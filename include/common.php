@@ -4,7 +4,8 @@ global $PWD, $ddbb, $ddbb_settings;
 error_reporting(E_ALL);
 ini_set('display_errors', '1'); 
 
-require_once($PWD."config/ddbb.php");
+if (file_exists($PWD."config/ddbb.php"))
+   require_once($PWD."config/ddbb.php");
 require_once($PWD."lib/np-lib/NPLib_Object.php");
 require_once($PWD."lib/np-lib/NPLib_Sql_2.php");
 require_once($PWD."lib/np-lib/NPLib_Net.php");
@@ -18,6 +19,8 @@ require_once($PWD."classes/User.sql.php");
 require_once($PWD."classes/Group.sql.php");
 require_once($PWD."classes/UserGroup.sql.php");
 require_once($PWD."classes/Menu.sql.php");
+
+require_once($PWD."classes/MenuGroup.sql.php");
 
 /*require_once($PWD."classes/Group.class.php");
 require_once($PWD."classes/LoginData.class.php");

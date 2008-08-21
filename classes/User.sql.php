@@ -17,5 +17,11 @@ $ddbb_types['email'] =       "STRING";
 $ddbb_types['creation_date'] = "DATE";
 $ddbb_types['real_name'] =   "STRING";
 
-$ddbb->addConfig("User", $ddbb_table, $ddbb_mapping, $ddbb_types);
+$ddbb_sql['user'] = array("PK" => true, "NULLABLE" => false, "LENGTH" => 20);
+$ddbb_sql['password'] = array("NULLABLE" => false, "LENGTH" => 60);
+$ddbb_sql['creation_date'] = array("NULLABLE" => false, "DEFAULT" => "CURRENT_TIMESTAMP");
+$ddbb_sql['email'] = array("LENGTH" => 60, "DEFAULT" => NULL);
+$ddbb_sql['real_name'] = array("LENGTH" => 60, "DEFAULT" => NULL);
+
+$ddbb->addConfig("User", $ddbb_table, $ddbb_mapping, $ddbb_types, $ddbb_sql);
 ?>

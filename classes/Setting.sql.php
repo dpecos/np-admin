@@ -15,5 +15,10 @@ $ddbb_types['type'] =          "STRING";
 $ddbb_types['value'] =         "STRING";
 $ddbb_types['defaultValue'] =  "STRING";
 
-$ddbb->addConfig("Setting", $ddbb_table, $ddbb_mapping, $ddbb_types);
+$ddbb_sql['name'] = array("PK" => true, "NULLABLE" => false, "LENGTH" => 60);
+$ddbb_sql['type'] = array("PK" => true, "NULLABLE" => false, "LENGTH" => 40);
+$ddbb_sql['value'] = array("LENGTH" => 100, "DEFAULT" => NULL);
+$ddbb_sql['defaultValue'] = array("LENGTH" => 100, "DEFAULT" => NULL);
+
+$ddbb->addConfig("Setting", $ddbb_table, $ddbb_mapping, $ddbb_types, $ddbb_sql);
 ?>

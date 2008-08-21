@@ -57,9 +57,9 @@ class YUI {
 	   }
 	   
 	   foreach ($depCSS as $css)
-   	   echo '<link rel="stylesheet" type="text/css" href="'.$this->path.$css.'"/>'."\n";
+   	   echo '<link rel="stylesheet" type="text/css" href="'.$this->path."/".$css.'"/>'."\n";
    	foreach ($depJS as $js)
-   	   echo '<script type="text/javascript" src="'.$this->path.$js.'"></script>'."\n";
+   	   echo '<script type="text/javascript" src="'.$this->path."/".$js.'"></script>'."\n";
 	} 
 }
 

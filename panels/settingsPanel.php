@@ -53,8 +53,8 @@ function html_head() {
          columnDefs = [
             {key:"type", label:"Type", sortable: true},
             {key:"name", label:"Name", sortable: true},
-            {key:"default_value", editor:"textbox", label:"Default Value"},
-            {key:"value", editor:"textbox", label: "Value"}
+            {key:"default_value", label:"Default Value"},
+            {key:"value", editor:"textbox", label: "Current Value"}
          ];
 
          dataSource = new YAHOO.util.DataSource("<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/settings.php?");

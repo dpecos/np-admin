@@ -105,7 +105,7 @@ YAHOO.util.Event.onDOMReady(function () {
                 ]
             } 
         },
-        <? createMenus(); ?>
+        <? if (isset($ddbb)) createMenus(); ?>
         <? 
         $login = npadmin_loginData();
         if ($login != null) {

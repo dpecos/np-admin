@@ -17,5 +17,11 @@ $ddbb_types['order'] =    "INT";
 $ddbb_types['text'] =       "STRING";
 $ddbb_types['url'] =        "STRING";
 
-$ddbb->addConfig("Menu", $ddbb_table, $ddbb_mapping, $ddbb_types);
+$ddbb_sql['id'] = array("PK" => true, "NULLABLE" => false, "LENGTH" => 11, "AUTO_INCREMENT" => true);
+$ddbb_sql['parentId'] = array("NULLABLE" => false, "LENGTH" => 11, "DEFAULT" => 0);
+$ddbb_sql['order'] = array("NULLABLE" => false, "LENGTH" => 11, "DEFAULT" => 0);
+$ddbb_sql['text'] = array("NULLABLE" => true, "LENGTH" => 60, "DEFAULT" => NULL);
+$ddbb_sql['url'] = array("NULLABLE" => true, "LENGTH" => 100, "DEFAULT" => NULL);
+
+$ddbb->addConfig("Menu", $ddbb_table, $ddbb_mapping, $ddbb_types, $ddbb_sql);
 ?>
