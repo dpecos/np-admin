@@ -47,6 +47,7 @@ $yui->add("ajax");
 $yui->add("event");
 $yui->add("json");
 $yui->add("treeview");
+$yui->add("calendar");
 
 $yui_logging = false;
 ?>

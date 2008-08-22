@@ -8,7 +8,7 @@ function npadmin_login($user, $password) {
    if (session_id() === "")
       session_start();
    $loginData = new LoginData();
-   return $loginData->login($user, sha1($password));
+   return $loginData->login($user, $password);
 }
 
 function npadmin_logout() {
@@ -24,11 +24,15 @@ function npadmin_loginData() {
    if (isset($_SESSION)) {
       if (isset($_SESSION['npadmin_logindata']))
          return $_SESSION['npadmin_logindata'];
+   }
+   $loginData = new LoginData();
+   if (!$loginData->isLoginFormRequired()) {
+      if (npadmin_login(null, null))
+         return $_SESSION['npadmin_logindata'];
       else 
          return null;
-   } else {
+   } else 
       return null;
-   }
 }
 
 /*function npadmin_isUserLoggedIn() {
@@ -46,9 +50,9 @@ function npadmin_userAllowed() {
 }
 */
 
-function npadmin_loginForm() {
-   global $PWD;
-   require_once($PWD."include/login.php");
+function npadmin_loginForm($useSeconday = false) {
+   $loginData = new LoginData();
+   require_once($loginData->getFormURL($useSeconday));
    exit();
 }
 
@@ -58,7 +62,7 @@ function npadmin_security($groups = null, $showLoginForm = true) {
    $login = npadmin_loginData();
    if ($login == null || $groups != null && !$login->isAllowed($groups)) {
       if ($showLoginForm)
-         npadmin_loginForm();
+         npadmin_loginForm(true);
       else 
          die("You are not allowed to access this page");      
    }

@@ -109,9 +109,16 @@ YAHOO.util.Event.onDOMReady(function () {
         <? 
         $login = npadmin_loginData();
         if ($login != null) {
+            if ($login->canLogout()) {
         ?>
         { text: "Logout (<?= $login->getUser()->user ?>)", classname: "menu_logout", onclick: { fn: logout }, disabled: false}
-        <? } ?>
+        <?   } else { ?>
+        { text: "<?= $login->getUser()->user ?>", classname: "menu_logout", disabled: true},
+        //{ text: "NP-Admin Login", classname: "menu_logout", url: "<?= npadmin_setting('NP-ADMIN', 'BASE_URL')?>/include/login.php", disabled: false}
+        <? 
+            }
+        } 
+        ?>
     ];
 
     var oMenuBar = new YAHOO.widget.MenuBar("npadmin_menubar", { 

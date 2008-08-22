@@ -33,7 +33,9 @@
             background-color: #FFFFFF; 
             padding: 15px;
             border: #000000 1px solid;
-            height: 80%;
+            /*min-height: 80%;
+            height: auto !important;
+            height: 80%;*/
          }
 
          .page_title {

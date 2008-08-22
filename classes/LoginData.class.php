@@ -1,6 +1,21 @@
 <? 
 class LoginData {
    private $user;
+   private $defaultAuthenticator;
+   private $alternativeAuthenticator;
+   private $usedDefaultAuthenticator;
+   
+   public function __construct() {
+      global $PWD;
+      //require_once($PWD."classes/auth/DefaultAuthenticator.class.php");
+      
+      $this->defaultAuthenticator = new DefaultAuthenticator();
+      $auth = npadmin_setting("NP-ADMIN", "AUTH");
+      if ($auth != null) 
+         $this->alternativeAuthenticator = new $auth();
+      else
+         $this->alternativeAuthenticator = null;
+   }
    
    private function clearSession() {
       if (!isset($_SESSION)) {
@@ -17,28 +32,51 @@ class LoginData {
       return $this->user;
    }
    
-   private function doLogin($user, $password) {
-      global $ddbb;
-      $sql = "SELECT * FROM ".$ddbb->getTable('User')." WHERE ".$ddbb->getMapping('User','user')." = ".NP_DDBB::encodeSQLValue($user, $ddbb->getType('User','user'))." AND ".$ddbb->getMapping('User','password')." = ".NP_DDBB::encodeSQLValue($password, $ddbb->getType('User','password'));
-      return $ddbb->executePKSelectQuery($sql);
-   }
-   
    public function login($user, $password) {
       global $ddbb;
       $this->clearSession();
-      if (($data = $this->doLogin($user, $password)) != null) {
-         $this->user = new User($data);
-         $this->groups = array();
-         $ddbb->executeSelectQuery("SELECT g.group_name AS group_name FROM ".$ddbb->getTable("User")." u, ".$ddbb->getTable("Group")." g, ".$ddbb->getTable("UserGroup")." ug WHERE u.user = ug.user AND ug.group_name = g.group_name AND u.user = '".$user."' ORDER BY 1", "__addToGroup", array(&$this->groups));
+      
+      $data = null;
+      if ($user != null && $password != null) {
+         $data = $this->defaultAuthenticator->login($user, $password);
+
+         $this->usedDefaultAuthenticator = true;
+      }
+      if ($data != null) {
+         $this->user = $data[0];
+         $this->groups = $data[1];
          $this->storeInSession("npadmin_logindata", $this);
+            
          return true;
       } else {
-         return false;
+         if ($this->alternativeAuthenticator != null) {
+            $data = $this->alternativeAuthenticator->login($user, $password);
+            if ($data != null) {
+               $this->user = $data[0];
+               $this->groups = $data[1];
+               $this->storeInSession("npadmin_logindata", $this);
+
+               $this->usedDefaultAuthenticator = false;
+                  
+               return true;
+            } else {
+               return false;
+            }
+         } else {
+            return false;
+         }
       }
    }
    
    public function logout() {
       session_destroy();
+   }
+   
+   public function canLogout() {
+      if ($this->usedDefaultAuthenticator)
+         return $this->defaultAuthenticator->canLogout();
+      else
+         return $this->alternativeAuthenticator->canLogout();
    }
    
    public function userInGroup($group) {
@@ -52,10 +90,19 @@ class LoginData {
       }
       return false;
    }
+   
+   public function isLoginFormRequired() {
+      if ($this->usedDefaultAuthenticator)
+         return $this->defaultAuthenticator->isLoginFormRequired();
+      else
+         return $this->alternativeAuthenticator->isLoginFormRequired();
+   }
+   
+   public function getFormURL($forceSecondary = false) {
+      if ($this->usedDefaultAuthenticator && !$forceSecondary)
+         return $this->defaultAuthenticator->getFormURL();
+      else
+         return $this->alternativeAuthenticator->getFormURL();
+   }
 }
-
-function __addToGroup($data, &$groups) {
-   $groups[] = $data['group_name'];
-}
-
 ?>

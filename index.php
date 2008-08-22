@@ -13,10 +13,10 @@ $yui->add("button");
 
 
 <script>
-       var oPanel = new YAHOO.widget.Panel("wellcome", { constraintoviewport: true, fixedcenter: true, width: "400px", zIndex: 1});
+       /*var oPanel = new YAHOO.widget.Panel("wellcome", { constraintoviewport: true, fixedcenter: true, width: "400px", zIndex: 1});
        oPanel.setHeader("NP - Admin");
        oPanel.setBody("Wellcome to NP-Admin!");
-       oPanel.render(document.body);
+       oPanel.render(document.body);*/
 </script>
 
 <? require_once("include/footer.php"); ?>
