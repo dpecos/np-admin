@@ -41,7 +41,7 @@ if ($returnList) {
       $groups[] = $group;
    }
 
-   $ddbb->executeSelectQuery("SELECT * FROM npadmin_groups ORDER BY 1", "createGroupList");
+   $ddbb->executeSelectQuery("SELECT * FROM ".$ddbb->getTable("Group")." ORDER BY 1", "createGroupList");
 
    echo json_encode($groups); 
 } 

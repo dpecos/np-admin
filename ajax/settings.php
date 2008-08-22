@@ -49,9 +49,9 @@ if ($returnList) {
    }
 
    if (in_array('type', array_keys($_POST)) && isset($_POST['type']) && $_POST['type'] != "ALL")
-      $sql = "SELECT * FROM npadmin_settings WHERE ".$ddbb->getMapping('Setting','type')." = ".NP_DDBB::encodeSQLValue($_POST['type'], $ddbb->getType('Setting','type'))." ORDER BY type, name";
+      $sql = "SELECT * FROM ".$ddbb->getTable("Setting")." WHERE ".$ddbb->getMapping('Setting','type')." = ".NP_DDBB::encodeSQLValue($_POST['type'], $ddbb->getType('Setting','type'))." ORDER BY type, name";
    else 
-      $sql = "SELECT * FROM npadmin_settings ORDER BY type, name";
+      $sql = "SELECT * FROM ".$ddbb->getTable("Setting")." ORDER BY type, name";
       
    $ddbb->executeSelectQuery($sql, "createSettingsList");
 
