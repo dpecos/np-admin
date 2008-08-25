@@ -20,13 +20,22 @@ class BugzillaAuthenticator {
          );
          $user = new User($mappedData);
          
-         $sql = "SELECT DISTINCT g.name FROM profiles p, user_group_map m, groups g WHERE p.userid = m.user_id AND m.group_id = g.id AND p.userid = ".$cookie." AND g.name = '".npadmin_setting("AUTH_BUGZILLA", "BUGZILLA_ADMIN_GROUP")."'";
+         $sql = "SELECT DISTINCT g.name FROM profiles p, user_group_map m, groups g WHERE p.userid = m.user_id AND m.group_id = g.id AND p.userid = ".$cookie;
+         $bugzillaGroups = $ddbb->executeSelectQuery($sql);
          
-         if ($ddbb->executePKSelectQuery($sql) != null) {
-            $groups = array(npadmin_setting("AUTH_BUGZILLA", "NPADMIN_ADMIN_GROUP"));
-         } else {               
-            $groups = array(npadmin_setting("AUTH_BUGZILLA", "DEFAULT_GROUP"));
+         $groups = array();
+         $isAdmin = false;
+         foreach ($bugzillaGroups as $bg) {
+            if ($bg['name'] === npadmin_setting("AUTH_BUGZILLA", "BUGZILLA_ADMIN_GROUP")) {
+               $isAdmin = true;
+               $groups = array_merge($groups, array(npadmin_setting("AUTH_BUGZILLA", "NPADMIN_ADMIN_GROUP")));
+            }
+            $groups = array_merge($groups, array("bugzilla_".$bg['name']));
          }
+         if (!$isAdmin) {
+            $groups = array_merge($groups, array(npadmin_setting("AUTH_BUGZILLA", "DEFAULT_GROUP")));
+         }
+         
          return array($user, $groups);
       } else {
          return null;

@@ -69,11 +69,15 @@ function createMenus($parentId = 0) {
       $menus[$parentId] = array();
       $sql = "SELECT m.* FROM ".$ddbb->getTable('Menu')." m, ".$ddbb->getTable('MenuGroup')." mg WHERE m.".$ddbb->getMapping('Menu','parentId')." = ".NP_DDBB::encodeSQLValue($parentId, $ddbb->getType('Menu','parentId'));
       $sql .= " AND mg.".$ddbb->getMapping('MenuGroup','menu_id')." = m.".$ddbb->getMapping('Menu','id');
-      foreach ($myGroups as $group) {
-         $sql .= " AND mg.".$ddbb->getMapping('MenuGroup','group_name')." = ".NP_DDBB::encodeSQLValue($group, $ddbb->getType('MenuGroup','group_name'));
+      if (count($myGroups) > 0) {   
+         $sql .= " AND ( false ";
+         foreach ($myGroups as $group) {
+            $sql .= " OR mg.".$ddbb->getMapping('MenuGroup','group_name')." = ".NP_DDBB::encodeSQLValue($group, $ddbb->getType('MenuGroup','group_name'));
+         }
+         $sql .= ") ";
       }
       $sql .=" ORDER BY m.".$ddbb->getMapping('Menu','parentId').", `".$ddbb->getMapping('Menu','order')."`";
-      
+      //echo $sql;
       $ddbb->executeSelectQuery($sql, "createMenuList", array($parentId, &$menus));
    }
    if (array_key_exists($parentId, $menus) && sizeof($menus[$parentId]) > 0) {
