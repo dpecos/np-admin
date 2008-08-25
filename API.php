@@ -77,10 +77,12 @@ function npadmin_setting($type, $name) {
       
       if (!in_array($type."_".$name, $_settingsCache)) {
          $setting = new Setting($name, $type);
-         if ($setting->value !== null)
+         if (isset($setting->value) && $setting->value !== null)
             $_settingsCache[$type."_".$name] = $setting->value;
-         else 
+         else if (isset($setting->defaultValue)) 
             $_settingsCache[$type."_".$name] = $setting->defaultValue;
+         else 
+            return null;
          //print_r($setting);
       }
       return $_settingsCache[$type."_".$name];
