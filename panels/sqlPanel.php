@@ -8,14 +8,6 @@ npadmin_security(array("Administrators"));
 function html_head() {
    global $PWD;
 ?>
-
-<style type="text/css">
-#mainTabs div.yui-content {
-   padding: 15px;
-}
-
-</style>
-
 <script> 
    var tabView;
 

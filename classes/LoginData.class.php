@@ -104,5 +104,9 @@ class LoginData {
       else
          return $this->alternativeAuthenticator->getFormURL();
    }
+   
+   public function getGroups() {
+      return $this->groups;
+   }
 }
 ?>

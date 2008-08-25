@@ -18,14 +18,6 @@ unset($ddbb);
 function html_head() {
    global $PWD;
 ?>
-
-<style type="text/css">
-#mainTabs div.yui-content {
-   padding: 15px;
-}
-
-</style>
-
 <script> 
    var tabView;
 
@@ -77,9 +69,11 @@ if (isset($_POST) && count($_POST) > 0) {
    echo "Step 3: Create default data ... ";
    $data = array (
    'Setting' => array(
-      array('name' => 'BASE_URL', 'type' => 'NP-ADMIN', 'default_value' => "/np-admin", "value" => $_POST['_PATH']),
-      array('name' => 'YUI_PATH', 'type' => 'NP-ADMIN', 'default_value' => 'http://yui.yahooapis.com/2.5.2/build', "value" => $_POST['_PATH']."/lib/yui_2.5.2/build"),
-      array('name' => 'BG_COLOR', 'type' => 'NP-ADMIN', 'default_value' => '#9999BB')
+      array('type' => 'NP-ADMIN', 'name' => 'BASE_URL', 'default_value' => "/np-admin", "value" => $_POST['_PATH']),
+      array('type' => 'NP-ADMIN', 'name' => 'AUTH', 'default_value' => ""),
+      array('type' => 'NP-ADMIN', 'name' => 'YUI_PATH', 'default_value' => 'http://yui.yahooapis.com/2.5.2/build', "value" => $_POST['_PATH']."/lib/yui_2.5.2/build"),
+      array('type' => 'NP-ADMIN', 'name' => 'BG_COLOR', 'default_value' => '#9999BB'),
+      array('type' => 'APP', 'name' => 'TITLE', 'default_value' => 'App')
    ), 
    'User' => array(
       array('user' => 'admin', 'password' => 'd033e22ae348aeb5660fc2140aec35850c4da997', 'email' => 'admin@estilohacker.com', 'real_name' => 'NP-Admin main user')
@@ -91,7 +85,7 @@ if (isset($_POST) && count($_POST) > 0) {
       array('group_name' => 'Administrators', 'user' => 'admin')
    ),
    'Menu' => array(
-      array('id' => 1, 'parent_id' => 0, 'order' => 0, 'text' => 'Menu', 'url' => 'index.php'),
+      array('id' => 1, 'parent_id' => 0, 'order' => 0, 'text' => 'Main', 'url' => 'panels/mainPanel.php'),
       array('id' => 2, 'parent_id' => 0, 'order' => 1, 'text' => 'Management'),
       array('id' => 3, 'parent_id' => 2, 'order' => 0, 'text' => 'Users', 'url' => 'panels/userPanel.php'),
       array('id' => 4, 'parent_id' => 2, 'order' => 1, 'text' => 'Groups', 'url' => 'panels/groupPanel.php'),
@@ -99,6 +93,16 @@ if (isset($_POST) && count($_POST) > 0) {
       array('id' => 6, 'parent_id' => 0, 'order' => 2, 'text' => 'Configuration'),
       array('id' => 7, 'parent_id' => 6, 'order' => 0, 'text' => 'NP-Admin settings', 'url' => 'panels/settingsPanel.php'),
       array('id' => 8, 'parent_id' => 2, 'order' => 2)
+   ),
+   'MenuGroup' => array(
+      array('menu_id' => 1, 'group_name' => 'Administrators'),
+      array('menu_id' => 2, 'group_name' => 'Administrators'),
+      array('menu_id' => 3, 'group_name' => 'Administrators'),
+      array('menu_id' => 4, 'group_name' => 'Administrators'),
+      array('menu_id' => 5, 'group_name' => 'Administrators'),
+      array('menu_id' => 6, 'group_name' => 'Administrators'),
+      array('menu_id' => 7, 'group_name' => 'Administrators'),
+      array('menu_id' => 8, 'group_name' => 'Administrators')
    )
    );
    foreach ($data as $type => $vector) {

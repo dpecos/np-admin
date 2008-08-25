@@ -8,15 +8,11 @@ npadmin_security(array("Administrators"));
 function html_head() {
    global $PWD;
 ?>
-
-<style type="text/css">
-</style>
-
 <script> 
    var tabView;
 
    YAHOO.util.Event.addListener(window, "load", function() {
-      tabView = new YAHOO.widget.TabView('mainTabs');
+      //tabView = new YAHOO.widget.TabView('mainTabs');
      
    });
   
@@ -26,9 +22,9 @@ function html_head() {
 ?>
 <? require_once($PWD."include/header.php"); ?>
 
-<div class="page_title">Title</div>
+<div class="page_title">NP-Admin Home</div>
 
-<div id="mainTabs" class="yui-navset">
+<!--div id="mainTabs" class="yui-navset">
     <ul class="yui-nav">
         <li class="selected"><a href="#tab1"><em>Tab 1</em></a></li>
     </ul>            
@@ -37,7 +33,7 @@ function html_head() {
            
         </div>
     </div>
-</div>
+</div-->
         
 
 <? require_once($PWD."include/footer.php"); ?>

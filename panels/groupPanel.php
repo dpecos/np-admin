@@ -10,10 +10,6 @@ function html_head() {
 ?>
 
 <style type="text/css">
-#mainTabs div.yui-content {
-   padding: 15px;
-}
-
 #group_form_table td {
    padding: 3px;
 }

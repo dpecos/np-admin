@@ -1,22 +1,25 @@
 <?
-global $PWD;
 $PWD = "./";
 require_once($PWD."include/common.php");
-
-$yui->add("menu");
-$yui->add("tabview");
-$yui->add("button");
-
 ?>
 
-<? require_once("include/header.php"); ?>
+<?
+function html_head() {
+   global $PWD;
+?>
 
+<script> 
 
-<script>
-       /*var oPanel = new YAHOO.widget.Panel("wellcome", { constraintoviewport: true, fixedcenter: true, width: "400px", zIndex: 1});
-       oPanel.setHeader("NP - Admin");
-       oPanel.setBody("Wellcome to NP-Admin!");
-       oPanel.render(document.body);*/
+   YAHOO.util.Event.addListener(window, "load", function() {
+     
+   });
+  
 </script>
+<?
+}
+?>
+<? require_once($PWD."include/header.php"); ?>
 
-<? require_once("include/footer.php"); ?>
+<div class="page_title"><?= npadmin_setting("APP", "TITLE") ?></div>      
+
+<? require_once($PWD."include/footer.php"); ?>

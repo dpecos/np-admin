@@ -6,7 +6,7 @@ header("Cache-Control: no-cache");
 header("Pragma: no-cache");
 header("Expires: Mon, 01 Jan 2000 01:00:00 GMT");
 
-if (isset($_POST['op']) && ($_POST['op'] == "login" || $_POST['op'] == "logout") || isset($_GET['op']) && $_GET['op'] == "logout") {
+if (array_key_exists("op", $_POST) && ($_POST['op'] == "login" || $_POST['op'] == "logout") || isset($_GET['op']) && $_GET['op'] == "logout") {
       
    if ($_POST['op'] == "login") {
       echo npadmin_login($_POST['user'], $_POST['password']) ? "OK" : "ERROR";
@@ -22,7 +22,7 @@ if (isset($_POST['op']) && ($_POST['op'] == "login" || $_POST['op'] == "logout")
 
    $returnList = false;
 
-   if (!isset($_POST['op']))
+   if (!array_key_exists("op", $_POST))
       exit;
 
    if ($_POST['op'] == "add") {

@@ -1,5 +1,12 @@
 <style type="text/css">
-   
+   #npadmin_menubar {
+      margin-bottom: 10px;   
+   }
+
+   .menu_logout {
+     float: right;
+   }   
+
    em#npadminlabel {
        text-indent: -6em;
        display: block;
@@ -7,33 +14,28 @@
        width: 2em;
        overflow: hidden;
    }
-
-
-   /*
-       Setting the "zoom" property to "1" triggers the "hasLayout" 
-       property in IE.  This is necessary to fix a bug IE where 
-       mousing mousing off a the text node of MenuItem instance's 
-       text label, or help text without the mouse actually exiting the
-       boundaries of the MenuItem instance will result in the losing  
-       the background color applied when it is selected.
-   */
+   
+   em#npadminsettings {
+       text-indent: -6em;
+       display: block;
+       background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/settings.png) center center no-repeat;
+       width: 2em;
+       overflow: hidden;
+   }
+   
+   em#npadminlogout {
+       text-indent: 2.5em;
+       display: block;
+       background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/logout.png) left center no-repeat;
+   }
    
    #filemenu.visible .yuimenuitemlabel,
    #editmenu.visible .yuimenuitemlabel {
-
        *zoom: 1;
-
    }
 
-
-/*
-	Remove "hasLayout" from the submenu of the file menu.			
-*/
-
    #filemenu.visible .yuimenu .yuimenuitemlabel {
-
        *zoom: normal;
-
    }
 
 </style>
@@ -50,21 +52,31 @@ function logoutConfirm() {
 
          
 <?
-$menus = array();
 
-function createMenuList($data, $parentId) {
-   global $menus;
+function createMenuList($data, $parentId, $menus) {
    $menus[$parentId][] = new Menu($data);
 }
    
 function createMenus($parentId = 0) {
    global $ddbb, $menus, $PWD;
-
-   $menus[$parentId] = array();
-
-   $ddbb->executeSelectQuery("SELECT * FROM ".$ddbb->getTable('Menu')." WHERE ".$ddbb->getMapping('Menu','parentId')." = ".NP_DDBB::encodeSQLValue($parentId, $ddbb->getType('Menu','parentId'))." ORDER BY ".$ddbb->getMapping('Menu','parentId').", `".$ddbb->getMapping('Menu','order')."`", "createMenuList", array($parentId));
-
-   if (sizeof($menus[$parentId]) > 0) {
+   
+   $login = npadmin_loginData();
+   $menus = array();
+   
+   if ($login != null) {
+      $myGroups = $login->getGroups();
+   
+      $menus[$parentId] = array();
+      $sql = "SELECT m.* FROM ".$ddbb->getTable('Menu')." m, ".$ddbb->getTable('MenuGroup')." mg WHERE m.".$ddbb->getMapping('Menu','parentId')." = ".NP_DDBB::encodeSQLValue($parentId, $ddbb->getType('Menu','parentId'));
+      $sql .= " AND mg.".$ddbb->getMapping('MenuGroup','menu_id')." = m.".$ddbb->getMapping('Menu','id');
+      foreach ($myGroups as $group) {
+         $sql .= " AND mg.".$ddbb->getMapping('MenuGroup','group_name')." = ".NP_DDBB::encodeSQLValue($group, $ddbb->getType('MenuGroup','group_name'));
+      }
+      $sql .=" ORDER BY m.".$ddbb->getMapping('Menu','parentId').", `".$ddbb->getMapping('Menu','order')."`";
+      
+      $ddbb->executeSelectQuery($sql, "createMenuList", array($parentId, &$menus));
+   }
+   if (array_key_exists($parentId, $menus) && sizeof($menus[$parentId]) > 0) {
       foreach ($menus[$parentId] as $menu) { 
          if ($menu->text === NULL) {
             echo "], [ ";
@@ -86,8 +98,6 @@ submenu: {
 <? 
          }
       }
-   } else {
-      echo "{ }";
    }
 }
 ?>
@@ -111,12 +121,16 @@ YAHOO.util.Event.onDOMReady(function () {
         if ($login != null) {
             if ($login->canLogout()) {
         ?>
-        { text: "Logout (<?= $login->getUser()->user ?>)", classname: "menu_logout", onclick: { fn: logout }, disabled: false}
+        { text: "<em id=\"npadminlogout\">Log-out <?= $login->getUser()->user ?></em>", classname: "menu_logout", onclick: { fn: logout }, disabled: false},
         <?   } else { ?>
         { text: "<?= $login->getUser()->user ?>", classname: "menu_logout", disabled: true},
-        //{ text: "NP-Admin Login", classname: "menu_logout", url: "<?= npadmin_setting('NP-ADMIN', 'BASE_URL')?>/include/login.php", disabled: false}
         <? 
             }
+        } 
+        if ($login == null || !in_array("Administrators", $login->getGroups())) { 
+        ?>
+        { text: "<em id=\"npadminsettings\">Log-in</em>", classname: "menu_logout", url: "<?= npadmin_setting('NP-ADMIN', 'BASE_URL')?>/panels/mainPanel.php", disabled: false}
+        <? 
         } 
         ?>
     ];

@@ -20,14 +20,6 @@
             background-color: <?= npadmin_setting('NP-ADMIN', 'BG_COLOR') ?>;            
          }
 
-         #npadmin_menubar {
-            margin-bottom: 10px;   
-         }
-
-         .menu_logout {
-           float: right;
-         }
-
          #main_body {
             margin: 20px;
             background-color: #FFFFFF; 
@@ -36,6 +28,10 @@
             /*min-height: 80%;
             height: auto !important;
             height: 80%;*/
+         }
+
+         #mainTabs div.yui-content {
+            padding: 15px;
          }
 
          .page_title {
@@ -49,6 +45,15 @@
       <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/npadmin_javascript.js"></script>
       
       <? if (function_exists("html_head")) html_head() ?>
+
+      <? 
+      $login = npadmin_loginData();
+        if ($login != null) {      
+      ?>
+      <title><?= npadmin_setting("APP", "TITLE") ?> - <?= $login->getUser()->user ?></title>
+      <? } else { ?>
+      <title><?= npadmin_setting("APP", "TITLE") ?></title>
+      <? } ?>
       
    </head>
    
