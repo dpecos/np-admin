@@ -35,34 +35,19 @@ function npadmin_loginData() {
       return null;
 }
 
-/*function npadmin_isUserLoggedIn() {
-   return npadmin_loginData() != null;
-}
-
-function npadmin_userAllowed() {
-   session_start();
-   if (($login = npadmin_loginData()) != null) {
-      //return $login->getUser()->user == "admin";
-      return $login->userInGroup("Administrators");
-   } else {
-      return false;
-   }
-}
-*/
-
-function npadmin_loginForm($useSeconday = false) {
-   $loginData = new LoginData();
-   require_once($loginData->getFormURL($useSeconday));
+function npadmin_loginForm() {
+   require_once(npadmin_setting("NP-ADMIN", "AUTH_FORM"));
    exit();
 }
 
 function npadmin_security($groups = null, $showLoginForm = true) {
+   /* AJAX calls have $showLoginForm set to false, because it makes no sense to show a login form */
    if (session_id() === "")
       session_start();
    $login = npadmin_loginData();
    if ($login == null || $groups != null && !$login->isAllowed($groups)) {
       if ($showLoginForm)
-         npadmin_loginForm(true);
+         npadmin_loginForm();
       else 
          die("You are not allowed to access this page");      
    }

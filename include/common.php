@@ -19,16 +19,7 @@ require_once($PWD."classes/User.sql.php");
 require_once($PWD."classes/Group.sql.php");
 require_once($PWD."classes/UserGroup.sql.php");
 require_once($PWD."classes/Menu.sql.php");
-
 require_once($PWD."classes/MenuGroup.sql.php");
-
-/*require_once($PWD."classes/Group.class.php");
-require_once($PWD."classes/LoginData.class.php");
-require_once($PWD."classes/Menu.class.php");
-require_once($PWD."classes/Setting.class.php");
-require_once($PWD."classes/User.class.php");
-require_once($PWD."classes/UserGroup.class.php");
-require_once($PWD."classes/YUI.class.php");*/
 
 function __autoload($class_name) {
    global $PWD;

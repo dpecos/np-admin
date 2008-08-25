@@ -26,7 +26,7 @@ function html_head() {
 
 <div id="mainTabs" class="yui-navset">
     <ul class="yui-nav">
-        <li class="selected"><a href="#tab1"><em>SQL</em></a></li>
+        <li class="selected"><a href="#"><em>SQL</em></a></li>
     </ul>            
     <div class="yui-content">
         <div>

@@ -470,8 +470,8 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
 
 <div id="mainTabs" class="yui-navset">
     <ul class="yui-nav">
-        <li class="selected"><a href="#tab1"><em>List of users</em></a></li>
-        <li><a href="#tab2"><em>User's groups</em></a></li>
+        <li class="selected"><a href="#"><em>List of users</em></a></li>
+        <li><a href="#"><em>User's groups</em></a></li>
     </ul>            
     <div class="yui-content">
         <div>
