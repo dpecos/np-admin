@@ -33,7 +33,7 @@ class BugzillaAuthenticator {
             $groups = array_merge($groups, array("bugzilla_".$bg['name']));
          }
          if (!$isAdmin) {
-            $groups = array_merge($groups, array(npadmin_setting("AUTH_BUGZILLA", "DEFAULT_GROUP")));
+            $groups = array_merge($groups, array(npadmin_setting("AUTH_BUGZILLA", "DEFAULT_NPADMIN_GROUP")));
          }
          
          return array($user, $groups);
