@@ -10,6 +10,11 @@ npadmin_security(array("Administrators"), false);
 
 $returnList = false;
 
+foreach ($_POST as $k => $v) {
+   if ($v === "null")
+      $_POST[$k] = null;
+}
+
 if (array_key_exists("op", $_POST)) {
    if ($_POST['op'] == "add") {
       $setting = new Setting($_POST);

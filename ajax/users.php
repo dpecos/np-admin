@@ -6,6 +6,11 @@ header("Cache-Control: no-cache");
 header("Pragma: no-cache");
 header("Expires: Mon, 01 Jan 2000 01:00:00 GMT");
 
+foreach ($_POST as $k => $v) {
+   if ($v === "null")
+      $_POST[$k] = null;
+}
+
 if (array_key_exists("op", $_POST) && ($_POST['op'] == "login" || $_POST['op'] == "logout") || isset($_GET['op']) && $_GET['op'] == "logout") {
       
    if ($_POST['op'] == "login") {

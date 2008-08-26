@@ -45,6 +45,7 @@ function npadmin_security($groups = null, $showLoginForm = true) {
    if (session_id() === "")
       session_start();
    $login = npadmin_loginData();
+
    if ($login == null || $groups != null && !$login->isAllowed($groups)) {
       if ($showLoginForm)
          npadmin_loginForm();

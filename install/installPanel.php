@@ -22,6 +22,7 @@ $data = array (
    'Setting' => array(
       array('type' => 'NP-ADMIN', 'name' => 'BASE_URL', 'default_value' => "/np-admin", "value" => $_POST['_PATH']),
       array('type' => 'NP-ADMIN', 'name' => 'AUTH', 'default_value' => ""),
+      array('type' => 'NP-ADMIN', 'name' => 'AUTH_FORM', 'default_value' => "include/login.php"),
       array('type' => 'NP-ADMIN', 'name' => 'YUI_PATH', 'default_value' => 'http://yui.yahooapis.com/2.5.2/build', "value" => $_POST['_PATH']."/lib/yui_2.5.2/build"),
       array('type' => 'NP-ADMIN', 'name' => 'BG_COLOR', 'default_value' => '#9999BB'),
       array('type' => 'APP', 'name' => 'TITLE', 'default_value' => 'App Name', 'value' => "Example App")

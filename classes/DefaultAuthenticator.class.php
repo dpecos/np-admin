@@ -29,11 +29,7 @@ class DefaultAuthenticator {
    public function isLoginFormRequired() {
       return true;
    }
-   
-   public function getFormURL() {
-      global $PWD;
-      return $PWD."include/login.php";
-   }
+  
 }
 
 function __addToGroup($data, &$groups) {

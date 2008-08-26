@@ -49,11 +49,7 @@ class BugzillaAuthenticator {
    public function isLoginFormRequired() {
       return false;
    }
-   
-   public function getFormURL() {
-      global $PWD;
-      return $PWD."soporte_panels/login.php";
-   }
+  
 }
 
 ?>

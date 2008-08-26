@@ -23,7 +23,8 @@ require_once($PWD."classes/MenuGroup.sql.php");
 
 function __autoload($class_name) {
    global $PWD;
-   require_once($PWD."classes/".$class_name.".class.php");
+   if (isset($class_name) && $class_name != null && trim($class_name) != "")
+   require_once($PWD."classes/".trim($class_name).".class.php");
 }
 
 $yui = new YUI(npadmin_setting('NP-ADMIN', 'YUI_PATH'));

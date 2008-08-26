@@ -7,7 +7,6 @@ class LoginData {
    
    public function __construct() {
       global $PWD;
-      //require_once($PWD."classes/auth/DefaultAuthenticator.class.php");
       
       $this->defaultAuthenticator = new DefaultAuthenticator();
       $auth = npadmin_setting("NP-ADMIN", "AUTH");
@@ -15,6 +14,8 @@ class LoginData {
          $this->alternativeAuthenticator = new $auth();
       else
          $this->alternativeAuthenticator = null;
+         
+      $this->usedDefaultAuthenticator = ($this->alternativeAuthenticator == null);
    }
    
    private function clearSession() {
@@ -96,13 +97,6 @@ class LoginData {
          return $this->defaultAuthenticator->isLoginFormRequired();
       else
          return $this->alternativeAuthenticator->isLoginFormRequired();
-   }
-   
-   public function getFormURL($forceSecondary = false) {
-      if ($this->usedDefaultAuthenticator && !$forceSecondary)
-         return $this->defaultAuthenticator->getFormURL();
-      else
-         return $this->alternativeAuthenticator->getFormURL();
    }
    
    public function getGroups() {
