@@ -99,6 +99,7 @@ function emptyList(listId) {
    }
 }
 
+/*
 Array.prototype.sort = function()
 {
    var tmp;
@@ -118,10 +119,10 @@ Array.prototype.sort = function()
   
 Array.prototype.unshift = function(item) 
 {
-   this[this.length] = null;/* create a new last element */
+   this[this.length] = null;
    for(var i=1;i<this.length;i++)
    {
-       this[i] = this[i-1]; /* shift elements upwards */
+       this[i] = this[i-1]; 
    }
    this[0] = item;
 };
@@ -129,15 +130,17 @@ Array.prototype.unshift = function(item)
 Array.prototype.shift = function() 
 {
    for(var i=1;i<this.length;i++) {
-       this[i-1] = this[i] /* shift element downwards */
+       this[i-1] = this[i];
    }
    this.length =  this.length-1;
 };
+
 
 Array.prototype.clear = function() 
 {
    this.length = 0;
 };
+*/
 
 Array.prototype.contains = function (element) 
 {
@@ -148,8 +151,7 @@ Array.prototype.contains = function (element)
    return false;
 };
 
-
-/* Shuffles the Array elements randomly */  
+/*
 Array.prototype.shuffle = function()  
 {      
    var i=this.length,j,t;      
@@ -161,7 +163,6 @@ Array.prototype.shuffle = function()
    }  
 };
  
-/* Removes redundant elements from the array */  
 Array.prototype.unique = function()
 {      
    var a=[],i;      
@@ -173,7 +174,6 @@ Array.prototype.unique = function()
    return a;  
 };
  
-/* Returns the index of the element matched from the behind */  
 Array.prototype.lastIndexOf = function(n)
 {      
    var i=this.length;      
@@ -183,3 +183,4 @@ Array.prototype.lastIndexOf = function(n)
    }      
    return -1;  
 };
+*/
