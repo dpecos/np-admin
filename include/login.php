@@ -30,7 +30,7 @@ $PWD = "../";
 			         fixedcenter: true,
 			         draggable: true,
 			         constraintoviewport: true,
-			         text: "Create new user",
+			         text: "NP-Admin Login",
 			         modal: true,
 			         close: false,
                   buttons: [ 
@@ -38,7 +38,7 @@ $PWD = "../";
 	                  { text:"Login", handler:doLogin, isDefault:true } 
 	               ]
 			       });
-	         loginDialog.setHeader("Login");
+	         loginDialog.setHeader("NP-Admin Login");
 	         loginDialog.render(document.body);
             loginDialog.show();
          });
@@ -76,6 +76,7 @@ $PWD = "../";
          <? if (npadmin_loginData() != null) { ?>
          <div class="page_title">You are not allowed to access this page</div>
          <? } ?>
+         <div class="page_title"><?= npadmin_setting("APP", "FORM_MESSAGE") ?></div>
          <div style="visibility: hidden; display:none">
            <div id="login_form_table">
               <div class="bd">
