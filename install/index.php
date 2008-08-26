@@ -124,7 +124,7 @@ if (isset($_POST) && count($_POST) > 1) {
          }
       }
       echo "Done <br/>\n";
-      echo "<br/>Installation succeed! Now you can <a href='settingsPanel.php'>login and edit configuration</a> with user <b>admin</b> and password <b>admin</b>.\n";
+      echo "<br/>Installation succeed! Now you can <a href='../panels/settingsPanel.php'>login and edit configuration</a> with user <b>admin</b> and password <b>admin</b>.\n";
    
    } else if ($_POST['op'] === "upgrade") {
       $ddbb = $ddbb_back;
@@ -151,7 +151,7 @@ if (isset($_POST) && count($_POST) > 1) {
          }
       }
       echo "Done <br/>\n";
-      echo "<br/>Upgrade succeed! Now you can <a href='settingsPanel.php'>login and edit configuration</a> with your already configure users.\n";
+      echo "<br/>Upgrade succeed! Now you can <a href='../panels/settingsPanel.php'>login and edit configuration</a> with your already configure users.\n";
    }
 } else {
 ?>
