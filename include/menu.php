@@ -10,7 +10,7 @@
    em#npadminlabel {
        text-indent: -6em;
        display: block;
-       background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/favicon.ico) center center no-repeat;
+       background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/glider.png) center center no-repeat;
        width: 2em;
        overflow: hidden;
    }
