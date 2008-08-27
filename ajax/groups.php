@@ -10,6 +10,8 @@ npadmin_security(array("Administrators"), false);
 
 $returnList = false;
 
+$_POST = NP_UTF8_decode($_POST);
+
 foreach ($_POST as $k => $v) {
    if ($v === "null")
       $_POST[$k] = null;
@@ -49,7 +51,7 @@ if (array_key_exists("op", $_POST)) {
    
       $ddbb->executeSelectQuery("SELECT * FROM ".$ddbb->getTable("Group")." ORDER BY 1", "createGroupList");
    
-      echo json_encode($groups); 
+      echo NP_json_encode($groups); 
    } 
 }
 ?>

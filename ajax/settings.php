@@ -10,6 +10,8 @@ npadmin_security(array("Administrators"), false);
 
 $returnList = false;
 
+$_POST = NP_UTF8_decode($_POST);
+
 foreach ($_POST as $k => $v) {
    if ($v === "null")
       $_POST[$k] = null;
@@ -61,7 +63,7 @@ if (array_key_exists("op", $_POST)) {
          
       $ddbb->executeSelectQuery($sql, "createSettingsList");
    
-      echo json_encode($settings); 
+      echo NP_json_encode($settings); 
    } 
 }
 ?>

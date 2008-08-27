@@ -6,6 +6,8 @@ header("Cache-Control: no-cache");
 header("Pragma: no-cache");
 header("Expires: Mon, 01 Jan 2000 01:00:00 GMT");
 
+$_POST = NP_UTF8_decode($_POST);
+
 foreach ($_POST as $k => $v) {
    if ($v === "null")
       $_POST[$k] = null;
@@ -60,7 +62,7 @@ if (array_key_exists("op", $_POST) && ($_POST['op'] == "login" || $_POST['op'] =
 
       $ddbb->executeSelectQuery("SELECT g.group_name AS group_name FROM ".$ddbb->getTable("User")." u, ".$ddbb->getTable("Group")." g, ".$ddbb->getTable("UserGroup")." ug WHERE u.user = ug.user AND ug.group_name = g.group_name AND u.user = '".$_POST['user']."' ORDER BY 1" , "createGroupList");
 
-      echo json_encode($groups);
+      echo NP_json_encode($groups);
 
    } else if ($_POST['op'] == "listUnassignedGroups") {
       $groups = array();
@@ -72,7 +74,7 @@ if (array_key_exists("op", $_POST) && ($_POST['op'] == "login" || $_POST['op'] =
 
       $ddbb->executeSelectQuery("SELECT group_name FROM ".$ddbb->getTable("Group")." WHERE group_name NOT IN (SELECT g.group_name AS group_name FROM ".$ddbb->getTable("User")." u, ".$ddbb->getTable("Group")." g, ".$ddbb->getTable("UserGroup")." ug WHERE u.user = ug.user AND ug.group_name = g.group_name AND u.user = '".$_POST['user']."') ORDER BY 1" , "createGroupList");
 
-      echo json_encode($groups);
+      echo NP_json_encode($groups);
       
    } else if ($_POST['op'] == "assignGroups") {
       $user = $_POST['user'];   
@@ -104,7 +106,7 @@ if (array_key_exists("op", $_POST) && ($_POST['op'] == "login" || $_POST['op'] =
 
       $ddbb->executeSelectQuery("SELECT * FROM ".$ddbb->getTable("User")." ORDER BY 1", "createUserList");
 
-      echo json_encode($users); 
+      echo NP_json_encode($users); 
    } 
 }
 ?>

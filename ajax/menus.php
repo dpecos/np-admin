@@ -10,6 +10,8 @@ npadmin_security(array("Administrators"), false);
 
 $returnList = false;
 
+$_POST = NP_UTF8_decode($_POST);
+
 foreach ($_POST as $k => $v) {
    if ($v === "null")
       $_POST[$k] = null;
@@ -67,7 +69,7 @@ if (array_key_exists("op", $_POST)) {
          $parentId = 0;
       createMenus($parentId);
       
-      echo json_encode($menus); 
+      echo NP_json_encode($menus); 
    } 
 }
 ?>
