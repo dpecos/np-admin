@@ -4,6 +4,7 @@ global $ddbb;
 $ddbb_table = "menus";
 $ddbb_mapping = array();
 $ddbb_types = array();
+$ddbb_sql = array();
 
 $ddbb_mapping['id'] =        "id";
 $ddbb_mapping['parentId'] =  "parent_id";

@@ -4,6 +4,7 @@ global $ddbb;
 $ddbb_table = "menus_groups";
 $ddbb_mapping = array();
 $ddbb_types = array();
+$ddbb_sql = array();
 
 $ddbb_mapping['menu_id'] =    "menu_id";
 $ddbb_mapping['group_name'] =  "group_name";

@@ -4,6 +4,7 @@ global $ddbb;
 $ddbb_table = "settings";
 $ddbb_mapping = array();
 $ddbb_types = array();
+$ddbb_sql = array();
 
 $ddbb_mapping['name'] =        "name";
 $ddbb_mapping['type'] =        "type";

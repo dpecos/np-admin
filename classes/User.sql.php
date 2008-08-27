@@ -4,6 +4,7 @@ global $ddbb;
 $ddbb_table = "users";
 $ddbb_mapping = array();
 $ddbb_types = array();
+$ddbb_sql = array();
 
 $ddbb_mapping['user'] =        "user";
 $ddbb_mapping['password'] =    "password";

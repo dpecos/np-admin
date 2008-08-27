@@ -4,6 +4,7 @@ global $ddbb;
 $ddbb_table = "groups";
 $ddbb_mapping = array();
 $ddbb_types = array();
+$ddbb_sql = array();
 
 $ddbb_mapping['group_name'] =        "group_name";
 $ddbb_mapping['description'] =    "description";
