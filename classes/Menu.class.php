@@ -5,7 +5,7 @@ class Menu {
       global $ddbb;
       $ddbb->loadData($this, $data);
       
-      if ($this->panelId != null) {
+      if (isset($this->panelId) && $this->panelId != null) {
          $this->panel = new Panel($this->panelId);
       }
    }
