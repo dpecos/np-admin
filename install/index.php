@@ -38,25 +38,37 @@ $data = array (
       array('group_name' => 'Administrators', 'user' => 'admin')
    ),
    'Menu' => array(
-      array('id' => 1, 'parent_id' => 0, 'order' => 0, 'text' => 'Main', 'url' => 'panels/mainPanel.php'),
+      array('id' => 1, 'parent_id' => 0, 'order' => 0, 'text' => 'Main', 'url' => 'panels/mainPanel.php', 'panel_id' => 'mainPanel'),
       array('id' => 2, 'parent_id' => 0, 'order' => 1, 'text' => 'Management'),
-      array('id' => 3, 'parent_id' => 2, 'order' => 0, 'text' => 'Users', 'url' => 'panels/userPanel.php'),
-      array('id' => 4, 'parent_id' => 2, 'order' => 1, 'text' => 'Groups', 'url' => 'panels/groupPanel.php'),
-      array('id' => 5, 'parent_id' => 2, 'order' => 3, 'text' => 'Menus', 'url' => 'panels/menuPanel.php'),
+      array('id' => 3, 'parent_id' => 2, 'order' => 0, 'text' => 'Users', 'url' => 'panels/userPanel.php', 'panel_id' => 'userPanel'),
+      array('id' => 4, 'parent_id' => 2, 'order' => 1, 'text' => 'Groups', 'url' => 'panels/groupPanel.php', 'panel_id' => 'groupPanel'),
+      array('id' => 5, 'parent_id' => 2, 'order' => 4, 'text' => 'Menus', 'url' => 'panels/menuPanel.php', 'panel_id' => 'menuPanel'),
       array('id' => 6, 'parent_id' => 0, 'order' => 2, 'text' => 'Configuration'),
-      array('id' => 7, 'parent_id' => 6, 'order' => 0, 'text' => 'NP-Admin settings', 'url' => 'panels/settingsPanel.php'),
-      array('id' => 8, 'parent_id' => 2, 'order' => 2)
+      array('id' => 7, 'parent_id' => 6, 'order' => 0, 'text' => 'NP-Admin settings', 'url' => 'panels/settingsPanel.php', 'panel_id'=>'settingsPanel'),
+      array('id' => 8, 'parent_id' => 2, 'order' => 2),
+      array('id' => 9, 'parent_id' => 2, 'order' => 3, 'text' => 'Panels', 'url' => 'panels/panelPanel.php', 'panel_id' => 'panelPanel'),
    ),
    'MenuGroup' => array(
-      array('menu_id' => 1, 'group_name' => 'Administrators'),
       array('menu_id' => 2, 'group_name' => 'Administrators'),
-      array('menu_id' => 3, 'group_name' => 'Administrators'),
-      array('menu_id' => 4, 'group_name' => 'Administrators'),
-      array('menu_id' => 5, 'group_name' => 'Administrators'),
       array('menu_id' => 6, 'group_name' => 'Administrators'),
-      array('menu_id' => 7, 'group_name' => 'Administrators'),
       array('menu_id' => 8, 'group_name' => 'Administrators')
-   )   
+   ),
+   'Panel' => array(
+      ('id' => 'mainPanel', 'title' => 'NP-Admin Home'),
+      ('id' => 'userPanel', 'title' => 'User administration'),
+      ('id' => 'groupPanel', 'title' => 'Group administration'),
+      ('id' => 'menuPanel', 'title' => 'Menu administration'),
+      ('id' => 'settingsPanel', 'title' => 'Settings administration'),
+      ('id' => 'panelPanel', 'title' => 'Panels administration')
+   ),   
+   'PanelGroup' => array(
+      ('panel_id' => 'groupPanel', 'group_name' => 'Administrators'),
+      ('panel_id' => 'mainPanel', 'group_name' => 'Administrators'),
+      ('panel_id' => 'menuPanel', 'group_name' => 'Administrators'),
+      ('panel_id' => 'panelPanel', 'group_name' => 'Administrators'),
+      ('panel_id' => 'settingsPanel', 'group_name' => 'Administrators'),
+      ('panel_id' => 'userPanel', 'group_name' => 'Administrators')
+   )
 );
 ?>
 
