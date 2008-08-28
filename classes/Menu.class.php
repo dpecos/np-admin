@@ -4,6 +4,10 @@ class Menu {
    public function __construct($data = null) {     
       global $ddbb;
       $ddbb->loadData($this, $data);
+      
+      if ($this->panelId != null) {
+         $this->panel = new Panel($this->panelId);
+      }
    }
    
    public function store() {

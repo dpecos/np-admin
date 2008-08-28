@@ -67,38 +67,65 @@ function createMenus($parentId = 0) {
       $myGroups = $login->getGroups();
    
       $menus[$parentId] = array();
-      $sql = "SELECT m.* FROM ".$ddbb->getTable('Menu')." m, ".$ddbb->getTable('MenuGroup')." mg WHERE m.".$ddbb->getMapping('Menu','parentId')." = ".NP_DDBB::encodeSQLValue($parentId, $ddbb->getType('Menu','parentId'));
-      $sql .= " AND mg.".$ddbb->getMapping('MenuGroup','menu_id')." = m.".$ddbb->getMapping('Menu','id');
+      $sql = "SELECT m.* FROM ".$ddbb->getTable('Menu')." m, ".$ddbb->getTable('MenuGroup')." mg";
+      $sql .= " WHERE m.".$ddbb->getMapping('Menu','parentId')." = ".NP_DDBB::encodeSQLValue($parentId, $ddbb->getType('Menu','parentId'));
+      $sql .= " AND mg.".$ddbb->getMapping('MenuGroup','menuId')." = m.".$ddbb->getMapping('Menu','id');
+      $sql .= " AND m.".$ddbb->getMapping('Menu','panelId')." IS NULL";
       if (count($myGroups) > 0) {   
          $sql .= " AND ( false ";
          foreach ($myGroups as $group) {
-            $sql .= " OR mg.".$ddbb->getMapping('MenuGroup','group_name')." = ".NP_DDBB::encodeSQLValue($group, $ddbb->getType('MenuGroup','group_name'));
+            $sql .= " OR mg.".$ddbb->getMapping('MenuGroup','groupName')." = ".NP_DDBB::encodeSQLValue($group, $ddbb->getType('MenuGroup','groupName'));
          }
          $sql .= ") ";
       }
-      $sql .=" ORDER BY m.".$ddbb->getMapping('Menu','parentId').", `".$ddbb->getMapping('Menu','order')."`";
+      $sql .= " UNION SELECT m.* FROM ".$ddbb->getTable('Panel')." p, ".$ddbb->getTable('PanelGroup')." pg, ".$ddbb->getTable('Menu')." m ";
+      $sql .= " WHERE m.".$ddbb->getMapping('Menu','parentId')." = ".NP_DDBB::encodeSQLValue($parentId, $ddbb->getType('Menu','parentId'));
+      $sql .= " AND p.".$ddbb->getMapping('Panel','id')." = pg.".$ddbb->getMapping('PanelGroup','panelId');
+      $sql .= " AND p.".$ddbb->getMapping('Panel','id')." = m.".$ddbb->getMapping('Menu','panelId');
+      if (count($myGroups) > 0) {   
+         $sql .= " AND ( false ";
+         foreach ($myGroups as $group) {
+            $sql .= " OR pg.".$ddbb->getMapping('PanelGroup','groupName')." = ".NP_DDBB::encodeSQLValue($group, $ddbb->getType('PanelGroup','groupName'));
+         }
+         $sql .= ") ";
+      }
+      $sql .=" ORDER BY ".$ddbb->getMapping('Menu','parentId').", `".$ddbb->getMapping('Menu','order')."`";
       //echo $sql;
       $ddbb->executeSelectQuery($sql, "createMenuList", array($parentId, &$menus));
+      //print_r($menus);
    }
    if (array_key_exists($parentId, $menus) && sizeof($menus[$parentId]) > 0) {
       foreach ($menus[$parentId] as $menu) { 
-         if ($menu->text === NULL) {
+         if ($menu->text === NULL && $menu->panelId === NULL) {
             echo "], [ ";
          } else {
+
+echo "{";
+if ($menu->panelId != null) { 
+   if ($menu->text != null) { 
+      echo "text: \"".$menu->text."\",";
+   } else { 
+      echo "text: \"".$menu->panel->getTitle()."\",";
+   }
+   if ($menu->url != null) { 
+      echo "url: \"".npadmin_setting('NP-ADMIN', 'BASE_URL').'/'.$menu->url."\"";
+   } else { 
+      echo "url: \"".npadmin_setting('NP-ADMIN', 'BASE_URL').'/'.$menu->panel->getURL()."\"";
+   }        
+} else if ($menu->url != null) {
+   echo "text: \"".$menu->text."\",";
+   echo "url: \"".npadmin_setting('NP-ADMIN', 'BASE_URL').'/'.$menu->url."\"";
+} else { 
 ?>
-{    
 text: "<?= $menu->text ?>",
-<? if ($menu->url != null) { ?>
-url: "<?= npadmin_setting('NP-ADMIN', 'BASE_URL').'/'.$menu->url ?>"
-<? } else { ?>
 submenu: {
    id: "menu_<?= $menu->id ?>",
    itemdata: [
    [<? createMenus($menu->id); ?>]
    ]
 }
-               <? } ?>
-           },
+<? } ?>
+},
 <? 
          }
       }

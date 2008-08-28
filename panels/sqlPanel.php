@@ -26,11 +26,19 @@ function html_head() {
 
 <div id="mainTabs" class="yui-navset">
     <ul class="yui-nav">
-        <li class="selected"><a href="#"><em>SQL</em></a></li>
+        <li class="selected"><a href="#"><em>SQL: Table structure & Data</em></a></li>
+        <li><a href="#"><em>SQL: Table structure</em></a></li>
+        <li><a href="#"><em>SQL: Table data</em></a></li>
     </ul>            
     <div class="yui-content">
         <div>
            <pre><?= $ddbb->createSQLCreateTable(true); ?></pre>
+        </div>
+        <div>
+           <pre><?= $ddbb->createSQLCreateTable(false); ?></pre>
+        </div>
+        <div>
+           <pre><?= $ddbb->createSQLDataTable(); ?></pre>
         </div>
     </div>
 </div>

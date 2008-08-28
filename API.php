@@ -82,4 +82,8 @@ function npadmin_setting($type, $name) {
       return null;
    }
 }
+
+function npadmin_panel($panelID) {
+   return new Panel($panelID);     
+}
 ?>

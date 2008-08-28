@@ -1,7 +1,8 @@
 <?
 $PWD = "../";
 require_once($PWD."include/common.php");
-npadmin_security(array("Administrators"));
+$panelData = npadmin_panel("userPanel");
+npadmin_security($panelData->getGroups());
 ?>
 
 <?
@@ -466,7 +467,8 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
 ?>
 <? require_once($PWD."include/header.php"); ?>
 
-<div class="page_title">User administration</div>
+
+<div class="page_title"><?= $panelData->getTitle() ?></div>
 
 <div id="mainTabs" class="yui-navset">
     <ul class="yui-nav">

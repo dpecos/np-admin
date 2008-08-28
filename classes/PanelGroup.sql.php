@@ -6,14 +6,14 @@ $ddbb_mapping = array();
 $ddbb_types = array();
 $ddbb_sql = array();
 
-$ddbb_mapping['panel_id'] =    "panel_id";
-$ddbb_mapping['group_name'] =  "group_name";
+$ddbb_mapping['panelId'] =    "panel_id";
+$ddbb_mapping['groupName'] =  "group_name";
 
-$ddbb_types['panel_id'] =          "STRING";
-$ddbb_types['group_name'] =    "STRING";
+$ddbb_types['panelId'] =          "STRING";
+$ddbb_types['groupName'] =    "STRING";
 
-$ddbb_sql['panel_id'] = array("PK" => true, "NULLABLE" => false, "LENGTH" => 40);
-$ddbb_sql['group_name'] = array("PK" => true, "NULLABLE" => false, "LENGTH" => 40);
+$ddbb_sql['panelId'] = array("PK" => true, "NULLABLE" => false, "LENGTH" => 40);
+$ddbb_sql['groupName'] = array("PK" => true, "NULLABLE" => false, "LENGTH" => 40);
 
 $ddbb->addConfig("PanelGroup", $ddbb_table, $ddbb_mapping, $ddbb_types, $ddbb_sql);
 ?>

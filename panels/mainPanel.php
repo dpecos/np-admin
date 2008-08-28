@@ -1,7 +1,8 @@
 <?
 $PWD = "../";
 require_once($PWD."include/common.php");
-npadmin_security(array("Administrators"));
+$panelData = npadmin_panel("mainPanel");
+npadmin_security($panelData->getGroups());
 ?>
 
 <?
@@ -22,7 +23,7 @@ function html_head() {
 ?>
 <? require_once($PWD."include/header.php"); ?>
 
-<div class="page_title">NP-Admin Home</div>
+<div class="page_title"><?= $panelData->getTitle() ?></div>
 
 <!--div id="mainTabs" class="yui-navset">
     <ul class="yui-nav">
