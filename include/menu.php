@@ -110,11 +110,17 @@ if ($menu->panelId != null) {
    if ($menu->url != null) { 
       echo "url: \"".npadmin_setting('NP-ADMIN', 'BASE_URL').'/'.$menu->url."\"";
    } else { 
-      echo "url: \"".npadmin_setting('NP-ADMIN', 'BASE_URL').'/'.$menu->panel->getURL()."\"";
+      if (NP_startsWith("http", $menu->panel->getURL()))
+         echo "url: \"".$menu->panel->getURL()."\"";
+      else
+         echo "url: \"".npadmin_setting('NP-ADMIN', 'BASE_URL').'/'.$menu->panel->getURL()."\"";
    }        
 } else if ($menu->url != null) {
    echo "text: \"".$menu->text."\",";
-   echo "url: \"".npadmin_setting('NP-ADMIN', 'BASE_URL').'/'.$menu->url."\"";
+   if (NP_startsWith("http", $menu->url))
+      echo "url: \"".$menu->url."\"";
+   else
+      echo "url: \"".npadmin_setting('NP-ADMIN', 'BASE_URL').'/'.$menu->url."\"";
 } else { 
 ?>
 text: "<?= $menu->text ?>",
