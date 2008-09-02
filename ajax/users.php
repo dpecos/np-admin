@@ -54,25 +54,15 @@ if (array_key_exists("op", $_POST) && ($_POST['op'] == "login" || $_POST['op'] =
       
    } else if ($_POST['op'] == "listAssignedGroups") {
       $groups = array();
-
-      function createGroupList($group) {
-         global $groups;
-         $groups[] = $group;
-      }
-
-      $ddbb->executeSelectQuery("SELECT g.group_name AS group_name FROM ".$ddbb->getTable("User")." u, ".$ddbb->getTable("Group")." g, ".$ddbb->getTable("UserGroup")." ug WHERE u.user = ug.user AND ug.group_name = g.group_name AND u.user = '".$_POST['user']."' ORDER BY 1" , "createGroupList");
+      
+      $groups = $ddbb->executeSelectQuery("SELECT g.".$ddbb->getMapping('Group','groupName')." AS group_name FROM ".$ddbb->getTable("User")." u, ".$ddbb->getTable("Group")." g, ".$ddbb->getTable("UserGroup")." ug WHERE u.".$ddbb->getMapping('User','user')." = ug.".$ddbb->getMapping('UserGroup','user')." AND ug.".$ddbb->getMapping('UserGroup','groupName')." = g.".$ddbb->getMapping('Group','groupName')." AND u.".$ddbb->getMapping('User','user')." = '".$_POST['user']."' ORDER BY 1");
 
       echo NP_json_encode($groups);
 
    } else if ($_POST['op'] == "listUnassignedGroups") {
       $groups = array();
-
-      function createGroupList($group) {
-         global $groups;
-         $groups[] = $group;
-      }
-
-      $ddbb->executeSelectQuery("SELECT group_name FROM ".$ddbb->getTable("Group")." WHERE group_name NOT IN (SELECT g.group_name AS group_name FROM ".$ddbb->getTable("User")." u, ".$ddbb->getTable("Group")." g, ".$ddbb->getTable("UserGroup")." ug WHERE u.user = ug.user AND ug.group_name = g.group_name AND u.user = '".$_POST['user']."') ORDER BY 1" , "createGroupList");
+      
+      $groups = $ddbb->executeSelectQuery("SELECT ".$ddbb->getMapping('Group','groupName')." FROM ".$ddbb->getTable("Group")." WHERE ".$ddbb->getMapping('Group','groupName')." NOT IN (SELECT g.".$ddbb->getMapping('Group','groupName')." AS group_name FROM ".$ddbb->getTable("User")." u, ".$ddbb->getTable("Group")." g, ".$ddbb->getTable("UserGroup")." ug WHERE u.".$ddbb->getMapping('User','user')." = ug.".$ddbb->getMapping('UserGroup','user')." AND ug.".$ddbb->getMapping('UserGroup','groupName')." = g.".$ddbb->getMapping('Group','groupName')." AND u.".$ddbb->getMapping('User','user')." = '".$_POST['user']."') ORDER BY 1");
 
       echo NP_json_encode($groups);
       

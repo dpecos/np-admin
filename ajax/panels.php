@@ -37,6 +37,36 @@ if (array_key_exists("op", $_POST)) {
       }
       echo "OK";
       
+   } else if ($_POST['op'] == "listAssignedGroups") {
+      $groups = array();
+
+      $groups = $ddbb->executeSelectQuery("SELECT g.group_name AS group_name FROM ".$ddbb->getTable("Panel")." p, ".$ddbb->getTable("Group")." g, ".$ddbb->getTable("PanelGroup")." pg WHERE p.id = pg.panel_id AND pg.group_name = g.group_name AND p.id = '".$_POST['panel']."' ORDER BY 1");
+
+      echo NP_json_encode($groups);
+
+   } else if ($_POST['op'] == "listUnassignedGroups") {
+      $groups = array();
+
+      $groups = $ddbb->executeSelectQuery("SELECT group_name FROM ".$ddbb->getTable("Group")." WHERE group_name NOT IN (SELECT g.group_name AS group_name FROM ".$ddbb->getTable("Panel")." p, ".$ddbb->getTable("Group")." g, ".$ddbb->getTable("PanelGroup")." pg WHERE p.id = pg.panel_id AND pg.group_name = g.group_name AND p.id = '".$_POST['panel']."') ORDER BY 1");
+
+      echo NP_json_encode($groups);
+      
+   } else if ($_POST['op'] == "assignGroups") {
+      $panel = $_POST['panel'];   
+      $groups = split(",", $_POST['list']);
+      
+      $sql = "DELETE FROM ".$ddbb->getTable('PanelGroup')." WHERE ".$ddbb->getMapping('PanelGroup','panelId')." = ".NP_DDBB::encodeSQLValue($panel, $ddbb->getType('PanelGroup','panelId')); 
+      $ddbb->executeDeleteQuery($sql);
+      
+      foreach ($groups as $group_name) {
+         if ($group_name != "") {
+            $pg = new PanelGroup(array("group_name" => $group_name, "panel_id" => $panel));
+            $pg->store();
+         }
+      }
+      
+      echo "OK";
+
    } else if ($_POST['op'] == "list" || $_GET['op'] == "list") {
       $returnList = true;
    }

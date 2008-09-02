@@ -1,7 +1,7 @@
 <?
 $PWD = "../";
 require_once($PWD."include/common.php");
-$panelData = npadmin_panel("panelName");
+$panelData = npadmin_panel("phpInfoPanel");
 npadmin_security($panelData->getGroups());
 ?>
 
@@ -31,11 +31,11 @@ function html_head() {
 
 <div id="mainTabs" class="yui-navset">
     <ul class="yui-nav">
-        <li class="selected"><a href="#"><em>Tab 1</em></a></li>
+        <li class="selected"><a href="#"><em>PHP</em></a></li>
     </ul>            
     <div class="yui-content">
         <div>
-           
+           <? phpinfo(); ?>
         </div>
     </div>
 </div>

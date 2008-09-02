@@ -47,27 +47,30 @@ $data = array (
       array('id' => 7, 'parent_id' => 6, 'order' => 0, 'text' => 'NP-Admin settings', 'url' => 'panels/settingsPanel.php', 'panel_id'=>'settingsPanel'),
       array('id' => 8, 'parent_id' => 2, 'order' => 2),
       array('id' => 9, 'parent_id' => 2, 'order' => 3, 'text' => 'Panels', 'url' => 'panels/panelPanel.php', 'panel_id' => 'panelPanel'),
+      array('id' => 10, 'parent_id' => 6, 'order' => 1, 'url' => 'panels/phpInfoPanel.php', 'panel_id' => 'phpInfoPanel'),
    ),
    'MenuGroup' => array(
       array('menu_id' => 2, 'group_name' => 'Administrators'),
       array('menu_id' => 6, 'group_name' => 'Administrators'),
-      array('menu_id' => 8, 'group_name' => 'Administrators')
+      array('menu_id' => 8, 'group_name' => 'Administrators'),
    ),
    'Panel' => array(
-      ('id' => 'mainPanel', 'title' => 'NP-Admin Home'),
-      ('id' => 'userPanel', 'title' => 'User administration'),
-      ('id' => 'groupPanel', 'title' => 'Group administration'),
-      ('id' => 'menuPanel', 'title' => 'Menu administration'),
-      ('id' => 'settingsPanel', 'title' => 'Settings administration'),
-      ('id' => 'panelPanel', 'title' => 'Panels administration')
+      array('id' => 'mainPanel', 'title' => 'NP-Admin Home'),
+      array('id' => 'userPanel', 'title' => 'User administration'),
+      array('id' => 'groupPanel', 'title' => 'Group administration'),
+      array('id' => 'menuPanel', 'title' => 'Menu administration'),
+      array('id' => 'settingsPanel', 'title' => 'Settings administration'),
+      array('id' => 'panelPanel', 'title' => 'Panels administration'),
+      array('id' => 'phpInfoPanel', 'title' => 'PHP Info'),
    ),   
    'PanelGroup' => array(
-      ('panel_id' => 'groupPanel', 'group_name' => 'Administrators'),
-      ('panel_id' => 'mainPanel', 'group_name' => 'Administrators'),
-      ('panel_id' => 'menuPanel', 'group_name' => 'Administrators'),
-      ('panel_id' => 'panelPanel', 'group_name' => 'Administrators'),
-      ('panel_id' => 'settingsPanel', 'group_name' => 'Administrators'),
-      ('panel_id' => 'userPanel', 'group_name' => 'Administrators')
+      array('panel_id' => 'groupPanel', 'group_name' => 'Administrators'),
+      array('panel_id' => 'mainPanel', 'group_name' => 'Administrators'),
+      array('panel_id' => 'menuPanel', 'group_name' => 'Administrators'),
+      array('panel_id' => 'panelPanel', 'group_name' => 'Administrators'),
+      array('panel_id' => 'settingsPanel', 'group_name' => 'Administrators'),
+      array('panel_id' => 'userPanel', 'group_name' => 'Administrators'),
+      array('panel_id' => 'phpInfoPanel', 'group_name' => 'Administrators'),
    )
 );
 ?>
@@ -136,7 +139,7 @@ if (isset($_POST) && count($_POST) > 1) {
          }
       }
       echo "Done <br/>\n";
-      echo "<br/>Installation succeed! Now you can <a href='settingsPanel.php'>login and edit configuration</a> with user <b>admin</b> and password <b>admin</b>.\n";
+      echo "<br/>Installation succeed! Now you can <a href='../panels/settingsPanel.php'>login and edit configuration</a> with user <b>admin</b> and password <b>admin</b>.\n";
    
    } else if ($_POST['op'] === "upgrade") {
       $ddbb = $ddbb_back;
@@ -163,7 +166,7 @@ if (isset($_POST) && count($_POST) > 1) {
          }
       }
       echo "Done <br/>\n";
-      echo "<br/>Upgrade succeed! Now you can <a href='settingsPanel.php'>login and edit configuration</a> with your already configure users.\n";
+      echo "<br/>Upgrade succeed! Now you can <a href='../panels/settingsPanel.php'>login and edit configuration</a> with your already configure users.\n";
    }
 } else {
 ?>

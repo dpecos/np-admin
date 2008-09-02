@@ -403,12 +403,13 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
 
 
    function populateGroupsLists(p_sType, p_aArgs, p_oItem) {
-      user = p_oItem.cfg.getProperty("text");
-      recoverDataGroupsLists(user);
+      user = p_oItem.value;
+      user_name = p_oItem.cfg.getProperty("text");
+      recoverDataGroupsLists(user, user_name);
    }
    
-   function recoverDataGroupsLists(user) {
-      user_list.set("label", user);
+   function recoverDataGroupsLists(user, user_name) {
+      user_list.set("label", user_name);
 
       emptyList("unassigned_groups");
       emptyList("assigned_groups");
@@ -473,7 +474,7 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
 <div id="mainTabs" class="yui-navset">
     <ul class="yui-nav">
         <li class="selected"><a href="#"><em>List of users</em></a></li>
-        <li><a href="#"><em>User's groups</em></a></li>
+        <li><a href="#"><em>Users' groups</em></a></li>
     </ul>            
     <div class="yui-content">
         <div>
