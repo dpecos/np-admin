@@ -178,8 +178,9 @@ li.li_assigned_groups {
                          break;
                      case 1:
                          var oRecord = p_myDataTable.getRecord(elRow);
-                         var panel = oRecord.getData("panel");
-                         recoverDataGroupsLists(panel);
+                         var panel = oRecord.getData("id");
+                         var panel_title = oRecord.getData("title");
+                         recoverDataGroupsLists(panel, panel_title);
                          tabView.set("activeTab",tabView.getTab(1));
                          break;
                  }
@@ -278,12 +279,24 @@ li.li_assigned_groups {
    }
    
    function populateGroupsLists(p_sType, p_aArgs, p_oItem) {
-      panel_id = p_oItem.value;
-      panel_text = p_oItem.cfg.getProperty("text");
+      if (p_oItem != null) {
+         panel_id = p_oItem.value;
+         panel_text = p_oItem.cfg.getProperty("text");
+      } else {
+         panel_id = p_sType;
+         panel_text = p_aArgs;
+      }
       recoverDataGroupsLists(panel_id, panel_text);
    }
    
    function recoverDataGroupsLists(panel_id, panel_text) {
+      for (itemIdx in panel_list.getMenu().getItems()) {
+         var item = panel_list.getMenu().getItem(parseInt(itemIdx));
+         if (item.value == panel_id) {
+            panel_list.getMenu().activeItem = item 
+            break;
+         }
+      }
       panel_list.set("label", panel_text);
 
       emptyList("unassigned_groups");
@@ -313,8 +326,9 @@ li.li_assigned_groups {
    }
    
    function assignGroups() {
-      var panel = panel_list.getMenu().activeItem.value;
-      if (panel != "Select panel") {
+      if (panel_list.getMenu().activeItem != null) {
+         var panel = panel_list.getMenu().activeItem.value;
+
          var parseList = function(listName) {
               ul = YAHOO.util.Dom.get(listName)
               var items = ul.getElementsByTagName("li");

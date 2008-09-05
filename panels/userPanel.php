@@ -131,7 +131,7 @@ li.li_assigned_groups {
          for (id in oParsedResponse.results) {
             var user = oParsedResponse.results[id];
             if (typeof(user) != "function")
-               user_list.getMenu().addItem({ text: user.user, value: user.user, onclick: { fn: populateGroupsLists } });
+               user_list.getMenu().addItem({ text: user.real_name, value: user.user, onclick: { fn: populateGroupsLists } });
          }
          user_list.getMenu().render(document.body);
          return oParsedResponse;
@@ -185,7 +185,8 @@ li.li_assigned_groups {
                      case 1:
                          var oRecord = p_myDataTable.getRecord(elRow);
                          var user = oRecord.getData("user");
-                         recoverDataGroupsLists(user);
+                         var user_name = oRecord.getData("real_name");
+                         recoverDataGroupsLists(user, user_name);
                          tabView.set("activeTab",tabView.getTab(1));
                          break;
                  }
@@ -403,14 +404,26 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
 
 
    function populateGroupsLists(p_sType, p_aArgs, p_oItem) {
-      user = p_oItem.value;
-      user_name = p_oItem.cfg.getProperty("text");
+      if (p_oItem != null) {
+         user = p_oItem.value;
+         user_name = p_oItem.cfg.getProperty("text");
+      } else {
+         user = p_sType;
+         user_name = p_aArgs;
+      }
       recoverDataGroupsLists(user, user_name);
    }
    
    function recoverDataGroupsLists(user, user_name) {
+      for (itemIdx in user_list.getMenu().getItems()) {
+         var item = user_list.getMenu().getItem(parseInt(itemIdx));
+         if (item.value == user) {
+            user_list.getMenu().activeItem = item 
+            break;
+         }
+      }
       user_list.set("label", user_name);
-
+      
       emptyList("unassigned_groups");
       emptyList("assigned_groups");
       var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/users.php", {success:groupListCallback, argument:["unassigned_groups"]}, "op=listUnassignedGroups&user="+user);
@@ -438,8 +451,9 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
    }
    
    function assignGroups() {
-      var user = user_list.get("label");
-      if (user != "Select user") {
+      if (user_list.getMenu().activeItem != null) {
+         var user = user_list.getMenu().activeItem.value;
+ 
          var parseList = function(listName) {
               ul = YAHOO.util.Dom.get(listName)
               var items = ul.getElementsByTagName("li");
