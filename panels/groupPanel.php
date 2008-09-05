@@ -211,8 +211,8 @@ function html_head() {
      <div class="bd">
         <form id="group_form">
            <table >
-              <tr><td>Group name:</td><td><input type="text" name="group_name"</td><tr>
-              <tr><td>Description:</td><td><input type="text" name="description"</td><tr>
+              <tr><td>Group name:</td><td><input type="text" name="group_name"/></td><tr>
+              <tr><td>Description:</td><td><input type="text" name="description"/></td><tr>
               <input type="hidden" name="op" value="add"/>
            </table>
         </form>

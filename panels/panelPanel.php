@@ -507,8 +507,8 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
      <div class="bd">
         <form id="panel_form">
            <table >
-              <tr><td>ID:</td><td><input type="text" name="id"</td><tr>
-              <tr><td>Title:</td><td><input type="text" name="title"</td><tr>
+              <tr><td>ID:</td><td><input type="text" name="id"/></td><tr>
+              <tr><td>Title:</td><td><input type="text" name="title"/></td><tr>
               <input type="hidden" name="op" value="add"/>
            </table>
         </form>

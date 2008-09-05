@@ -311,10 +311,10 @@ function html_head() {
      <div class="bd">
         <form id="setting_form">
            <table >
-              <tr><td>Type:</td><td><input type="text" name="type"</td><tr>               
-              <tr><td>Name:</td><td><input type="text" name="name"</td>
-              <tr><td>Default value:</td><td><input type="text" name="default_value"</td><tr>
-              <tr><td>Value:</td><td><input type="text" name="value"</td><tr>
+              <tr><td>Type:</td><td><input type="text" name="type"/></td><tr>               
+              <tr><td>Name:</td><td><input type="text" name="name"/></td>
+              <tr><td>Default value:</td><td><input type="text" name="default_value"/></td><tr>
+              <tr><td>Value:</td><td><input type="text" name="value"/></td><tr>
               <input type="hidden" name="op" value="add"/>
            </table>
         </form>
