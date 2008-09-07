@@ -19,11 +19,12 @@ foreach ($_POST as $k => $v) {
 
 if (array_key_exists("op", $_POST)) {
    if ($_POST['op'] == "add") {
-      $group = new Group($_POST);
+      print_r($_POST);
+      /*$group = new Menu($_POST);
       if ($group->store())
          echo "OK";
       else 
-         echo "ERROR";
+         echo "ERROR";*/
    
    } else if ($_POST['op'] == "delete") {
       $list = split(",", $_POST['list']);

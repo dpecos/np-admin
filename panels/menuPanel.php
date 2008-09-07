@@ -10,13 +10,7 @@ function html_head() {
 ?>
 
 <style type="text/css">
-#group_form_table td {
-   padding: 3px;
-}
 
-#group_datatable {
-   margin-bottom: 10px;
-}
 
 .yui-button#addMenuButton button {
    padding-left: 2em;
@@ -86,14 +80,17 @@ function html_head() {
 	   addMenuDialog.setHeader("Add menu");
 	   
 	   menuType = new YAHOO.widget.ButtonGroup("buttonmenu_type");
-	   panelId = new YAHOO.widget.Button("panel_id", {
+	   
+	   panelId = new YAHOO.widget.Button("panel_id_yui", {
             type: "menu",  
-            menu: "panel_id_select"
+            menu: "panel_id_select",
       });
-      parentId = new YAHOO.widget.Button("parent_id", {
+      panelId.set("label", "Select panel...");
+      parentId = new YAHOO.widget.Button("parent_id_yui", {
             type: "menu",  
             menu: "parent_id_select"
       });
+      parentId.set("label", "Select parent menu...");
       
       var postdata = "op=list";
       var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/menus.php", {success:menuListCallback}, postdata);
@@ -103,6 +100,7 @@ function html_head() {
             menu: "group_list_select"
       }); 
       var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/groups.php", {success:groupListCallback}, postdata);
+      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/panels.php", {success:panelListCallback}, postdata);
    });
    
    function showNewMenuDialog() {
@@ -110,38 +108,58 @@ function html_head() {
       addMenuDialog.show();
    }
    
-   function addMenu() {/*
-      var formObject = document.getElementById('group_form');
-      if (formObject.group_name.value.trim().length == 0)
+   function addMenu() {
+      var formObject = document.getElementById('menu_form');
+      formObject.panel_id.value = panelId.getMenu().activeItem.value;
+      formObject.parent_id.value = parentId.getMenu().activeItem.value;      
+      
+      /*if (formObject.group_name.value.trim().length == 0)
          box_block("groupadd_block", "All the required fields have to be filled");
-      else {
+      else {*/
          YAHOO.util.Connect.setForm(formObject); 
-         var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/groups.php", {success:addGroupCallback});
-      }*/
+         var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/menus.php", {success:addMenuCallback});
+      //}
+   }
+   
+   function addMenuCallback(response) {
+      
+      if (response.responseText.trim() == "OK") {
+         addMenuDialog.hide();
+         box_info("menuadd_result", "Menu added correctly!");
+        
+         var formObject = document.getElementById('group_form');
+         formObject.reset();
+
+         var postdata = "op=list";
+         var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/menus.php", {success:menuListCallback}, postdata);
+      } else {
+         box_error("menuadd_result", response.responseText);
+      }
    }
    
    function buildMenu(menu, root, menus) {
       var nodeData;
+            
       
-      if (root == tree.getRoot()) {
-         panelId.getMenu().clearContent();
-         parentId.getMenu().clearContent();
-         parentId.getMenu().addItem({ text: "ROOT", value: 0});
-      }
-      
-      if (menu.text == null)
-         nodeData = {label : "---", title: "Separator"};
-      else {
-         if (menu.panel == null) {
-            if (menu.url != null)
-               nodeData = {label : menu.text, title : "URL &laquo;" + menu.url + "&raquo;"};
-            else
+      if (menu.panel == null) {
+         if (menu.url != null)
+            nodeData = {label : menu.text, title : "URL &laquo;" + menu.url + "&raquo;"};
+         else {
+            if (menu.text == null)
+               nodeData = {label : "---", title: "Separator"};
+            else {
                nodeData = {label : menu.text, title : "Menu"};
-         } else {
-            nodeData = {label : menu.text, title : "Panel &laquo;" + menu.text + "&raquo;"};
+               parentId.getMenu().addItem({text: menu.text, value: menu.id, onclick: {fn: parentMenuClick}});
+            }
          }
-         parentId.getMenu().addItem({ text: menu.text, value: menu.id});
+      } else {
+         if (menu.text != null)
+            nodeData = {label : menu.text, title : "Panel &laquo;" + menu.panel.title + "&raquo;"};
+         else
+            nodeData = {label : menu.panel.title, title : "Panel &laquo;" + menu.panel.title + "&raquo;"};
       }
+         
+     
          
       var tmpNode = new YAHOO.widget.MenuNode(nodeData, root, false);
       tmpNode.isLeaf = (menu.text == null || menu.url != null);
@@ -155,11 +173,12 @@ function html_head() {
             buildMenu(submenu, tmpNode, menus);
          }
       }
-      
-      if (root == tree.getRoot()) {
-         panelId.getMenu().render(document.body);
-         parentId.getMenu().render(document.body);
-      }
+  
+   }
+   
+   function parentMenuClick(p_sType, p_aArgs, p_oItem) {
+      var menu = p_oItem.cfg.getProperty("text");
+      parentId.set("label", menu);
    }
    
    function menuListCallback(response) {
@@ -167,12 +186,17 @@ function html_head() {
        
       var menus = YAHOO.lang.JSON.parse(response.responseText);
 
+      parentId.getMenu().clearContent();
+      parentId.getMenu().addItem({ text: "ROOT", value: 0, onclick: {fn: parentMenuClick}});
+
       for (id in menus["menu_0"]) {
          if (typeof(menus["menu_0"][id]) != "function") {
             menu = menus["menu_0"][id];
             buildMenu(menu, tree.getRoot(), menus);
          }
       } 
+      
+      parentId.getMenu().render(document.body);
       
       new YAHOO.widget.Tooltip("tooltip", {context: contextElements});
       
@@ -190,6 +214,25 @@ function html_head() {
       }
       
       group_list.getMenu().render(document.body);
+   }
+   
+   function panelListCallback(response) {
+      var panels = YAHOO.lang.JSON.parse(response.responseText);
+      
+      panelId.getMenu().clearContent();
+      
+      for (idx in panels) {
+          var panel = panels[idx];
+          if (typeof(panel) != "function")
+            panelId.getMenu().addItem({text: panel.title, value: panel.id, onclick: {fn:panelMenuClick}});
+      }
+      
+      panelId.getMenu().render(document.body);
+   }
+      
+   function panelMenuClick(p_sType, p_aArgs, p_oItem) {
+      var panel = p_oItem.cfg.getProperty("text");
+      panelId.set("label", panel);
    }
       
    function filterMenus(p_sType, p_aArgs, p_oItem) {
@@ -249,22 +292,26 @@ function html_head() {
                   <td width="35%">Type:</td>
                   <td width="65%">
                      <div id="buttonmenu_type" class="yui-buttongroup">
-                        <input id="menuTypePanel" type="radio" name="menu_type" value="Panel">
-                        <input id="menuTypeURL" type="radio" name="menu_type" value="URL">
+                        <input type="radio" name="menu_type" value="Menu">
+                        <input type="radio" name="menu_type" value="Panel">
+                        <input type="radio" name="menu_type" value="URL">
                      </div>
                   </td>
               <tr>
               <tr>
                   <td>Panel:</td>
-                  <td><input type="button" id="panel_id" name="panel_id"/><select id="panel_id_select" name="panel_id_select"></select></td>
+                  <td><input type="button" id="panel_id_yui" name="panelId"/><select id="panel_id_select" name="panel_id_select"></select></td>
               <tr>
               <tr><td>URL:</td><td><input type="text" name="url"/></td><tr>
               <tr>
                   <td>Parent Menu:</td>
-                  <td><input type="button" id="parent_id" name="parent_id"/><select id="parent_id_select" name="parent_id_select"></select></td>
+                  <td><input type="button" id="parent_id_yui" name="parentId"/><select id="parent_id_select" name="parent_id_select"></select></td>
               <tr>
+              <tr><td>Order:</td><td><input type="text" name="order" value="0"/></td><tr>
               <tr><td>Text:</td><td><input type="text" name="text"/></td><tr>
               <input type="hidden" name="op" value="add"/>
+              <input type="hidden" name="panel_id"/>
+              <input type="hidden" name="parent_id"/>
            </table>
         </form>
      </div>
