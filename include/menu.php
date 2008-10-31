@@ -117,9 +117,10 @@ if ($menu->panelId != null) {
    }        
 } else if ($menu->url != null) {
    echo "text: \"".$menu->text."\",";
-   if (NP_startsWith("http", $menu->url))
-      echo "url: \"".$menu->url."\"";
-   else
+   if (NP_startsWith("http", $menu->url)) {
+      echo "url: \"".$menu->url."\",";
+      echo "target: \"_new\"";
+   } else
       echo "url: \"".npadmin_setting('NP-ADMIN', 'BASE_URL').'/'.$menu->url."\"";
 } else { 
 ?>
