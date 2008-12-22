@@ -1,6 +1,6 @@
 <?
-$PWD = "../";
-require_once($PWD."include/common.php");
+$NPADMIN_PATH = "../";
+require_once($NPADMIN_PATH."include/common.php");
 
 header("Cache-Control: no-cache");
 header("Pragma: no-cache");

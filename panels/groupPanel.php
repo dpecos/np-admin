@@ -1,13 +1,13 @@
 <?
-$PWD = "../";
-require_once($PWD."include/common.php");
+$NPADMIN_PATH = "../";
+require_once($NPADMIN_PATH."include/common.php");
 $panelData = npadmin_panel("groupPanel");
 npadmin_security($panelData->getGroups());
 ?>
 
 <?
 function html_head() {
-   global $PWD;
+   global $NPADMIN_PATH;
 ?>
 
 <style type="text/css">
@@ -15,6 +15,10 @@ function html_head() {
    padding: 3px;
 }
 
+#users_form_table {
+   margin-top: 5px;
+   margin-bottom: 5px;
+}
 #group_datatable {
    margin-bottom: 10px;
 }
@@ -30,12 +34,67 @@ function html_head() {
 }
 </style>
 
+<style type="text/css">
+
+ul.draglist { 
+    position: relative;
+    width: 200px; 
+    height:240px;
+    background: #f7f7f7;
+    border: 1px solid gray;
+    list-style: none;
+    margin:0;
+    margin-right: 10px;
+    padding:0;
+}
+
+ul.draglist li {
+    margin: 1px;
+    cursor: move; 
+}
+
+ul.draglist_alt { 
+    position: relative;
+    width: 200px; 
+    list-style: none;
+    margin:0;
+    padding:0;
+    /*
+       The bottom padding provides the cushion that makes the empty 
+       list targetable.  Alternatively, we could leave the padding 
+       off by default, adding it when we detect that the list is empty.
+    */
+    padding-bottom:20px;
+}
+
+ul.draglist_alt li {
+    margin: 1px;
+    cursor: move; 
+}
+
+li.li_unassigned_users {
+    background-color: #D1E6EC;
+    border:1px solid #7EA6B2;
+}
+
+li.li_assigned_users {
+    background-color: #D8D4E2;
+    border:1px solid #6B4C86;
+}
+
+.yui-button#saveUsersButton button {
+   padding-left: 2em;
+   background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/save.gif) 5% 50% no-repeat;
+}
+</style>
+
 <script> 
    var tabView;
    var dataSource;
    var columnDefs;
    var addGroupDialog;
    var groupDatatable;
+   var group_list;
     
    function changeTabEventHandler(e) {
    }
@@ -55,6 +114,20 @@ function html_head() {
       dataSource.connXhrMode = "queueRequests"; 
       dataSource.responseSchema = {
             fields: ["group_name","description"]
+      };
+      dataSource.doBeforeCallback = function(oRequest , oFullResponse , oParsedResponse) {
+         group_list.getMenu().clearContent();
+         group_list.set("label", "Select group");
+         emptyList("unassigned_users");
+         emptyList("assigned_users");
+         
+         for (id in oParsedResponse.results.reverse()) {
+            var group = oParsedResponse.results[id];
+            if (typeof(group) != "function")
+               group_list.getMenu().addItem({ text: group.group_name, value: group.group_name, onclick: { fn: populateUsersLists } });
+         }
+         group_list.getMenu().render(document.body);
+         return oParsedResponse;
       };
 
       groupDatatable = new YAHOO.widget.DataTable("group_datatable", columnDefs, dataSource, {initialRequest:"op=list"});
@@ -103,15 +176,34 @@ function html_head() {
                             deleteGroupsConfirm(oRecord.getData("group_name"));                         
                          });
                          break;
+                     case 1:
+                         var oRecord = p_myDataTable.getRecord(elRow);
+                         var group = oRecord.getData("group_name");
+                         recoverDataUsersLists(group);
+                         tabView.set("activeTab",tabView.getTab(1));
+                         break;                         
                  }
              }
          }
       };
 
       var contextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", { trigger:groupDatatable.getTbodyEl() });
-      contextMenu.addItems(["Delete Item"]);
+      contextMenu.addItems(["Delete Item", "Manage users"]);
       contextMenu.render("group_datatable");
       contextMenu.clickEvent.subscribe(onContextMenuClick, groupDatatable);
+      
+      group_list = new YAHOO.widget.Button("group_list", {
+            type: "menu",  
+            menu: "group_list_select"
+      });    
+      
+      new YAHOO.util.DDTarget("unassigned_users");
+      new YAHOO.util.DDTarget("assigned_users");
+      var saveUsersButton = new YAHOO.widget.Button({ 
+            label:"Save", 
+            id:"saveUsersButton", 
+            container:"users_buttons" });
+      saveUsersButton.on("click", assignUsers);
 
    });
    
@@ -187,21 +279,213 @@ function html_head() {
    }
    
 </script>
+
+<script type="text/javascript">
+DDList = function(id, sGroup, config) {
+    DDList.superclass.constructor.call(this, id, sGroup, config);
+
+    var el = this.getDragEl();
+    YAHOO.util.Dom.setStyle(el, "opacity", 0.67); // The proxy is slightly transparent
+
+    this.goingUp = false;
+    this.lastY = 0;
+};
+
+YAHOO.extend(DDList, YAHOO.util.DDProxy, {
+
+    startDrag: function(x, y) {
+        // make the proxy look like the source element
+        var dragEl = this.getDragEl();
+        var clickEl = this.getEl();
+        YAHOO.util.Dom.setStyle(clickEl, "visibility", "hidden");
+
+        dragEl.innerHTML = clickEl.innerHTML;
+
+        YAHOO.util.Dom.setStyle(dragEl, "color", YAHOO.util.Dom.getStyle(clickEl, "color"));
+        YAHOO.util.Dom.setStyle(dragEl, "backgroundColor", YAHOO.util.Dom.getStyle(clickEl, "backgroundColor"));
+        YAHOO.util.Dom.setStyle(dragEl, "border", "2px solid gray");
+    },
+
+    endDrag: function(e) {
+
+        var srcEl = this.getEl();
+        var proxy = this.getDragEl();
+
+        // Show the proxy element and animate it to the src element's location
+        YAHOO.util.Dom.setStyle(proxy, "visibility", "");
+        var a = new YAHOO.util.Motion( 
+            proxy, { 
+                points: { 
+                    to: YAHOO.util.Dom.getXY(srcEl)
+                }
+            }, 
+            0.2, 
+            YAHOO.util.Easing.easeOut 
+        )
+        var proxyid = proxy.id;
+        var thisid = this.id;
+
+        // Hide the proxy and show the source element when finished with the animation
+        a.onComplete.subscribe(function() {
+                YAHOO.util.Dom.setStyle(proxyid, "visibility", "hidden");
+                YAHOO.util.Dom.setStyle(thisid, "visibility", "");
+            });
+        a.animate();
+    },
+
+    onDragDrop: function(e, id) {
+
+        // If there is one drop interaction, the li was dropped either on the list,
+        // or it was dropped on the current location of the source element.
+        if (YAHOO.util.DragDropMgr.interactionInfo.drop.length === 1) {
+
+            // The position of the cursor at the time of the drop (YAHOO.util.Point)
+            var pt = YAHOO.util.DragDropMgr.interactionInfo.point; 
+
+            // The region occupied by the source element at the time of the drop
+            var region = YAHOO.util.DragDropMgr.interactionInfo.sourceRegion; 
+
+            // Check to see if we are over the source element's location.  We will
+            // append to the bottom of the list once we are sure it was a drop in
+            // the negative space (the area of the list without any list items)
+            if (!region.intersect(pt)) {
+                var destEl = YAHOO.util.Dom.get(id);
+                var destDD = YAHOO.util.DragDropMgr.getDDById(id);
+                destEl.appendChild(this.getEl());
+                destDD.isEmpty = false;
+                YAHOO.util.DragDropMgr.refreshCache();
+            }
+
+        }
+    },
+
+    onDrag: function(e) {
+
+        // Keep track of the direction of the drag for use during onDragOver
+        var y = YAHOO.util.Event.getPageY(e);
+
+        if (y < this.lastY) {
+            this.goingUp = true;
+        } else if (y > this.lastY) {
+            this.goingUp = false;
+        }
+
+        this.lastY = y;
+    },
+
+    onDragOver: function(e, id) {
+    
+        var srcEl = this.getEl();
+        var destEl = YAHOO.util.Dom.get(id);
+
+        // We are only concerned with list items, we ignore the dragover
+        // notifications for the list.
+        if (destEl.nodeName.toLowerCase() == "li") {
+            var orig_p = srcEl.parentNode;
+            var p = destEl.parentNode;
+
+            if (this.goingUp) {
+                p.insertBefore(srcEl, destEl); // insert above
+            } else {
+                p.insertBefore(srcEl, destEl.nextSibling); // insert below
+            }
+
+            YAHOO.util.DragDropMgr.refreshCache();
+        }
+    }
+});
+
+
+   function populateUsersLists(p_sType, p_aArgs, p_oItem) {
+      group = p_oItem.cfg.getProperty("text");
+      recoverDataUsersLists(group);
+   }
+   
+   function recoverDataUsersLists(group) {
+      group_list.set("label", group);
+
+      emptyList("unassigned_users");
+      emptyList("assigned_users");
+      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/groups.php", {success:userListCallback, argument:["unassigned_users"]}, "op=listUnassignedUsers&group_name="+group);
+      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/groups.php", {success:userListCallback, argument:["assigned_users"]}, "op=listAssignedUsers&group_name="+group);   
+   }
+   
+   function userListCallback(response) {
+      var listId = response.argument[0];
+      
+      usersList = document.getElementById(listId);
+      
+      data = YAHOO.lang.JSON.parse(response.responseText);
+
+      for(id in data) {
+         user = data[id];
+         if (typeof(user) != "function") {
+            var user_element = document.createElement('li');
+            user_element.innerHTML = user.user;
+            user_element.setAttribute("id", listId + "_" + user.user);
+            user_element.className = "li_" + listId;
+            usersList.appendChild(user_element);
+            new DDList(listId + "_" + user.user);
+         }
+      }   
+   }
+   
+   function assignUsers() {
+      var group = group_list.get("label");
+      if (group != "Select group") {
+         var parseList = function(listName) {
+              ul = YAHOO.util.Dom.get(listName)
+              var items = ul.getElementsByTagName("li");
+              var list = "";
+              for (i=0; i<items.length; i=i+1) {
+                  list += items[i].innerHTML + ",";
+              }
+              list = list.substring(0, list.length - 1);
+              return list;
+          };
+
+          var list = parseList("assigned_users");
+          var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/groups.php", {success:assignUsersCallback, argument:[group]}, "op=assignUsers&group_name="+group+"&list="+list);
+       }
+   }
+
+   function assignUsersCallback(response) {
+      var group_name = response.argument[0];
+      box_info("user_users_info", "Groups configuration saved correctly!");
+      recoverDataUsersLists(group_name);
+   }  
+</script>
+
 <?
 }
 ?>
-<? require_once($PWD."include/header.php"); ?>
+<? require_once($NPADMIN_PATH."include/header.php"); ?>
 
 <div class="page_title"><?= $panelData->getTitle() ?></div>
 
 <div id="mainTabs" class="yui-navset">
     <ul class="yui-nav">
         <li class="selected"><a href="#"><em>List of groups</em></a></li>
+        <li><a href="#"><em>Group's users</em></a></li>
     </ul>            
     <div class="yui-content">
         <div>
            <div id="group_datatable"></div>
-           <div id="group_buttons"/>
+           <div id="group_buttons"></div>
+        </div>
+        <div>  
+           Group: <input type="button" id="group_list" name="group_list" value="Select group"/>
+           <select id="group_list_select" name="group_list_select"></select>
+           <table id="users_form_table">
+              <tr><td>
+                 <h3>Unassigned users</h3>
+                 <ul id="unassigned_users" class="draglist"></ul>
+              </td><td>
+                 <h3>Assigned users</h3>
+                 <ul id="assigned_users" class="draglist"></ul>
+              </td></tr>
+           </table>
+           <div id="users_buttons"/>
         </div>
     </div>
 </div>
@@ -221,4 +505,4 @@ function html_head() {
 </div> 
         
 
-<? require_once($PWD."include/footer.php"); ?>
+<? require_once($NPADMIN_PATH."include/footer.php"); ?>

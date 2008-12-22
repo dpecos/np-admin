@@ -1,13 +1,13 @@
 <?
-$PWD = "../";
-require_once($PWD."include/common.php");
+$NPADMIN_PATH = "../";
+require_once($NPADMIN_PATH."include/common.php");
 $panelData = npadmin_panel("userPanel");
 npadmin_security($panelData->getGroups());
 ?>
 
 <?
 function html_head() {
-   global $PWD;
+   global $NPADMIN_PATH;
 ?>
 
 <style type="text/css">
@@ -128,12 +128,13 @@ li.li_assigned_groups {
          emptyList("unassigned_groups");
          emptyList("assigned_groups");
          
-         for (id in oParsedResponse.results) {
+         for (id in oParsedResponse.results.reverse()) {
             var user = oParsedResponse.results[id];
             if (typeof(user) != "function")
-               user_list.getMenu().addItem({ text: user.real_name, value: user.user, onclick: { fn: populateGroupsLists } });
+               user_list.getMenu().addItem({ text: user.user, value: user.user, onclick: { fn: populateGroupsLists } });
          }
          user_list.getMenu().render(document.body);
+	      oParsedResponse.results.reverse();
          return oParsedResponse;
       };
 
@@ -185,8 +186,7 @@ li.li_assigned_groups {
                      case 1:
                          var oRecord = p_myDataTable.getRecord(elRow);
                          var user = oRecord.getData("user");
-                         var user_name = oRecord.getData("real_name");
-                         recoverDataGroupsLists(user, user_name);
+                         recoverDataGroupsLists(user);
                          tabView.set("activeTab",tabView.getTab(1));
                          break;
                  }
@@ -404,26 +404,13 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
 
 
    function populateGroupsLists(p_sType, p_aArgs, p_oItem) {
-      if (p_oItem != null) {
-         user = p_oItem.value;
-         user_name = p_oItem.cfg.getProperty("text");
-      } else {
-         user = p_sType;
-         user_name = p_aArgs;
-      }
-      recoverDataGroupsLists(user, user_name);
+      user = p_oItem.cfg.getProperty("text");
+      recoverDataGroupsLists(user);
    }
    
-   function recoverDataGroupsLists(user, user_name) {
-      for (itemIdx in user_list.getMenu().getItems()) {
-         var item = user_list.getMenu().getItem(parseInt(itemIdx));
-         if (item.value == user) {
-            user_list.getMenu().activeItem = item 
-            break;
-         }
-      }
-      user_list.set("label", user_name);
-      
+   function recoverDataGroupsLists(user) {
+      user_list.set("label", user);
+
       emptyList("unassigned_groups");
       emptyList("assigned_groups");
       var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/users.php", {success:groupListCallback, argument:["unassigned_groups"]}, "op=listUnassignedGroups&user="+user);
@@ -451,9 +438,8 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
    }
    
    function assignGroups() {
-      if (user_list.getMenu().activeItem != null) {
-         var user = user_list.getMenu().activeItem.value;
- 
+      var user = user_list.get("label");
+      if (user != "Select user") {
          var parseList = function(listName) {
               ul = YAHOO.util.Dom.get(listName)
               var items = ul.getElementsByTagName("li");
@@ -470,7 +456,7 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
        }
    }
 
-   function assignGroupsCallback(response, user) {
+   function assignGroupsCallback(response) {
       var user = response.argument[0];
       box_info("user_groups_info", "Groups configuration saved correctly!");
       recoverDataGroupsLists(user);
@@ -480,7 +466,7 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
 <?
 } // html_head();
 ?>
-<? require_once($PWD."include/header.php"); ?>
+<? require_once($NPADMIN_PATH."include/header.php"); ?>
 
 
 <div class="page_title"><?= $panelData->getTitle() ?></div>
@@ -488,7 +474,7 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
 <div id="mainTabs" class="yui-navset">
     <ul class="yui-nav">
         <li class="selected"><a href="#"><em>List of users</em></a></li>
-        <li><a href="#"><em>Users' groups</em></a></li>
+        <li><a href="#"><em>User's groups</em></a></li>
     </ul>            
     <div class="yui-content">
         <div>
@@ -528,4 +514,4 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
    </div>
 </div>
 
-<? require_once($PWD."include/footer.php"); ?>
+<? require_once($NPADMIN_PATH."include/footer.php"); ?>

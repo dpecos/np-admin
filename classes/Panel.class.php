@@ -1,4 +1,10 @@
 <?
+global $ddbb;
+
+$ddbb->addTable("Panel", "panels");
+$ddbb->addField("Panel", "id", null, "STRING", array("PK" => true, "NULLABLE" => false, "LENGTH" => 40));
+$ddbb->addField("Panel", "title", null, "STRING", array("NULLABLE" => false, "LENGTH" => 60));
+
 class Panel {
    
    public function __construct($panel = null) {

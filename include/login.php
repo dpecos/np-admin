@@ -1,5 +1,5 @@
 <?
-$PWD = "../";
+$NPADMIN_PATH = "../";
 ?>
 <html>
    <head>

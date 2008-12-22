@@ -1,4 +1,13 @@
 <?php
+global $ddbb;
+
+$ddbb->addTable("Menu", "menus");
+$ddbb->addField("Menu", "id", null, "INT", array("PK" => true, "NULLABLE" => false, "LENGTH" => 11, "AUTO_INCREMENT" => true));
+$ddbb->addField("Menu", "parentId", "parent_id", "INT", array("NULLABLE" => false, "LENGTH" => 11, "DEFAULT" => 0));
+$ddbb->addField("Menu", "order", null, "INT", array("NULLABLE" => false, "LENGTH" => 11, "DEFAULT" => 0));
+$ddbb->addField("Menu", "text", null, "STRING", array("NULLABLE" => true, "LENGTH" => 60, "DEFAULT" => NULL));
+$ddbb->addField("Menu", "url", null, "STRING", array("NULLABLE" => true, "LENGTH" => 100, "DEFAULT" => NULL));
+$ddbb->addField("Menu", "panelId", "panel_id", "STRING", array("NULLABLE" => true, "LENGTH" => 40, "DEFAULT" => NULL));
 
 class Menu {
    public function __construct($data = null) {     

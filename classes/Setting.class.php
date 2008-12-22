@@ -1,4 +1,11 @@
 <?php
+global $ddbb;
+
+$ddbb->addTable("Setting", "settings");
+$ddbb->addField("Setting", "name", null, "STRING", array("PK" => true, "NULLABLE" => false, "LENGTH" => 60));
+$ddbb->addField("Setting", "type", null, "STRING", array("PK" => true, "NULLABLE" => false, "LENGTH" => 40));
+$ddbb->addField("Setting", "value", null, "STRING", array("LENGTH" => 100, "DEFAULT" => NULL));
+$ddbb->addField("Setting", "defaultValue", "default_value", "STRING", array("LENGTH" => 100, "DEFAULT" => NULL));
 
 class Setting {
    public function __construct($data = null, $type = null) {     

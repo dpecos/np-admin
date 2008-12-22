@@ -1,5 +1,5 @@
 <?
-require_once($PWD."include/common.php");
+require_once($NPADMIN_PATH."include/common.php");
 
 if (session_id() === "")
    session_start();
@@ -54,13 +54,14 @@ function npadmin_security($groups = null, $showLoginForm = true) {
    }
 }
 
-$_settingsCache = array();
-
 function npadmin_setting($type, $name) {
    global $_settingsCache, $ddbb;
    
+   if ($_settingsCache == null)
+      $_settingsCache = array();
+   
    if (isset($ddbb) && $ddbb->isInitialized()) {
-      
+
       if (!in_array($type."_".$name, $_settingsCache)) {
          $setting = new Setting($name, $type);
          if (isset($setting->value) && $setting->value !== null)

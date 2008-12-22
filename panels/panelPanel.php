@@ -1,13 +1,13 @@
 <?
-$PWD = "../";
-require_once($PWD."include/common.php");
+$NPADMIN_PATH = "../";
+require_once($NPADMIN_PATH."include/common.php");
 $panelData = npadmin_panel("panelPanel");
 npadmin_security($panelData->getGroups());
 ?>
 
 <?
 function html_head() {
-   global $PWD;
+   global $NPADMIN_PATH;
 ?>
 
 <style type="text/css">
@@ -471,7 +471,7 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
 <?
 }
 ?>
-<? require_once($PWD."include/header.php"); ?>
+<? require_once($NPADMIN_PATH."include/header.php"); ?>
 
 <div class="page_title"><?= $panelData->getTitle() ?></div>
 
@@ -517,4 +517,4 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
 </div> 
         
 
-<? require_once($PWD."include/footer.php"); ?>
+<? require_once($NPADMIN_PATH."include/footer.php"); ?>

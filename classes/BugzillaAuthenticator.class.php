@@ -1,5 +1,6 @@
 <? 
 class BugzillaAuthenticator {
+   public $prefix = "bugzilla_";
 
    private function getCookieUserId() {
       if (isset($_COOKIE) &&isset($_COOKIE['Bugzilla_login'])) {
@@ -22,18 +23,11 @@ class BugzillaAuthenticator {
          
          $sql = "SELECT DISTINCT g.name FROM profiles p, user_group_map m, groups g WHERE p.userid = m.user_id AND m.group_id = g.id AND p.userid = ".$cookie;
          $bugzillaGroups = $ddbb->executeSelectQuery($sql);
-         
+
          $groups = array();
-         $isAdmin = false;
-         foreach ($bugzillaGroups as $bg) {
-            if ($bg['name'] === npadmin_setting("AUTH_BUGZILLA", "BUGZILLA_ADMIN_GROUP")) {
-               $isAdmin = true;
-               $groups = array_merge($groups, array(npadmin_setting("AUTH_BUGZILLA", "NPADMIN_ADMIN_GROUP")));
-            }
-            $groups = array_merge($groups, array("bugzilla_".$bg['name']));
-         }
-         if (!$isAdmin) {
-            $groups = array_merge($groups, array(npadmin_setting("AUTH_BUGZILLA", "NPADMIN_DEFAULT_GROUP")));
+         $groupsObj = $this->listGroups($cookie);
+         foreach ($groupsObj as $g) {
+            $groups[] = $g->group_name;
          }
          
          return array($user, $groups);
@@ -49,6 +43,83 @@ class BugzillaAuthenticator {
    public function isLoginFormRequired() {
       return false;
    }
+
+   public function listUsers() {
+      global $ddbb;
+      $users = array();
+
+      $sql = "SELECT * FROM profiles order by login_name";
+      $queryData = $ddbb->executeSelectQuery($sql);
+      foreach ($queryData as $idx=>$data) {
+	      $user = new User();
+	      $user->user = $data['login_name'];
+	      $user->email = $data['login_name'];
+	      $user->real_name = $data['realname'];
+	      $user->creation_date = "-";
+	      $user->external_userID = $data['userid'];
+	      $users[] = $user;
+
+      }
+      return $users;
+   }
+
+   private function createGroups($sql) {
+	   global $ddbb;
+
+	   $bugzillaGroups = $ddbb->executeSelectQuery($sql);
+
+	   $groups = array();
+	   $isAdmin = false;
+	   if ($bugzillaGroups != null && count($bugzillaGroups)) {
+		   foreach ($bugzillaGroups as $bg) {
+			   if ($bg['name'] === npadmin_setting("AUTH_BUGZILLA", "BUGZILLA_ADMIN_GROUP")) {
+				   $isAdmin = true;
+				   $g = new Group();
+				   $g->group_name = npadmin_setting("AUTH_BUGZILLA", "NPADMIN_ADMIN_GROUP");
+				   $g->description = "Bugzilla \"".$bg['name']."\" users group - NP-Admin administrators group";
+				   $groups = array_merge($groups, array($g));
+			   } 
+			   $g = new Group();
+			   $g->group_name = $this->prefix.$bg['name'];
+			   $g->description = "Bugzilla \"".$bg['name']."\" users group";
+			   $groups = array_merge($groups, array($g));
+		   }
+	   }
+         /*if (!$isAdmin) {
+            $groups = array_merge($groups, array(npadmin_setting("AUTH_BUGZILLA", "NPADMIN_DEFAULT_GROUP")));
+	 }*/
+	   return $groups;
+
+   }
+
+   public function listGroups() {
+	   $sql = "SELECT DISTINCT name FROM groups";
+	   return $this->createGroups($sql);
+   }
+
+   public function listAssignedGroups($loginName) {
+	   $sql = "SELECT DISTINCT g.name FROM profiles p, user_group_map m, groups g WHERE p.userid = m.user_id AND m.group_id = g.id AND p.login_name= '".$loginName."'";
+	   $groups = $this->createGroups($sql);
+	   return $groups;
+   }
+
+   public function listUnasssignedGroups($loginName) {
+	   $sql = "SELECT name from groups WHERE name not in (Select DISTINCT g.name FROM profiles p, user_group_map m, groups g WHERE p.userid = m.user_id AND m.group_id = g.id AND p.login_name = '".$loginName."')";
+	   return $this->createGroups($sql);
+   }
+      
+   /*public function listAssignedUsers($groupName) {
+	   $sql = "SELECT DISTINCT g.name FROM profiles p, user_group_map m, groups g WHERE p.userid = m.user_id AND m.group_id = g.id AND p.login_name= '".$loginName."'";
+	   $groups = $this->createGroups($sql);
+
+	   return $groups;
+   }
+
+   public function listUnasssignedUsers($groupName) {
+	   $sql = "SELECT name from groups WHERE name not in (Select DISTINCT g.name FROM profiles p, user_group_map m, groups g WHERE p.userid = m.user_id AND m.group_id = g.id AND p.login_name = '".$loginName."')";
+	   return $this->createGroups($sql);
+   }*/
+   
   
 }
 

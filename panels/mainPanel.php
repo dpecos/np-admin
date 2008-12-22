@@ -1,13 +1,13 @@
 <?
-$PWD = "../";
-require_once($PWD."include/common.php");
+$NPADMIN_PATH = "../";
+require_once($NPADMIN_PATH."include/common.php");
 $panelData = npadmin_panel("mainPanel");
 npadmin_security($panelData->getGroups());
 ?>
 
 <?
 function html_head() {
-   global $PWD;
+   global $NPADMIN_PATH;
 ?>
 <script> 
    var tabView;
@@ -21,7 +21,7 @@ function html_head() {
 <?
 }
 ?>
-<? require_once($PWD."include/header.php"); ?>
+<? require_once($NPADMIN_PATH."include/header.php"); ?>
 
 <div class="page_title"><?= $panelData->getTitle() ?></div>
 
@@ -37,4 +37,4 @@ function html_head() {
 </div-->
         
 
-<? require_once($PWD."include/footer.php"); ?>
+<? require_once($NPADMIN_PATH."include/footer.php"); ?>

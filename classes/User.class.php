@@ -1,4 +1,12 @@
 <?php
+global $ddbb;
+
+$ddbb->addTable("User", "users");
+$ddbb->addField("User", "user", null, "STRING", array("PK" => true, "NULLABLE" => false, "LENGTH" => 20));
+$ddbb->addField("User", "password", null, "STRING", array("NULLABLE" => false, "LENGTH" => 60));
+$ddbb->addField("User", "email", null, "STRING", array("LENGTH" => 60, "DEFAULT" => NULL));
+$ddbb->addField("User", "creation_date", "creation_date", "DATE", array("NULLABLE" => false, "DEFAULT" => "CURRENT_TIMESTAMP"));
+$ddbb->addField("User", "real_name", "real_name", "STRING", array("LENGTH" => 60, "DEFAULT" => NULL));
 
 class User {
    public function __construct($data = null) {     

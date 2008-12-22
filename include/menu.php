@@ -58,7 +58,7 @@ function createMenuList($data, $parentId, $menus) {
 }
    
 function createMenus($parentId = 0) {
-   global $ddbb, $menus, $PWD;
+   global $ddbb, $menus, $NPADMIN_PATH;
    
    $login = npadmin_loginData();
    $menus = array();
@@ -177,11 +177,11 @@ YAHOO.util.Event.onDOMReady(function () {
                                                 lazyload: true, 
                                                 itemdata: aItemData 
                                                 });
+    oMenuBar.cfg.setProperty("zindex", "9");
     oMenuBar.render(document.body);
 
 
     // Add a "show" event listener for each submenu.
-    
     function onSubmenuShow() {
 
       var oIFrame, oElement, nOffsetWidth;
@@ -201,6 +201,14 @@ YAHOO.util.Event.onDOMReady(function () {
 
     // Subscribe to the "show" event for each submenu
     oMenuBar.subscribe("show", onSubmenuShow);
+
+    window.onscroll = function () {
+	    document.getElementById("npadmin_menubar").style.margin="0px";
+	    oMenuBar.moveTo(0,0);
+	    document.getElementById("npadmin_menubar").style.left="0px";
+	    document.getElementById("npadmin_menubar").style.margin="-10px 0 0 0";
+	    oMenuBar.render(document.body);
+    }
 });
 
 </script>

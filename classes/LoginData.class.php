@@ -6,7 +6,7 @@ class LoginData {
    private $usedDefaultAuthenticator;
    
    public function __construct() {
-      global $PWD;
+      global $NPADMIN_PATH;
       
       $this->defaultAuthenticator = new DefaultAuthenticator();
       $auth = npadmin_setting("NP-ADMIN", "AUTH");

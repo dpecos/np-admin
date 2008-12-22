@@ -13,7 +13,7 @@
       </script>
       <? } ?>
       
-      <? require_once($PWD."include/menu.php") ?>
+      <? require_once($NPADMIN_PATH."include/menu.php") ?>
       
       <style>
          html {

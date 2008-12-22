@@ -1,7 +1,8 @@
 <?
-$PWD = "../";
+$NPADMIN_PATH = "../";
+require_once($NPADMIN_PATH."include/common.php");
 
-$file = $PWD."work/ddbb_config.php";
+$file = $NPADMIN_PATH."work/ddbb_config.php";
 
 global $msg;
 $msg = "";
@@ -10,7 +11,7 @@ if (file_exists($file)) {
    $msg = "<b>Deleted existing config file. A new one will be generated now.</b><br/><br/>";
 }
 
-require_once($PWD."include/common.php");
+require_once($NPADMIN_PATH."include/common.php");
 $ddbb_back = clone $ddbb;
 unset($ddbb);
 
@@ -77,7 +78,7 @@ $data = array (
 
 <?
 function html_head() {
-   global $PWD;
+   global $NPADMIN_PATH;
 ?>
 <script> 
    var tabView;
@@ -92,7 +93,7 @@ function html_head() {
 <?
 }
 ?>
-<? require_once($PWD."include/header.php"); ?>
+<? require_once($NPADMIN_PATH."include/header.php"); ?>
 
 <div class="page_title">NP-Admin installation</div>
 
@@ -203,4 +204,4 @@ if (isset($_POST) && count($_POST) > 1) {
 </div>
         
 
-<? require_once($PWD."include/footer.php"); ?>
+<? require_once($NPADMIN_PATH."include/footer.php"); ?>
