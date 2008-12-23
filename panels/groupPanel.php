@@ -121,7 +121,7 @@ li.li_assigned_users {
          emptyList("unassigned_users");
          emptyList("assigned_users");
          
-         for (id in oParsedResponse.results.reverse()) {
+         for (id in oParsedResponse.results) {
             var group = oParsedResponse.results[id];
             if (typeof(group) != "function")
                group_list.getMenu().addItem({ text: group.group_name, value: group.group_name, onclick: { fn: populateUsersLists } });

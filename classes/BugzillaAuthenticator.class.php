@@ -44,6 +44,16 @@ class BugzillaAuthenticator {
       return false;
    }
 
+   private function createUser($data) {
+      $user = new User();
+	   $user->user = $data['login_name'];
+	   $user->email = $data['login_name'];
+	   $user->real_name = $data['realname'];
+	   $user->creation_date = "-";
+	   $user->external_userID = $data['userid'];
+	   return $user;
+   }
+
    public function listUsers() {
       global $ddbb;
       $users = array();
@@ -51,14 +61,8 @@ class BugzillaAuthenticator {
       $sql = "SELECT * FROM profiles order by login_name";
       $queryData = $ddbb->executeSelectQuery($sql);
       foreach ($queryData as $idx=>$data) {
-	      $user = new User();
-	      $user->user = $data['login_name'];
-	      $user->email = $data['login_name'];
-	      $user->real_name = $data['realname'];
-	      $user->creation_date = "-";
-	      $user->external_userID = $data['userid'];
+	      $user = $this->createUser($data);
 	      $users[] = $user;
-
       }
       return $users;
    }
@@ -108,17 +112,37 @@ class BugzillaAuthenticator {
 	   return $this->createGroups($sql);
    }
       
-   /*public function listAssignedUsers($groupName) {
-	   $sql = "SELECT DISTINCT g.name FROM profiles p, user_group_map m, groups g WHERE p.userid = m.user_id AND m.group_id = g.id AND p.login_name= '".$loginName."'";
-	   $groups = $this->createGroups($sql);
+   public function listAssignedUsers($groupName) {
+	   global $ddbb;
+	   $sql = "SELECT DISTINCT p.* FROM profiles p, user_group_map m, groups g WHERE p.userid = m.user_id AND m.group_id = g.id AND g.name= '".$groupName."'";
+	   	   
+      $users = array();
 
-	   return $groups;
+      $queryData = $ddbb->executeSelectQuery($sql);
+      if ($queryData != null) {
+	      foreach ($queryData as $idx=>$data) {
+		      $user = $this->createUser($data);
+		      $users[] = $user;
+	      }
+      }
+      return $users;
    }
 
-   public function listUnasssignedUsers($groupName) {
-	   $sql = "SELECT name from groups WHERE name not in (Select DISTINCT g.name FROM profiles p, user_group_map m, groups g WHERE p.userid = m.user_id AND m.group_id = g.id AND p.login_name = '".$loginName."')";
-	   return $this->createGroups($sql);
-   }*/
+   public function listUnassignedUsers($groupName) {
+      global $ddbb;
+	   $sql = "SELECT * from groups WHERE id not in (Select DISTINCT g.id FROM profiles p, user_group_map m, groups g WHERE p.userid = m.user_id AND m.group_id = g.id AND g.name= '".$groupName."')";
+	   	   
+      $users = array();
+
+      $queryData = $ddbb->executeSelectQuery($sql);
+      if ($queryData != null) {
+	      foreach ($queryData as $idx=>$data) {
+		      $user = $this->createUser($data);
+		      $users[] = $user;
+	      }
+      }
+      return $users;
+   }
    
   
 }

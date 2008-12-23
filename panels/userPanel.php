@@ -134,7 +134,7 @@ li.li_assigned_groups {
                user_list.getMenu().addItem({ text: user.user, value: user.user, onclick: { fn: populateGroupsLists } });
          }
          user_list.getMenu().render(document.body);
-	      oParsedResponse.results.reverse();
+         oParsedResponse.results.reverse();
          return oParsedResponse;
       };
 
