@@ -2,7 +2,8 @@
 global $ddbb;
 
 $ddbb->addTable("Group", "groups");
-$ddbb->addField("Group", "groupName", "group_name", "STRING", array("PK" => true, "NULLABLE" => false, "LENGTH" => 40));
+$ddbb->addField("Group", "groupId", "group_id", "INT", array("PK" => true, "NULLABLE" => false, "DEFAULT" => null));
+$ddbb->addField("Group", "groupName", "group_name", "STRING", array("NULLABLE" => false, "LENGTH" => 40));
 $ddbb->addField("Group", "description", null, "STRING", array("NULLABLE" => true, "LENGTH" => 150, "DEFAULT" => null));
 
 class Group {
@@ -18,22 +19,13 @@ class Group {
    }
    
    public function delete() {
-      global $ddbb;
-      if (strlen($this->group_name) == 0) {
-         $sql_1 = "DELETE FROM ".$ddbb->getTable('Group')." WHERE ".$ddbb->getMapping('Group','groupName')." = ''";
-         $sql_2 = "DELETE FROM ".$ddbb->getTable('UserGroup')." WHERE ".$ddbb->getMapping('UserGroup','groupName')." = ''";
-         $sql_3 = "DELETE FROM ".$ddbb->getTable('PanelGroup')." WHERE ".$ddbb->getMapping('PanelGroup','groupName')." = ''";            
-         $sql_4 = "DELETE FROM ".$ddbb->getTable('MenuGroup')." WHERE ".$ddbb->getMapping('MenuGroup','groupName')." = ''";                        
-      } else {
-         $sql_1 = "DELETE FROM ".$ddbb->getTable('Group')." WHERE ".$ddbb->getMapping('Group','groupName')." = ".NP_DDBB::encodeSQLValue($this->group_name, $ddbb->getType('Group','groupName'));
-         $sql_2 = "DELETE FROM ".$ddbb->getTable('UserGroup')." WHERE ".$ddbb->getMapping('UserGroup','groupName')." = ".NP_DDBB::encodeSQLValue($this->group_name, $ddbb->getType('UserGroup','groupName'));            
-         $sql_3 = "DELETE FROM ".$ddbb->getTable('PanelGroup')." WHERE ".$ddbb->getMapping('PanelGroup','groupName')." = ".NP_DDBB::encodeSQLValue($this->group_name, $ddbb->getType('PanelGroup','groupName'));            
-         $sql_4 = "DELETE FROM ".$ddbb->getTable('MenuGroup')." WHERE ".$ddbb->getMapping('MenuGroup','groupName')." = ".NP_DDBB::encodeSQLValue($this->group_name, $ddbb->getType('MenuGroup','groupName'));            
-      }
-      $ddbb->executeDeleteQuery($sql_2);
-      $ddbb->executeDeleteQuery($sql_3);
-      $ddbb->executeDeleteQuery($sql_4);
-      return ($ddbb->executeDeleteQuery($sql_1) > 0);
+	   global $ddbb;
+	   $sql_1 = "DELETE FROM ".$ddbb->getTable('Group')." WHERE ".$ddbb->getMapping('Group','groupId')." = ".NP_DDBB::encodeSQLValue($this->groupId, $ddbb->getType('Group','groupId'));
+	   $sql_2 = "DELETE FROM ".$ddbb->getTable('UserGroup')." WHERE ".$ddbb->getMapping('UserGroup','groupId')." = ".NP_DDBB::encodeSQLValue($this->groupId, $ddbb->getType('UserGroup','groupId'));            
+	   $sql_3 = "DELETE FROM ".$ddbb->getTable('GroupRol')." WHERE ".$ddbb->getMapping('GroupRol','groupId')." = ".NP_DDBB::encodeSQLValue($this->groupId, $ddbb->getType('GroupRol','groupId'));            
+	   $ddbb->executeDeleteQuery($sql_2);
+	   $ddbb->executeDeleteQuery($sql_3);
+	   return ($ddbb->executeDeleteQuery($sql_1) > 0);
    }
 }
 ?>

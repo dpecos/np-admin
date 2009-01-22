@@ -2,7 +2,7 @@
 $NPADMIN_PATH = "../";
 require_once($NPADMIN_PATH."include/common.php");
 $panelData = npadmin_panel("panelPanel");
-npadmin_security($panelData->getGroups());
+npadmin_security($panelData->getRols());
 ?>
 
 <?
@@ -25,11 +25,7 @@ function html_head() {
 }
 
 .yui-button#addPanelButton button {
-   padding-left: 2em;      var saveGroupsButton = new YAHOO.widget.Button({ 
-            label:"Save", 
-            id:"saveGroupsButton", 
-            container:"groups_buttons" });
-      saveGroupsButton.on("click", assignGroups);
+   padding-left: 2em;
    background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/add.gif) 5% 50% no-repeat;
 }
 
@@ -69,17 +65,17 @@ ul.draglist_alt li {
     cursor: move; 
 }
 
-li.li_unassigned_groups {
+li.li_unassigned_rols {
     background-color: #D1E6EC;
     border:1px solid #7EA6B2;
 }
 
-li.li_assigned_groups {
+li.li_assigned_rols {
     background-color: #D8D4E2;
     border:1px solid #6B4C86;
 }
 
-.yui-button#saveGroupsButton button {
+.yui-button#saveRolsButton button {
    padding-left: 2em;
    background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/save.gif) 5% 50% no-repeat;
 }
@@ -102,27 +98,26 @@ li.li_assigned_groups {
      
       columnDefs = [ 
          {key:"id", label:"ID", sortable:true},
-         {key:"title", label:"Title", editor:"textbox", sortable:true},
-         {key:"groups", label:"Groups"}
+         {key:"title", label:"Title", editor:"textbox", sortable:true}
 	   ]; 
 	        
-	   dataSource = new YAHOO.util.DataSource("<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/panels.php?");
-  	   dataSource.connMethodPost = true;
-	   dataSource.responseType = YAHOO.util.DataSource.TYPE_JSON; 
+      dataSource = new YAHOO.util.DataSource("<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/panels.php?");
+      dataSource.connMethodPost = true;
+      dataSource.responseType = YAHOO.util.DataSource.TYPE_JSON; 
       dataSource.connXhrMode = "queueRequests"; 
       dataSource.responseSchema = {
-            fields: ["id","title","groups"]
+            fields: ["id","title","rols"]
       };
       dataSource.doBeforeCallback = function(oRequest , oFullResponse , oParsedResponse) {
          panel_list.getMenu().clearContent();
          panel_list.set("label", "Select panel");
-         emptyList("unassigned_groups");
-         emptyList("assigned_groups");
+         emptyList("unassigned_rols");
+         emptyList("assigned_rols");
          
          for (id in oParsedResponse.results) {
             var panel = oParsedResponse.results[id];
             if (typeof(panel) != "function")
-               panel_list.getMenu().addItem({ text: panel.title, value: panel.id, onclick: { fn: populateGroupsLists } });
+               panel_list.getMenu().addItem({ text: panel.title, value: panel.id, onclick: { fn: populateRolsLists } });
          }
          panel_list.getMenu().render(document.body);
          return oParsedResponse;
@@ -180,7 +175,7 @@ li.li_assigned_groups {
                          var oRecord = p_myDataTable.getRecord(elRow);
                          var panel = oRecord.getData("id");
                          var panel_title = oRecord.getData("title");
-                         recoverDataGroupsLists(panel, panel_title);
+                         recoverDataRolsLists(panel, panel_title);
                          tabView.set("activeTab",tabView.getTab(1));
                          break;
                  }
@@ -189,7 +184,7 @@ li.li_assigned_groups {
       };
 
       var contextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", { trigger:panelDatatable.getTbodyEl() });
-      contextMenu.addItems(["Delete Item", "Manage groups"]);
+      contextMenu.addItems(["Delete Item", "Manage rols"]);
       contextMenu.render("panel_datatable");
       contextMenu.clickEvent.subscribe(onContextMenuClick, panelDatatable);
       
@@ -198,13 +193,13 @@ li.li_assigned_groups {
             menu: "panel_list_select"
       });    
       
-      new YAHOO.util.DDTarget("unassigned_groups");
-      new YAHOO.util.DDTarget("assigned_groups");
-      var saveGroupsButton = new YAHOO.widget.Button({ 
+      new YAHOO.util.DDTarget("unassigned_rols");
+      new YAHOO.util.DDTarget("assigned_rols");
+      var saveRolsButton = new YAHOO.widget.Button({ 
             label:"Save", 
-            id:"saveGroupsButton", 
-            container:"groups_buttons" });
-      saveGroupsButton.on("click", assignGroups);
+            id:"saveRolsButton", 
+            container:"rols_buttons" });
+      saveRolsButton.on("click", assignRols);
    });
    
    function showNewPanelDialog() {
@@ -251,7 +246,7 @@ li.li_assigned_groups {
    }
      
    function deletePanelsConfirm(list) {
-      if (!YAHOO.lang.isString(list)) {
+      if (YAHOO.lang.isObject(list)) {
          var list = "";
          var rows = panelDatatable.getSelectedRows();
          for (var id in rows) {  
@@ -278,7 +273,7 @@ li.li_assigned_groups {
       }
    }
    
-   function populateGroupsLists(p_sType, p_aArgs, p_oItem) {
+   function populateRolsLists(p_sType, p_aArgs, p_oItem) {
       if (p_oItem != null) {
          panel_id = p_oItem.value;
          panel_text = p_oItem.cfg.getProperty("text");
@@ -286,10 +281,10 @@ li.li_assigned_groups {
          panel_id = p_sType;
          panel_text = p_aArgs;
       }
-      recoverDataGroupsLists(panel_id, panel_text);
+      recoverDataRolsLists(panel_id, panel_text);
    }
    
-   function recoverDataGroupsLists(panel_id, panel_text) {
+   function recoverDataRolsLists(panel_id, panel_text) {
       for (itemIdx in panel_list.getMenu().getItems()) {
          var item = panel_list.getMenu().getItem(parseInt(itemIdx));
          if (item.value == panel_id) {
@@ -299,33 +294,34 @@ li.li_assigned_groups {
       }
       panel_list.set("label", panel_text);
 
-      emptyList("unassigned_groups");
-      emptyList("assigned_groups");
-      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/panels.php", {success:groupListCallback, argument:["unassigned_groups"]}, "op=listUnassignedGroups&panel="+panel_id);
-      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/panels.php", {success:groupListCallback, argument:["assigned_groups"]}, "op=listAssignedGroups&panel="+panel_id);   
+      emptyList("unassigned_rols");
+      emptyList("assigned_rols");
+      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/panels.php", {success:rolListCallback, argument:["unassigned_rols"]}, "op=listUnassignedRols&panel="+panel_id);
+      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/panels.php", {success:rolListCallback, argument:["assigned_rols"]}, "op=listAssignedRols&panel="+panel_id);   
    }
    
-   function groupListCallback(response) {
+   function rolListCallback(response) {
       var listId = response.argument[0];
       
-      groupsList = document.getElementById(listId);
+      rolsList = document.getElementById(listId);
       
       data = YAHOO.lang.JSON.parse(response.responseText);
 
       for(id in data) {
-         group = data[id];
-         if (typeof(group) != "function") {
-            var group_element = document.createElement('li');
-            group_element.innerHTML = group.group_name;
-            group_element.setAttribute("id", listId + "_" + group.group_name);
-            group_element.className = "li_" + listId;
-            groupsList.appendChild(group_element);
-            new DDList(listId + "_" + group.group_name);
+         rol = data[id];
+         if (typeof(rol) != "function") {
+            var rol_element = document.createElement('li');
+            rol_element.innerHTML = rol.rolName;
+            rol_element.setAttribute("id", listId + "_" + rol.rolId);
+            rol_element.setAttribute("title", rol.rolId);
+            rol_element.className = "li_" + listId;
+            rolsList.appendChild(rol_element);
+            new DDList(listId + "_" + rol.rolId);
          }
       }   
    }
    
-   function assignGroups() {
+   function assignRols() {
       if (panel_list.getMenu().activeItem != null) {
          var panel = panel_list.getMenu().activeItem.value;
 
@@ -334,21 +330,22 @@ li.li_assigned_groups {
               var items = ul.getElementsByTagName("li");
               var list = "";
               for (i=0; i<items.length; i=i+1) {
-                  list += items[i].innerHTML + ",";
+		      //list += items[i].innerHTML + ",";
+		      list += items[i].title + ",";
               }
               list = list.substring(0, list.length - 1);
               return list;
           };
 
-          var list = parseList("assigned_groups");
-          var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/panels.php", {success:assignGroupsCallback, argument:[panel]}, "op=assignGroups&panel="+panel+"&list="+list);
+          var list = parseList("assigned_rols");
+          var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/panels.php", {success:assignRolsCallback, argument:[panel]}, "op=assignRols&panel="+panel+"&list="+list);
        }
    }
 
-   function assignGroupsCallback(response) {
+   function assignRolsCallback(response) {
       var panel = response.argument[0];
-      box_info("panel_groups_info", "Groups configuration saved correctly!");
-      recoverDataGroupsLists(panel);
+      box_info("panel_rols_info", "Rols configuration saved correctly!");
+      recoverDataRolsLists(panel);
    }  
 </script>
 
@@ -478,26 +475,26 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
 <div id="mainTabs" class="yui-navset">
     <ul class="yui-nav">
         <li class="selected"><a href="#"><em>List of panels</em></a></li>
-        <li><a href="#"><em>Panels' groups</em></a></li>
+        <li><a href="#"><em>Panels' rols</em></a></li>
     </ul>            
     <div class="yui-content">
         <div>
+           <div class="buttonBox" id="panel_buttons"></div>
            <div id="panel_datatable"></div>
-           <div id="panel_buttons"></div>
         </div>
         <div>  
+           <div class="buttonBox" id="rols_buttons"></div>
            Panel: <input type="button" id="panel_list" name="panel_list" value="Select panel"/>
            <select id="panel_list_select" name="panel_list_select"></select>
-           <table id="groups_form_table">
+           <table id="rols_form_table">
               <tr><td>
-                 <h3>Unassigned groups</h3>
-                 <ul id="unassigned_groups" class="draglist"></ul>
+                 <h3>Unassigned rols</h3>
+                 <ul id="unassigned_rols" class="draglist"></ul>
               </td><td>
-                 <h3>Assigned groups</h3>
-                 <ul id="assigned_groups" class="draglist"></ul>
+                 <h3>Assigned rols</h3>
+                 <ul id="assigned_rols" class="draglist"></ul>
               </td></tr>
            </table>
-           <div id="groups_buttons"/>
         </div>
     </div>
 </div>

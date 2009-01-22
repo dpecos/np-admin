@@ -64,28 +64,28 @@ function createMenus($parentId = 0) {
    $menus = array();
    
    if ($login != null) {
-      $myGroups = $login->getGroups();
+      $myRols = $login->getRolsIds();
    
       $menus[$parentId] = array();
-      $sql = "SELECT m.* FROM ".$ddbb->getTable('Menu')." m, ".$ddbb->getTable('MenuGroup')." mg";
+      $sql = "SELECT m.* FROM ".$ddbb->getTable('Menu')." m, ".$ddbb->getTable('MenuRol')." mg";
       $sql .= " WHERE m.".$ddbb->getMapping('Menu','parentId')." = ".NP_DDBB::encodeSQLValue($parentId, $ddbb->getType('Menu','parentId'));
-      $sql .= " AND mg.".$ddbb->getMapping('MenuGroup','menuId')." = m.".$ddbb->getMapping('Menu','id');
+      $sql .= " AND mg.".$ddbb->getMapping('MenuRol','menuId')." = m.".$ddbb->getMapping('Menu','menuId');
       $sql .= " AND m.".$ddbb->getMapping('Menu','panelId')." IS NULL";
-      if (count($myGroups) > 0) {   
+      if (count($myRols) > 0) {   
          $sql .= " AND ( false ";
-         foreach ($myGroups as $group) {
-            $sql .= " OR mg.".$ddbb->getMapping('MenuGroup','groupName')." = ".NP_DDBB::encodeSQLValue($group, $ddbb->getType('MenuGroup','groupName'));
+         foreach ($myRols as $rol) {
+            $sql .= " OR mg.".$ddbb->getMapping('MenuRol','rolId')." = ".NP_DDBB::encodeSQLValue($rol, $ddbb->getType('MenuRol','rolId'));
          }
          $sql .= ") ";
       }
-      $sql .= " UNION SELECT m.* FROM ".$ddbb->getTable('Panel')." p, ".$ddbb->getTable('PanelGroup')." pg, ".$ddbb->getTable('Menu')." m ";
+      $sql .= " UNION SELECT m.* FROM ".$ddbb->getTable('Panel')." p, ".$ddbb->getTable('PanelRol')." pg, ".$ddbb->getTable('Menu')." m ";
       $sql .= " WHERE m.".$ddbb->getMapping('Menu','parentId')." = ".NP_DDBB::encodeSQLValue($parentId, $ddbb->getType('Menu','parentId'));
-      $sql .= " AND p.".$ddbb->getMapping('Panel','id')." = pg.".$ddbb->getMapping('PanelGroup','panelId');
+      $sql .= " AND p.".$ddbb->getMapping('Panel','id')." = pg.".$ddbb->getMapping('PanelRol','panelId');
       $sql .= " AND p.".$ddbb->getMapping('Panel','id')." = m.".$ddbb->getMapping('Menu','panelId');
-      if (count($myGroups) > 0) {   
+      if (count($myRols) > 0) {   
          $sql .= " AND ( false ";
-         foreach ($myGroups as $group) {
-            $sql .= " OR pg.".$ddbb->getMapping('PanelGroup','groupName')." = ".NP_DDBB::encodeSQLValue($group, $ddbb->getType('PanelGroup','groupName'));
+         foreach ($myRols as $rol) {
+            $sql .= " OR pg.".$ddbb->getMapping('PanelRol','rolId')." = ".NP_DDBB::encodeSQLValue($rol, $ddbb->getType('PanelRol','rolId'));
          }
          $sql .= ") ";
       }
@@ -126,9 +126,9 @@ if ($menu->panelId != null) {
 ?>
 text: "<?= $menu->text ?>",
 submenu: {
-   id: "menu_<?= $menu->id ?>",
+   id: "menu_<?= $menu->menuId ?>",
    itemdata: [
-   [<? createMenus($menu->id); ?>]
+   [<? createMenus($menu->menuId); ?>]
    ]
 }
 <? } ?>
@@ -149,7 +149,7 @@ YAHOO.util.Event.onDOMReady(function () {
                 id: "npadmin", 
                 itemdata: [
                     "About NP-Admin",
-                    { text: "Visit NP-Admin homepage", url: "http://netpecos.org/projects/np-admin" }
+                    { text: "Visit NP-Admin homepage", url: "http://netpecos.org/projects/np-admin", target: "_new"}
                 ]
             } 
         },
@@ -165,7 +165,7 @@ YAHOO.util.Event.onDOMReady(function () {
         <? 
             }
         } 
-        if ($login == null || !in_array("Administrators", $login->getGroups())) { 
+        if ($login == null || !in_array("Administrators", $login->getRolsNames())) { 
         ?>
         { text: "<em id=\"npadminsettings\">Log-in</em>", classname: "menu_logout", url: "<?= npadmin_setting('NP-ADMIN', 'BASE_URL')?>/panels/mainPanel.php", disabled: false}
         <? 

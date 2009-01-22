@@ -18,20 +18,20 @@ class Panel {
       }
       
       if (isset($this->id) && $this->id != null) {   
-         $data = $ddbb->executeSelectQuery("SELECT * FROM ".$ddbb->getTable('PanelGroup')." WHERE ".$ddbb->getMapping('PanelGroup','panelId')."=".NP_DDBB::encodeSQLValue($this->id, $ddbb->getType('PanelGroup','panelId')));
+         $data = $ddbb->executeSelectQuery("SELECT * FROM ".$ddbb->getTable('PanelRol')." WHERE ".$ddbb->getMapping('PanelRol','panelId')."=".NP_DDBB::encodeSQLValue($this->id, $ddbb->getType('PanelRol','panelId')));
          
-         $this->groups = array();
+         $this->rols = array();
          if ($data != null) {
-            foreach ($data as $group) {
-               $this->groups[] = NP_DDBB::decodeSQLValue($group['group_name'], $ddbb->getType('PanelGroup','groupName'));
+            foreach ($data as $rol) {
+               $this->rols[] = NP_DDBB::decodeSQLValue($rol['rol_id'], $ddbb->getType('PanelRol','rolId'));
             }
          }
       }
       
    }
    
-   public function getGroups() {
-      return $this->groups;
+   public function getRols() {
+      return $this->rols;
    }
    
    public function getTitle() {
@@ -52,7 +52,7 @@ class Panel {
       global $ddbb;
      
       $sql_1 = "DELETE FROM ".$ddbb->getTable('Panel')." WHERE ".$ddbb->getMapping('Panel','id')." = ".NP_DDBB::encodeSQLValue($this->id, $ddbb->getType('Panel','id'));
-      $sql_2 = "DELETE FROM ".$ddbb->getTable('PanelGroup')." WHERE ".$ddbb->getMapping('PanelGroup','panelId')." = ".NP_DDBB::encodeSQLValue($this->id, $ddbb->getType('PanelGroup','panelId'));            
+      $sql_2 = "DELETE FROM ".$ddbb->getTable('PanelRol')." WHERE ".$ddbb->getMapping('PanelRol','panelId')." = ".NP_DDBB::encodeSQLValue($this->id, $ddbb->getType('PanelRol','panelId'));            
      
       $ddbb->executeDeleteQuery($sql_2);
       return ($ddbb->executeDeleteQuery($sql_1) > 0);

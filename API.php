@@ -25,6 +25,7 @@ function npadmin_loginData() {
       if (isset($_SESSION['npadmin_logindata']))
          return $_SESSION['npadmin_logindata'];
    }
+
    $loginData = new LoginData();
    if (!$loginData->isLoginFormRequired()) {
       if (npadmin_login(null, null))
@@ -40,18 +41,32 @@ function npadmin_loginForm() {
    exit();
 }
 
-function npadmin_security($groups = null, $showLoginForm = true) {
-   /* AJAX calls have $showLoginForm set to false, because it makes no sense to show a login form */
-   if (session_id() === "")
-      session_start();
-   $login = npadmin_loginData();
+function npadmin_security($rols = null, $showLoginForm = true) {
+	/* AJAX calls have $showLoginForm set to false, because it makes no sense to show a login form */
+	if (session_id() === "")
+		session_start();
+	$login = npadmin_loginData();
 
-   if ($login == null || $groups != null && !$login->isAllowed($groups)) {
-      if ($showLoginForm)
-         npadmin_loginForm();
-      else 
-         die("You are not allowed to access this page");      
-   }
+	if ($login == null) {
+		if ($showLoginForm)
+			npadmin_loginForm();
+		else 
+			die("You are not allowed to access this page");      
+	} else {
+		if (is_array($rols)) {
+			if (!$login->isAllowed($rols)) {
+				if ($showLoginForm)
+					npadmin_loginForm();
+				else 
+					die("You are not allowed to access this page");      
+			}
+		} else {
+			// TODO:rols contains panelId
+			//$panel = new Panel($rols);
+
+
+		}
+	}
 }
 
 function npadmin_setting($type, $name) {

@@ -2,7 +2,7 @@
 $NPADMIN_PATH = "../";
 require_once($NPADMIN_PATH."include/common.php");
 $panelData = npadmin_panel("settingsPanel");
-npadmin_security($panelData->getGroups());
+npadmin_security($panelData->getRols());
 ?>
 
 <?
@@ -298,10 +298,10 @@ function html_head() {
     </ul>            
     <div class="yui-content">
         <div>
+           <div class="buttonBox" id="setting_buttons"></div>
            Type: <input type="button" id="type_list" name="type_list" value="ALL"/>
            <select id="type_list_select" name="type_list_select"></select>
            <div id="settings_datatable"></div>
-           <div id="setting_buttons"/>
         </div>
     </div>
 </div>    

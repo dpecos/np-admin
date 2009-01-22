@@ -21,10 +21,10 @@ foreach ($_POST as $k => $v) {
 
 if (array_key_exists("op", $_POST) && ($_POST['op'] == "login" || $_POST['op'] == "logout") || isset($_GET['op']) && $_GET['op'] == "logout") {
       
-   if ($_POST['op'] == "login") {
+   if (array_key_exists("op", $_POST) && $_POST['op'] == "login") {
       echo npadmin_login($_POST['user'], $_POST['password']) ? "OK" : "ERROR";
 
-   } else if ($_POST['op'] == "logout" || $_GET['op'] == "logout") {
+   } else if (array_key_exists("op", $_POST) && $_POST['op'] == "logout" || array_key_exists("op", $_GET) && $_GET['op'] == "logout") {
       npadmin_logout();
       echo "OK";
    }
@@ -51,7 +51,7 @@ if (array_key_exists("op", $_POST) && ($_POST['op'] == "login" || $_POST['op'] =
       foreach ($list as $id) {
          if ($id != null) {
             $user = new User();
-            $user->user = $id;
+            $user->userId = $id;
             if (!$user->delete()) {
                echo "ERROR: Unable to delete user '".$id."'";
                return;
@@ -62,24 +62,40 @@ if (array_key_exists("op", $_POST) && ($_POST['op'] == "login" || $_POST['op'] =
       
    } else if ($_POST['op'] == "listAssignedGroups") {
 
-      $groups = $ddbb->executeSelectQuery("SELECT ug.group_name AS group_name FROM  ".$ddbb->getTable("UserGroup")." ug WHERE ug.user = '".$_POST['user']."' ORDER BY 1");
+      $groups = array();
+      $groupsT = $ddbb->executeSelectQuery("SELECT g.* AS group_name FROM  ".$ddbb->getTable("UserGroup")." ug, ".$ddbb->getTable("Group")." g WHERE ug.group_id = g.group_id AND ug.user_id = '".$_POST['user']."' ORDER BY 1");
+
+      if ($groupsT != null) {
+	      foreach ($groupsT as $data) {
+		      $groups[] = new Group($data);
+	      }
+      }
+
       if ($authenticator != null) {
-	      if ($groups == null)
-		      $groups = array();
-	      $groups = array_merge($groups, $authenticator->listAssignedGroups($_POST['user']));
+	      if ($_POST['user'] < 0 && npadmin_setting("AUTH","DEFAULT_GROUP") != null) {
+		      $data = $ddbb->executePKSelectQuery("SELECT * FROM ".$ddbb->getTable("Group")." WHERE ".$ddbb->getMapping("Group", "groupId")."=".NP_DDBB::encodeSQLValue(npadmin_setting("AUTH","DEFAULT_GROUP"), $ddbb->getType('Group','groupId')));
+		      $groups[] = new Group($data);
+	      }
+	      //$groups = array_merge($groups, $authenticator->listAssignedGroups($_POST['user']));
       }
 
       echo NP_json_encode($groups);
 
    } else if ($_POST['op'] == "listUnassignedGroups") {
 
-      $groups = $ddbb->executeSelectQuery("SELECT group_name FROM ".$ddbb->getTable("Group")." WHERE group_name NOT IN (SELECT group_name FROM ".$ddbb->getTable("UserGroup")." WHERE user = '".$_POST['user']."') ORDER BY 1");
+      $groups = array();
+      $groupsT = $ddbb->executeSelectQuery("SELECT * FROM ".$ddbb->getTable("Group")." WHERE group_id NOT IN (SELECT group_id FROM ".$ddbb->getTable("UserGroup")." WHERE user_id = '".$_POST['user']."') ORDER BY 1");
 
-      if ($authenticator != null) {
-	      if ($groups == null)
-		      $groups = array();
-	      $groups = array_merge($groups, $authenticator->listUnasssignedGroups($_POST['user']));
+      if ($groupsT != null) {
+	      foreach ($groupsT as $data) {
+		      if ($authenticator == null || ($authenticator != null && npadmin_setting("AUTH","DEFAULT_GROUP") != $data["group_id"]))
+		      $groups[] = new Group($data);
+	      }
       }
+
+      /*if ($authenticator != null) {
+	      $groups = array_merge($groups, $authenticator->listUnasssignedGroups($_POST['user']));
+      }*/
 
       echo NP_json_encode($groups);
       
@@ -87,19 +103,13 @@ if (array_key_exists("op", $_POST) && ($_POST['op'] == "login" || $_POST['op'] =
       $user = $_POST['user'];   
       $groups = split(",", $_POST['list']);
       
-      $sql = "DELETE FROM ".$ddbb->getTable('UserGroup')." WHERE ".$ddbb->getMapping('UserGroup','user')." = ".NP_DDBB::encodeSQLValue($user, $ddbb->getType('UserGroup','user')); 
+      $sql = "DELETE FROM ".$ddbb->getTable('UserGroup')." WHERE ".$ddbb->getMapping('UserGroup','userId')." = ".NP_DDBB::encodeSQLValue($user, $ddbb->getType('UserGroup','userId')); 
       $ddbb->executeDeleteQuery($sql);
 
-      foreach ($groups as $group_name) {
-         if ($group_name != "") {
-      		$is_authenticator_group = false;
-      		if ($authenticator != null) {
-      		   if (strstr($group_name, $authenticator->prefix) !== false) {
-      			   $is_authenticator_group = true;
-      		   }
-      		}
-      		if (!$is_authenticator_group) {
-      		   $ug = new UserGroup(array("group_name" => $group_name, "user" => $user));
+      foreach ($groups as $group) {
+         if ($group != "") {
+		 if (npadmin_setting("AUTH","DEFAULT_GROUP") == null || (npadmin_setting("AUTH","DEFAULT_GROUP") != null && npadmin_setting("AUTH","DEFAULT_GROUP") != $group)) {
+      		   $ug = new UserGroup(array("group_id" => $group, "user_id" => $user));
       		   $ug->store();
       		}
          }
@@ -112,7 +122,16 @@ if (array_key_exists("op", $_POST) && ($_POST['op'] == "login" || $_POST['op'] =
    }
 
    if ($returnList) {
-      $users = $ddbb->executeSelectQuery("SELECT * FROM ".$ddbb->getTable("User")." ORDER BY 1");
+      $users = array();
+      $usersT = $ddbb->executeSelectQuery("SELECT * FROM ".$ddbb->getTable("User")." ORDER BY 1");
+
+      if ($usersT != null) {
+	      foreach ($usersT as $data) {
+		      $user = new User($data);
+		      $user->creationDate = date("Y-m-d", $user->creationDate);
+		      $users[] = $user;
+	      }
+      }
 
       if ($authenticator != null) {
          $users = array_merge($users, $authenticator->listUsers());

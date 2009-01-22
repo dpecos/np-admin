@@ -18,6 +18,8 @@ if ($authClass != null) {
 	$authenticator = new $authClass;
 }
 
+$defaultAuthenticator = new DefaultAuthenticator();
+
 foreach ($_POST as $k => $v) {
    if ($v === "null")
       $_POST[$k] = null;
@@ -36,7 +38,7 @@ if (array_key_exists("op", $_POST)) {
       foreach ($list as $id) {
          if ($id != "") {
             $group = new Group();
-            $group->group_name = $id;
+            $group->groupId = $id;
             if (!$group->delete()) {
                echo "ERROR: Unable to delete group '".$id."'";
                return;
@@ -47,47 +49,42 @@ if (array_key_exists("op", $_POST)) {
       
    } else if ($_POST['op'] == "listAssignedUsers") {
 
-      $users = $ddbb->executeSelectQuery("SELECT ug.user AS user FROM  ".$ddbb->getTable("UserGroup")." ug WHERE ug.group_name = '".$_POST['group_name']."' ORDER BY 1");
+      $users = $defaultAuthenticator->listAssignedUsersToGroup($_POST['group_id']);
       if ($authenticator != null) {
-	      if ($users == null)
-		      $users = array();
-	      $users = array_merge($users, $authenticator->listAssignedUsers($_POST['group_name']));
+	      if (npadmin_setting("AUTH","DEFAULT_GROUP") != null && npadmin_setting("AUTH","DEFAULT_GROUP") == $_POST['group_id']) {
+		      $users = array_merge($users, $authenticator->listUsers());
+	      } else {
+		      $users = array_merge($users, $authenticator->listAssignedUsersToGroup($_POST['group_id']));
+	      }
       }
 
       echo NP_json_encode($users);
 
    } else if ($_POST['op'] == "listUnassignedUsers") {
 
-      $users = $ddbb->executeSelectQuery("SELECT user FROM ".$ddbb->getTable("User")." WHERE user NOT IN (SELECT user FROM ".$ddbb->getTable("UserGroup")." WHERE group_name = '".$_POST['group_name']."') ORDER BY 1");
-
+      $users = $defaultAuthenticator->listUnassignedUsersToGroup($_POST['group_id']);
       if ($authenticator != null) {
-	      if ($users == null)
-		      $users = array();
-	      $users = array_merge($users, $authenticator->listUnasssignedUsers($_POST['group_name']));
+	      if (npadmin_setting("AUTH","DEFAULT_GROUP") == null || (npadmin_setting("AUTH","DEFAULT_GROUP") != null && npadmin_setting("AUTH","DEFAULT_GROUP") != $_POST['group_id'])) {
+		      $users = array_merge($users, $authenticator->listUnassignedUsersToGroup($_POST['group_id']));
+	      }
       }
 
       echo NP_json_encode($users);    
       
    } else if ($_POST['op'] == "assignUsers") {
-      $group = $_POST['group_name'];   
+      $group = $_POST['group_id'];   
       $users = split(",", $_POST['list']);
       
-      $sql = "DELETE FROM ".$ddbb->getTable('UserGroup')." WHERE ".$ddbb->getMapping('UserGroup','groupName')." = ".NP_DDBB::encodeSQLValue($group, $ddbb->getType('UserGroup','groupName')); 
+      $sql = "DELETE FROM ".$ddbb->getTable('UserGroup')." WHERE ".$ddbb->getMapping('UserGroup','groupId')." = ".NP_DDBB::encodeSQLValue($group, $ddbb->getType('UserGroup','groupId')); 
       $ddbb->executeDeleteQuery($sql);
 
-      foreach ($users as $user) {
-         if ($user != "") {
-      		$is_authenticator_group = false;
-      		if ($authenticator != null) {
-      		   if (strstr($group_name, $authenticator->prefix) !== false) {
-      			   $is_authenticator_group = true;
-      		   }
-      		}
-       		if (!$is_authenticator_group) {
-      		   $ug = new UserGroup(array("group_name" => $group, "user" => $user));
-      		   $ug->store();
-      		}
-         }
+      foreach (array_values($users) as $user) {
+	      if ($user != "") {
+		      if (npadmin_setting("AUTH","DEFAULT_GROUP") == null || (npadmin_setting("AUTH","DEFAULT_GROUP") != null && npadmin_setting("AUTH","DEFAULT_GROUP") != $_POST['group_id'])) {
+			      $ug = new UserGroup(array("group_id" => $group, "user_id" => $user));
+			      $ug->store();
+		      }
+	      }
       }
       
       echo "OK";
@@ -98,15 +95,7 @@ if (array_key_exists("op", $_POST)) {
    }
    
    if ($returnList) {
-	   $groups = $ddbb->executeSelectQuery("SELECT * FROM ".$ddbb->getTable("Group")." ORDER BY ".$ddbb->getMapping('Group','groupName')." DESC");
-
-	   $authClass = npadmin_setting("NP-ADMIN", "AUTH");
-
-	   if ($authClass != null) {
-		   $authenticator = new $authClass;
-		   $groups = array_merge($groups, $authenticator->listGroups());
-	   }
-
+	   $groups = $defaultAuthenticator->listGroups();
 	   echo NP_json_encode($groups); 
    } 
 }

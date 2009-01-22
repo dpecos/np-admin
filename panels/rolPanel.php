@@ -1,7 +1,7 @@
 <?
 $NPADMIN_PATH = "../";
 require_once($NPADMIN_PATH."include/common.php");
-$panelData = npadmin_panel("groupPanel");
+$panelData = npadmin_panel("rolPanel");
 npadmin_security($panelData->getRols());
 ?>
 
@@ -11,7 +11,7 @@ function html_head() {
 ?>
 
 <style type="text/css">
-#group_form_table td {
+#rol_form_table td {
    padding: 3px;
 }
 
@@ -19,16 +19,16 @@ function html_head() {
    margin-top: 5px;
    margin-bottom: 5px;
 }
-#group_datatable {
+#rol_datatable {
    margin-bottom: 10px;
 }
 
-.yui-button#delGroupButton button {
+.yui-button#delRolButton button {
    padding-left: 2em;
    background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/del.gif) 5% 50% no-repeat;
 }
 
-.yui-button#addGroupButton button {
+.yui-button#addRolButton button {
    padding-left: 2em;
    background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/add.gif) 5% 50% no-repeat;
 }
@@ -92,9 +92,10 @@ li.li_assigned_users {
    var tabView;
    var dataSource;
    var columnDefs;
-   var addGroupDialog;
-   var groupDatatable;
-   var group_list;
+   var addRolDialog;
+   var rolDatatable;
+   var rol_user_list;
+   var rol_group_list;
     
    function changeTabEventHandler(e) {
    }
@@ -104,62 +105,70 @@ li.li_assigned_users {
       tabView.addListener('activeTabChange', changeTabEventHandler);
      
       columnDefs = [ 
-         {key:"groupName", label:"Name", sortable:true},
+         {key:"rolName", label:"Name", sortable:true},
          {key:"description", label:"Description", sortable:true},
 	   ]; 
 	        
-	   dataSource = new YAHOO.util.DataSource("<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/groups.php?");
+	   dataSource = new YAHOO.util.DataSource("<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/rols.php?");
   	   dataSource.connMethodPost = true;
 	   dataSource.responseType = YAHOO.util.DataSource.TYPE_JSON; 
       dataSource.connXhrMode = "queueRequests"; 
       dataSource.responseSchema = {
-            fields: ["groupId", "groupName","description"]
+            fields: ["rolId", "rolName","description"]
       };
       dataSource.doBeforeCallback = function(oRequest , oFullResponse , oParsedResponse) {
-         group_list.getMenu().clearContent();
-         group_list.set("label", "Select group");
+         rol_user_list.getMenu().clearContent();
+         rol_user_list.set("label", "Select rol");
          emptyList("unassigned_users");
          emptyList("assigned_users");
+
+	 rol_group_list.getMenu().clearContent();
+         rol_group_list.set("label", "Select rol");
+         emptyList("unassigned_groups");
+         emptyList("assigned_groups");
          
          for (id in oParsedResponse.results) {
-            var group = oParsedResponse.results[id];
-            if (typeof(group) != "function")
-               group_list.getMenu().addItem({ text: group.groupName, value: group.groupId, onclick: { fn: populateUsersLists } });
+            var rol = oParsedResponse.results[id];
+            if (typeof(rol) != "function") {
+               rol_user_list.getMenu().addItem({ text: rol.rolName, value: rol.rolId, onclick: { fn: populateUsersLists } });
+	       rol_group_list.getMenu().addItem({ text: rol.rolName, value: rol.rolId, onclick: { fn: populateUsersLists } });
+	    }
          }
-         group_list.getMenu().render(document.body);
+         rol_user_list.getMenu().render(document.body);
+         rol_group_list.getMenu().render(document.body);
          return oParsedResponse;
       };
 
-      groupDatatable = new YAHOO.widget.DataTable("group_datatable", columnDefs, dataSource, {initialRequest:"op=list"});
-      groupDatatable.subscribe("rowMouseoverEvent", groupDatatable.onEventHighlightRow);
-      groupDatatable.subscribe("rowMouseoutEvent", groupDatatable.onEventUnhighlightRow);
-      groupDatatable.subscribe("rowClickEvent", groupDatatable.onEventSelectRow);
-      var delGroupButton = new YAHOO.widget.Button({ 
-            label:"Delete selected groups", 
-            id:"delGroupButton", 
-            container:"group_buttons" });
-      delGroupButton.on("click", deleteGroups);
-      var addGroupButton = new YAHOO.widget.Button({ 
-            label:"Create new group...", 
-            id:"addGroupButton", 
-            container:"group_buttons" });
-      addGroupButton.on("click", showNewGroupDialog);
+      rolDatatable = new YAHOO.widget.DataTable("rol_datatable", columnDefs, dataSource, {initialRequest:"op=list"});
+      rolDatatable.subscribe("rowMouseoverEvent", rolDatatable.onEventHighlightRow);
+      rolDatatable.subscribe("rowMouseoutEvent", rolDatatable.onEventUnhighlightRow);
+      rolDatatable.subscribe("rowClickEvent", rolDatatable.onEventSelectRow);
+      var delRolButton = new YAHOO.widget.Button({ 
+            label:"Delete selected rols", 
+            id:"delRolButton", 
+            container:"rol_buttons" });
+      delRolButton.on("click", deleteRols);
+      var addRolButton = new YAHOO.widget.Button({ 
+            label:"Create new rol...", 
+            id:"addRolButton", 
+            container:"rol_buttons" });
+      addRolButton.on("click", showNewRolDialog);
       
-      addGroupDialog = new YAHOO.widget.Dialog("group_form_table", { 
+      addRolDialog = new YAHOO.widget.Dialog("rol_form_table", { 
 			   effect: {effect:YAHOO.widget.ContainerEffect.FADE, duration:0.25},
 			   fixedcenter: true,
 			   draggable: true,
 			   constraintoviewport: true,
-			   text: "Create new group",
+			   text: "Create new rol",
 			   modal: true,
 			   close: false,
             buttons: [ 
                { text:"Cancel", handler:defaultButtonHandler },
-	            { text:"Add", handler:addGroup, isDefault:true } 
+	            { text:"Add", handler:addRol, isDefault:true } 
 	         ],
-	         form: YAHOO.util.Dom.get("group_form")
+	         form: YAHOO.util.Dom.get("rol_form")
 			 });
-	   addGroupDialog.setHeader("Add group");
+	   addRolDialog.setHeader("Add rol");
 			 
       var onContextMenuClick = function(p_sType, p_aArgs, p_myDataTable) {
          var task = p_aArgs[1];
@@ -171,16 +180,16 @@ li.li_assigned_users {
                  switch(task.index) {
                      case 0: 
                          var oRecord = p_myDataTable.getRecord(elRow);
-                         box_question("groupdel_question", "Are you sure you want to delete the selected group?", function() {
+                         box_question("roldel_question", "Are you sure you want to delete the selected rol?", function() {
                             this.hide(); 
-                            deleteGroupsConfirm(oRecord.getData("groupId"));                         
+                            deleteRolsConfirm(oRecord.getData("rolId"));                         
                          });
                          break;
                      case 1:
                          var oRecord = p_myDataTable.getRecord(elRow);
-                         var groupId = oRecord.getData("groupId");
-                         var groupName = oRecord.getData("groupName");
-                         recoverDataUsersLists(groupId, groupName);
+                         var rolId = oRecord.getData("rolId");
+                         var rolName = oRecord.getData("rolName");
+                         recoverDataUsersLists(rolId, rolName);
                          tabView.set("activeTab",tabView.getTab(1));
                          break;                         
                  }
@@ -188,18 +197,26 @@ li.li_assigned_users {
          }
       };
 
-      var contextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", { trigger:groupDatatable.getTbodyEl() });
+      var contextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", { trigger:rolDatatable.getTbodyEl() });
       contextMenu.addItems(["Delete Item", "Manage users"]);
-      contextMenu.render("group_datatable");
-      contextMenu.clickEvent.subscribe(onContextMenuClick, groupDatatable);
+      contextMenu.render("rol_datatable");
+      contextMenu.clickEvent.subscribe(onContextMenuClick, rolDatatable);
       
-      group_list = new YAHOO.widget.Button("group_list", {
+      rol_user_list = new YAHOO.widget.Button("rol_user_list", {
             type: "menu",  
-            menu: "group_list_select"
+            menu: "rol_user_list_select"
+      });    
+      
+      rol_group_list = new YAHOO.widget.Button("rol_group_list", {
+            type: "menu",  
+            menu: "rol_group_list_select"
       });    
       
       new YAHOO.util.DDTarget("unassigned_users");
       new YAHOO.util.DDTarget("assigned_users");
+      new YAHOO.util.DDTarget("unassigned_groups");
+      new YAHOO.util.DDTarget("assigned_groups");
+
       var saveUsersButton = new YAHOO.widget.Button({ 
             label:"Save", 
             id:"saveUsersButton", 
@@ -208,82 +225,82 @@ li.li_assigned_users {
 
    });
    
-   function showNewGroupDialog() {
-      addGroupDialog.render(document.body);
-      addGroupDialog.show();
+   function showNewRolDialog() {
+      addRolDialog.render(document.body);
+      addRolDialog.show();
    }
    
-   function addGroup() {
-      var formObject = document.getElementById('group_form');
-      if (formObject.group_name.value.trim().length == 0)
-         box_block("groupadd_block", "All the required fields have to be filled");
+   function addRol() {
+      var formObject = document.getElementById('rol_form');
+      if (formObject.rol_name.value.trim().length == 0)
+         box_block("roladd_block", "All the required fields have to be filled");
       else {
          YAHOO.util.Connect.setForm(formObject); 
-         var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/groups.php", {success:addGroupCallback});
+         var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/rols.php", {success:addRolCallback});
       }
    }
    
-   function addGroupCallback(response) {
+   function addRolCallback(response) {
       
       if (response.responseText.trim() == "OK") {
-         addGroupDialog.hide();
-         box_info("groupadd_result", "Group added correctly!");
+         addRolDialog.hide();
+         box_info("roladd_result", "Rol added correctly!");
         
-         var formObject = document.getElementById('group_form');
+         var formObject = document.getElementById('rol_form');
          formObject.reset();
 
-         var count = groupDatatable.getRecordSet().getLength();
-         groupDatatable.deleteRows(0,count);
+         var count = rolDatatable.getRecordSet().getLength();
+         rolDatatable.deleteRows(0,count);
 
-         dataSource.sendRequest("op=list", {success : groupDatatable.onDataReturnAppendRows, scope: groupDatatable})
+         dataSource.sendRequest("op=list", {success : rolDatatable.onDataReturnAppendRows, scope: rolDatatable})
 
          tabView.set('activeIndex', 0);
       } else {
-         box_error("groupadd_result", response.responseText);
+         box_error("roladd_result", response.responseText);
       }
    }
    
-   function deleteGroups() {
-      var l = groupDatatable.getSelectedRows().length;
+   function deleteRols() {
+      var l = rolDatatable.getSelectedRows().length;
       if (l > 0)
-         box_question("groupdel_question", "Are you sure you want to delete the " + l + " selected groups?", deleteGroupsConfirm);
+         box_question("roldel_question", "Are you sure you want to delete the " + l + " selected rols?", deleteRolsConfirm);
       else 
-         box_warn("groupdel_warn", "No groups selected");
+         box_warn("roldel_warn", "No rols selected");
    }
      
-   function deleteGroupsConfirm(list) {
+   function deleteRolsConfirm(list) {
       if (YAHOO.lang.isObject(list)) {
          var list = "";
-         var rows = groupDatatable.getSelectedRows();
+         var rows = rolDatatable.getSelectedRows();
          for (var id in rows) {  
-            var record = groupDatatable.getRecord(rows[id]);
+            var record = rolDatatable.getRecord(rows[id]);
             if (record != null)
-               list += record.getData("groupId") + ",";
+               list += record.getData("rolId") + ",";
          }
          list = list.substring(0, list.length - 1);
          this.hide();
       }
      
       var postdata = "op=delete&list=" + list;
-      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/groups.php", {success:deleteGroupsCallback}, postdata);
+      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/rols.php", {success:deleteRolsCallback}, postdata);
    }
    
-   function deleteGroupsCallback(response) {
+   function deleteRolsCallback(response) {
       if (response.responseText.trim() == "OK") {
-         var count = groupDatatable.getRecordSet().getLength();
-         groupDatatable.deleteRows(0, count);
+         var count = rolDatatable.getRecordSet().getLength();
+         rolDatatable.deleteRows(0, count);
 
-         dataSource.sendRequest("op=list", {success : groupDatatable.onDataReturnAppendRows, scope: groupDatatable})
+         dataSource.sendRequest("op=list", {success : rolDatatable.onDataReturnAppendRows, scope: rolDatatable})
       } else {
-         box_error("groupdel_result", response.responseText);
+         box_error("roldel_result", response.responseText);
       }
    }
    
 </script>
 
 <script type="text/javascript">
-DDList = function(id, sGroup, config) {
-    DDList.superclass.constructor.call(this, id, sGroup, config);
+DDList = function(id, sRol, config) {
+    DDList.superclass.constructor.call(this, id, sRol, config);
 
     var el = this.getDragEl();
     YAHOO.util.Dom.setStyle(el, "opacity", 0.67); // The proxy is slightly transparent
@@ -398,19 +415,19 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
 
 
    function populateUsersLists(p_sType, p_aArgs, p_oItem) {
-      groupId = p_oItem.value;
-      groupName = p_oItem.cfg.getProperty("text");
-      recoverDataUsersLists(groupId, groupName);
+      rolId = p_oItem.value;
+      rolName = p_oItem.cfg.getProperty("text");
+      recoverDataUsersLists(rolId, rolName);
    }
    
-   function recoverDataUsersLists(groupId, groupName) {
-      group_list.set("label", groupName);
-      group_list.value = groupId;
+   function recoverDataUsersLists(rolId, rolName) {
+      rol_user_list.set("label", rolName);
+      rol_user_list.value = rolId;
 
       emptyList("unassigned_users");
       emptyList("assigned_users");
-      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/groups.php", {success:userListCallback, argument:["unassigned_users"]}, "op=listUnassignedUsers&group_id="+groupId);
-      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/groups.php", {success:userListCallback, argument:["assigned_users"]}, "op=listAssignedUsers&group_id="+groupId);   
+      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/rols.php", {success:userListCallback, argument:["unassigned_users"]}, "op=listUnassignedUsers&rol_id="+rolId);
+      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/rols.php", {success:userListCallback, argument:["assigned_users"]}, "op=listAssignedUsers&rol_id="+rolId);   
    }
    
    function userListCallback(response) {
@@ -435,9 +452,9 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
    }
    
    function assignUsers() {
-      var groupName = group_list.get("label");
-      var groupId = group_list.value;
-      if (groupName != "Select group") {
+      var rolName = rol_user_list.get("label");
+      var rolId = rol_user_list.value;
+      if (rolName != "Select rol") {
          var parseList = function(listName) {
               ul = YAHOO.util.Dom.get(listName)
               var items = ul.getElementsByTagName("li");
@@ -450,15 +467,15 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
           };
 
           var list = parseList("assigned_users");
-          var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/groups.php", {success:assignUsersCallback, argument:[groupId, groupName]}, "op=assignUsers&group_id="+groupId+"&list="+list);
+          var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/rols.php", {success:assignUsersCallback, argument:[rolId, rolName]}, "op=assignUsers&rol_id="+rolId+"&list="+list);
        }
    }
 
    function assignUsersCallback(response) {
-      var groupId = response.argument[0];
-      var groupName = response.argument[1];
-      box_info("user_users_info", "Groups configuration saved correctly!");
-      recoverDataUsersLists(groupId, groupName);
+      var rolId = response.argument[0];
+      var rolName = response.argument[1];
+      box_info("user_users_info", "Rols configuration saved correctly!");
+      recoverDataUsersLists(rolId, rolName);
    }  
 </script>
 
@@ -471,18 +488,19 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
 
 <div id="mainTabs" class="yui-navset">
     <ul class="yui-nav">
-        <li class="selected"><a href="#"><em>List of groups</em></a></li>
-        <li><a href="#"><em>Group's users</em></a></li>
+        <li class="selected"><a href="#"><em>List of rols</em></a></li>
+        <li><a href="#"><em>Rol's users</em></a></li>
+        <li><a href="#"><em>Rol's groups</em></a></li>
     </ul>            
     <div class="yui-content">
         <div>
-           <div class="buttonBox" id="group_buttons"></div>
-           <div id="group_datatable"></div>
+           <div class="buttonBox" id="rol_buttons"></div>
+           <div id="rol_datatable"></div>
         </div>
         <div>  
            <div class="buttonBox" id="users_buttons"></div>
-           Group: <input type="button" id="group_list" name="group_list" value="Select group"/>
-           <select id="group_list_select" name="group_list_select"></select>
+           Rol: <input type="button" id="rol_user_list" name="rol_user_list" value="Select rol"/>
+           <select id="rol_user_list_select" name="rol_user_list_select"></select>
            <table id="users_form_table">
               <tr><td>
                  <h3>Unassigned users</h3>
@@ -493,15 +511,29 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
               </td></tr>
            </table>
         </div>
+         <div>  
+           <div class="buttonBox" id="groups_buttons"></div>
+           Rol: <input type="button" id="rol_group_list" name="rol_group_list" value="Select rol"/>
+           <select id="rol_group_list_select" name="rol_group_list_select"></select>
+           <table id="groups_form_table">
+              <tr><td>
+                 <h3>Unassigned groups</h3>
+                 <ul id="unassigned_groups" class="draglist"></ul>
+              </td><td>
+                 <h3>Assigned groups</h3>
+                 <ul id="assigned_groups" class="draglist"></ul>
+              </td></tr>
+           </table>
+        </div>
     </div>
 </div>
 
 <div style="visibility: hidden; display:none">
-  <div id="group_form_table">
+  <div id="rol_form_table">
      <div class="bd">
-        <form id="group_form">
+        <form id="rol_form">
            <table >
-              <tr><td>Group name:</td><td><input type="text" name="group_name"/></td><tr>
+              <tr><td>Rol name:</td><td><input type="text" name="rol_name"/></td><tr>
               <tr><td>Description:</td><td><input type="text" name="description"/></td><tr>
               <input type="hidden" name="op" value="add"/>
            </table>

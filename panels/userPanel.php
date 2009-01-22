@@ -2,7 +2,7 @@
 $NPADMIN_PATH = "../";
 require_once($NPADMIN_PATH."include/common.php");
 $panelData = npadmin_panel("userPanel");
-npadmin_security($panelData->getGroups());
+npadmin_security($panelData->getRols());
 ?>
 
 <?
@@ -110,9 +110,9 @@ li.li_assigned_groups {
      
       columnDefs = [ 
          {key:"user", label:"User", sortable:true},
-         {key:"creation_date", label:"Creation date", formatter:YAHOO.widget.DataTable.formatDate, sortable:true, sortOptions:{defaultDir:YAHOO.widget.DataTable.CLASS_DESC}},
+         {key:"creationDate", label:"Creation date", formatter:YAHOO.widget.DataTable.formatDate, sortable:true, sortOptions:{defaultDir:YAHOO.widget.DataTable.CLASS_DESC}},
          {key:"email", sortable:true},
-         {key:"real_name", label:"Real name", sortable:true},
+         {key:"realName", label:"Real name", sortable:true},
 	   ]; 
 	        
 	   dataSource = new YAHOO.util.DataSource("<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/users.php?");
@@ -120,7 +120,7 @@ li.li_assigned_groups {
 	   dataSource.responseType = YAHOO.util.DataSource.TYPE_JSON; 
       dataSource.connXhrMode = "queueRequests"; 
       dataSource.responseSchema = {
-            fields: ["user","creation_date","email","real_name"]
+            fields: ["userId", "user","creationDate","email","realName"]
       };
       dataSource.doBeforeCallback = function(oRequest , oFullResponse , oParsedResponse) {
          user_list.getMenu().clearContent();
@@ -131,7 +131,7 @@ li.li_assigned_groups {
          for (id in oParsedResponse.results.reverse()) {
             var user = oParsedResponse.results[id];
             if (typeof(user) != "function")
-               user_list.getMenu().addItem({ text: user.user, value: user.user, onclick: { fn: populateGroupsLists } });
+               user_list.getMenu().addItem({ text: user.user, value: user.userId, onclick: { fn: populateGroupsLists } });
          }
          user_list.getMenu().render(document.body);
          oParsedResponse.results.reverse();
@@ -180,13 +180,14 @@ li.li_assigned_groups {
                          var oRecord = p_myDataTable.getRecord(elRow);
                          box_question("userdel_question", "Are you sure you want to delete the selected user?", function() {
                             this.hide(); 
-                            deleteUsersConfirm(oRecord.getData("user"));
+                            deleteUsersConfirm(oRecord.getData("userId"));
                          });
                          break;
                      case 1:
                          var oRecord = p_myDataTable.getRecord(elRow);
-                         var user = oRecord.getData("user");
-                         recoverDataGroupsLists(user);
+                         var userId = oRecord.getData("userId");
+                         var userName = oRecord.getData("user");
+                         recoverDataGroupsLists(userId, userName);
                          tabView.set("activeTab",tabView.getTab(1));
                          break;
                  }
@@ -258,7 +259,7 @@ li.li_assigned_groups {
    }
      
    function deleteUsersConfirm(list) {
-      if (!YAHOO.lang.isString(list)) {
+      if (YAHOO.lang.isObject(list)) {
          var list = "";
          var rows = userDatatable.getSelectedRows();
          for (var id in rows) {  
@@ -404,17 +405,20 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
 
 
    function populateGroupsLists(p_sType, p_aArgs, p_oItem) {
-      user = p_oItem.cfg.getProperty("text");
-      recoverDataGroupsLists(user);
+      //user = p_oItem.cfg.getProperty("text");
+      user_id = p_oItem.value;
+      user_name = p_oItem.cfg.getProperty("text");
+      recoverDataGroupsLists(user_id, user_name);
    }
    
-   function recoverDataGroupsLists(user) {
-      user_list.set("label", user);
+   function recoverDataGroupsLists(userId, userName) {
+      user_list.set("label", userName);
+      user_list.value = userId;
 
       emptyList("unassigned_groups");
       emptyList("assigned_groups");
-      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/users.php", {success:groupListCallback, argument:["unassigned_groups"]}, "op=listUnassignedGroups&user="+user);
-      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/users.php", {success:groupListCallback, argument:["assigned_groups"]}, "op=listAssignedGroups&user="+user);   
+      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/users.php", {success:groupListCallback, argument:["unassigned_groups"]}, "op=listUnassignedGroups&user="+userId);
+      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/users.php", {success:groupListCallback, argument:["assigned_groups"]}, "op=listAssignedGroups&user="+userId);   
    }
    
    function groupListCallback(response) {
@@ -428,38 +432,43 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
          group = data[id];
          if (typeof(group) != "function") {
             var group_element = document.createElement('li');
-            group_element.innerHTML = group.group_name;
-            group_element.setAttribute("id", listId + "_" + group.group_name);
+            group_element.innerHTML = group.groupName;
+            group_element.setAttribute("id", listId + "_" + group.groupId);
+	    group_element.setAttribute("title", group.groupId);
             group_element.className = "li_" + listId;
             groupsList.appendChild(group_element);
-            new DDList(listId + "_" + group.group_name);
+            new DDList(listId + "_" + group.groupId);
          }
       }   
    }
    
    function assignGroups() {
-      var user = user_list.get("label");
-      if (user != "Select user") {
+      var userName = user_list.get("label");
+      var userId = user_list.value;
+
+      if (userName != "Select user") {
          var parseList = function(listName) {
               ul = YAHOO.util.Dom.get(listName)
               var items = ul.getElementsByTagName("li");
               var list = "";
               for (i=0; i<items.length; i=i+1) {
-                  list += items[i].innerHTML + ",";
+		      //list += items[i].innerHTML + ",";
+		      list += items[i].title + ",";
               }
               list = list.substring(0, list.length - 1);
               return list;
           };
 
           var list = parseList("assigned_groups");
-          var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/users.php", {success:assignGroupsCallback, argument:[user]}, "op=assignGroups&user="+user+"&list="+list);
+          var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/users.php", {success:assignGroupsCallback, argument:[userId, userName]}, "op=assignGroups&user="+userId+"&list="+list);
        }
    }
 
    function assignGroupsCallback(response) {
-      var user = response.argument[0];
+      var userId = response.argument[0];
+      var userName = response.argument[1];
       box_info("user_groups_info", "Groups configuration saved correctly!");
-      recoverDataGroupsLists(user);
+      recoverDataGroupsLists(userId, userName);
    }   
 </script>
 
@@ -478,10 +487,11 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
     </ul>            
     <div class="yui-content">
         <div>
+           <div class="buttonBox" id="user_buttons"></div>
            <div id="user_datatable"></div>
-           <div id="user_buttons"></div>
         </div>
         <div>  
+           <div class="buttonBox" id="groups_buttons"></div>
            User: <input type="button" id="user_list" name="user_list" value="Select user"/>
            <select id="user_list_select" name="user_list_select"></select>
            <table id="groups_form_table">
@@ -493,7 +503,6 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
                  <ul id="assigned_groups" class="draglist"></ul>
               </td></tr>
            </table>
-           <div id="groups_buttons"/>
         </div>
     </div>
 </div>

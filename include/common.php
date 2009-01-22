@@ -22,13 +22,16 @@ $ddbb = new NP_DDBB($ddbb_settings);
 require_once($NPADMIN_PATH."API.php");
 
 require_once($NPADMIN_PATH."classes/Setting.class.php");
-require_once($NPADMIN_PATH."classes/User.class.php");
+require_once($NPADMIN_PATH."classes/Rol.class.php");
 require_once($NPADMIN_PATH."classes/Group.class.php");
+require_once($NPADMIN_PATH."classes/GroupRol.class.php");
+require_once($NPADMIN_PATH."classes/User.class.php");
+require_once($NPADMIN_PATH."classes/UserRol.class.php");
 require_once($NPADMIN_PATH."classes/UserGroup.class.php");
 require_once($NPADMIN_PATH."classes/Menu.class.php");
-require_once($NPADMIN_PATH."classes/MenuGroup.class.php");
+require_once($NPADMIN_PATH."classes/MenuRol.class.php");
 require_once($NPADMIN_PATH."classes/Panel.class.php");
-require_once($NPADMIN_PATH."classes/PanelGroup.class.php");
+require_once($NPADMIN_PATH."classes/PanelRol.class.php");
 
 function __autoload($class_name) {
    global $NPADMIN_PATH;

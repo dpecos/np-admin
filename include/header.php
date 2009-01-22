@@ -37,9 +37,21 @@
          .page_title {
             font-size: 22px;
             font-weight: bold;
+	    font-family: "Arial";
             margin-top: 5px;
             margin-bottom: 15px;
+	    background-color: rgb(188,193,214);
+            border: 2px solid black;
+            padding:10px;
          }
+
+	 .buttonBox {
+            border: 1px solid black;
+            margin-bottom:10px;
+            padding:10px;
+	    background-color: rgb(190,211,206);
+	 }
+
       </style>
       
       <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/npadmin_javascript.js"></script>

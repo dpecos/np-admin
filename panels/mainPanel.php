@@ -2,7 +2,7 @@
 $NPADMIN_PATH = "../";
 require_once($NPADMIN_PATH."include/common.php");
 $panelData = npadmin_panel("mainPanel");
-npadmin_security($panelData->getGroups());
+npadmin_security($panelData->getRols());
 ?>
 
 <?

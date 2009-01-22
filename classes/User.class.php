@@ -2,11 +2,12 @@
 global $ddbb;
 
 $ddbb->addTable("User", "users");
-$ddbb->addField("User", "user", null, "STRING", array("PK" => true, "NULLABLE" => false, "LENGTH" => 20));
+$ddbb->addField("User", "userId", "user_id", "INT", array("PK" => true, "NULLABLE" => false));
+$ddbb->addField("User", "user", null, "STRING", array("NULLABLE" => false, "LENGTH" => 20));
 $ddbb->addField("User", "password", null, "STRING", array("NULLABLE" => false, "LENGTH" => 60));
 $ddbb->addField("User", "email", null, "STRING", array("LENGTH" => 60, "DEFAULT" => NULL));
-$ddbb->addField("User", "creation_date", "creation_date", "DATE", array("NULLABLE" => false, "DEFAULT" => "CURRENT_TIMESTAMP"));
-$ddbb->addField("User", "real_name", "real_name", "STRING", array("LENGTH" => 60, "DEFAULT" => NULL));
+$ddbb->addField("User", "creationDate", "creation_date", "DATE", array("NULLABLE" => false, "DEFAULT" => "CURRENT_TIMESTAMP"));
+$ddbb->addField("User", "realName", "real_name", "STRING", array("LENGTH" => 60, "DEFAULT" => NULL));
 
 class User {
    public function __construct($data = null) {     
@@ -21,16 +22,13 @@ class User {
    }
    
    public function delete() {
-      global $ddbb;
-      if (strlen($this->user) == 0) {
-         $sql_1 = "DELETE FROM ".$ddbb->getTable('User')." WHERE ".$ddbb->getMapping('User','user')." = ''";
-         $sql_2 = "DELETE FROM ".$ddbb->getTable('UserGroup')." WHERE ".$ddbb->getMapping('UserGroup','user')." = ''";            
-      } else {
-         $sql_1 = "DELETE FROM ".$ddbb->getTable('User')." WHERE ".$ddbb->getMapping('User','user')." = ".NP_DDBB::encodeSQLValue($this->user, $ddbb->getType('User','user'));
-         $sql_2 = "DELETE FROM ".$ddbb->getTable('UserGroup')." WHERE ".$ddbb->getMapping('UserGroup','user')." = ".NP_DDBB::encodeSQLValue($this->user, $ddbb->getType('UserGroup','user'));            
-      }
-      $ddbb->executeDeleteQuery($sql_2);
-      return ($ddbb->executeDeleteQuery($sql_1) > 0);
+	   global $ddbb;
+	   $sql_1 = "DELETE FROM ".$ddbb->getTable('User')." WHERE ".$ddbb->getMapping('User','userId')." = ".NP_DDBB::encodeSQLValue($this->userId, $ddbb->getType('User','userId'));
+	   $sql_2 = "DELETE FROM ".$ddbb->getTable('UserGroup')." WHERE ".$ddbb->getMapping('UserGroup','userId')." = ".NP_DDBB::encodeSQLValue($this->userId, $ddbb->getType('UserGroup','userId'));            
+	   $sql_3 = "DELETE FROM ".$ddbb->getTable('UserRol')." WHERE ".$ddbb->getMapping('UserRol','userId')." = ".NP_DDBB::encodeSQLValue($this->userId, $ddbb->getType('UserRol','userId'));            
+	   $ddbb->executeDeleteQuery($sql_2);
+	   $ddbb->executeDeleteQuery($sql_3);
+	   return ($ddbb->executeDeleteQuery($sql_1) > 0);
    }
    
    public function toString() {

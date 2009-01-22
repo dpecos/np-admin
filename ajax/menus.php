@@ -29,9 +29,9 @@ if (array_key_exists("op", $_POST)) {
    } else if ($_POST['op'] == "delete") {
       $list = split(",", $_POST['list']);
       foreach ($list as $id) {
-         $group = new Group();
-         $group->group_name = $id;
-         if (!$group->delete()) {
+         $menu= new Menu();
+         $menu->menuId = $id;
+         if (!$menu->delete()) {
             echo "ERROR: Unable to delete group '".$id."'";
             return;
          }
@@ -53,11 +53,11 @@ if (array_key_exists("op", $_POST)) {
          global $ddbb, $menus;
          
          $sql  = "SELECT m.* FROM ".$ddbb->getTable('Menu')." m, ".$ddbb->getTable('MenuGroup')." mg WHERE ".$ddbb->getMapping('Menu','parentId')." = ".NP_DDBB::encodeSQLValue($parentId, $ddbb->getType('Menu','parentId'));
-         $sql .= " AND m.".$ddbb->getMapping('Menu','id')." = mg.".$ddbb->getMapping('MenuGroup','menuId');
+         $sql .= " AND m.".$ddbb->getMapping('Menu','menuId')." = mg.".$ddbb->getMapping('MenuGroup','menuId');
          $sql .= " AND m.".$ddbb->getMapping('Menu','panelId')." IS NULL";
          if ($groups != null) {
             foreach ($groups as $group) {
-               $sql .= " AND mg.".$ddbb->getMapping('MenuGroup','groupName')." = ".NP_DDBB::encodeSQLValue($group, $ddbb->getType('MenuGroup','groupName'));
+               $sql .= " AND mg.".$ddbb->getMapping('MenuGroup','groupId')." = ".NP_DDBB::encodeSQLValue($group, $ddbb->getType('MenuGroup','groupId'));
             }
          }
          $sql .= " UNION SELECT m.* FROM ".$ddbb->getTable('Panel')." p, ".$ddbb->getTable('PanelGroup')." pg, ".$ddbb->getTable('Menu')." m ";
