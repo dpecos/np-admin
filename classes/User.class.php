@@ -2,7 +2,7 @@
 global $ddbb;
 
 $ddbb->addTable("User", "users");
-$ddbb->addField("User", "userId", "user_id", "INT", array("PK" => true, "NULLABLE" => false));
+$ddbb->addField("User", "userId", "user_id", "INT", array("PK" => true, "NULLABLE" => false, "AUTO_INCREMENT" => true));
 $ddbb->addField("User", "user", null, "STRING", array("NULLABLE" => false, "LENGTH" => 20));
 $ddbb->addField("User", "password", null, "STRING", array("NULLABLE" => false, "LENGTH" => 60));
 $ddbb->addField("User", "email", null, "STRING", array("LENGTH" => 60, "DEFAULT" => NULL));

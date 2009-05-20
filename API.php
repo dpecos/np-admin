@@ -14,7 +14,7 @@ function npadmin_login($user, $password) {
 function npadmin_logout() {
    if (session_id() === "")
       session_start();
-   if (isset($_SESSION))
+   if (isset($_SESSION) && array_key_exists('npadmin_logindata', $_SESSION))
       $_SESSION['npadmin_logindata']->logout();
 }
 

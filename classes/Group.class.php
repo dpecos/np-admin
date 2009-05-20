@@ -2,7 +2,7 @@
 global $ddbb;
 
 $ddbb->addTable("Group", "groups");
-$ddbb->addField("Group", "groupId", "group_id", "INT", array("PK" => true, "NULLABLE" => false, "DEFAULT" => null));
+$ddbb->addField("Group", "groupId", "group_id", "INT", array("PK" => true, "NULLABLE" => false, "AUTO_INCREMENT" => true));
 $ddbb->addField("Group", "groupName", "group_name", "STRING", array("NULLABLE" => false, "LENGTH" => 40));
 $ddbb->addField("Group", "description", null, "STRING", array("NULLABLE" => true, "LENGTH" => 150, "DEFAULT" => null));
 

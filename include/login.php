@@ -34,16 +34,16 @@ $NPADMIN_PATH = "../";
 			         modal: true,
 			         close: false,
                   buttons: [ 
-                     { text:"Cancel", handler:doExit },
-	                  { text:"Login", handler:doLogin, isDefault:true } 
+                     { text:"Cancel", handler:npadmin_doExit },
+	                  { text:"Login", handler:npadmin_doLogin, isDefault:true } 
 	               ]
-			       });
-	         loginDialog.setHeader("NP-Admin Login");
-	         loginDialog.render(document.body);
+			      });
+	          loginDialog.setHeader("NP-Admin Login");
+	          loginDialog.render(document.body);
             loginDialog.show();
          });
          
-         function doLogin() {
+         function npadmin_doLogin() {
             var formObject = document.getElementById('login_form');
             if (formObject.user.value.trim().length == 0 || formObject.password.value.trim().length == 0)
                box_block("userlogin_block", "All the required fields have to be filled");
@@ -53,7 +53,7 @@ $NPADMIN_PATH = "../";
             }
          }
          
-         function doExit() {
+         function npadmin_doExit() {
             window.history.back();
          }
          

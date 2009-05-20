@@ -128,7 +128,7 @@ if (array_key_exists("op", $_POST) && ($_POST['op'] == "login" || $_POST['op'] =
       if ($usersT != null) {
 	      foreach ($usersT as $data) {
 		      $user = new User($data);
-		      $user->creationDate = date("Y-m-d", $user->creationDate);
+		      //$user->creationDate = date("Y-m-d", $user->creationDate);
 		      $users[] = $user;
 	      }
       }

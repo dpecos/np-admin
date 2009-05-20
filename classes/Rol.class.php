@@ -2,7 +2,7 @@
 global $ddbb;
 
 $ddbb->addTable("Rol", "rols");
-$ddbb->addField("Rol", "rolId", "rol_id", "INT", array("PK" => true, "NULLABLE" => false, "DEFAULT" => null));
+$ddbb->addField("Rol", "rolId", "rol_id", "INT", array("PK" => true, "NULLABLE" => false, "AUTO_INCREMENT" => true));
 $ddbb->addField("Rol", "rolName", "rol_name", "STRING", array("NULLABLE" => false, "LENGTH" => 40));
 $ddbb->addField("Rol", "description", null, "STRING", array("NULLABLE" => true, "LENGTH" => 150, "DEFAULT" => null));
 

@@ -20,24 +20,12 @@ if (!array_key_exists('_PATH', $_POST))
 
 /* Fresh install data */
 $data = array (
-   'Setting' => array(
-      array('type' => 'NP-ADMIN', 'name' => 'BASE_URL', 'default_value' => "/np-admin", "value" => $_POST['_PATH']),
-      array('type' => 'NP-ADMIN', 'name' => 'AUTH', 'default_value' => ""),
-      array('type' => 'NP-ADMIN', 'name' => 'AUTH_FORM', 'default_value' => "include/login.php"),
-      array('type' => 'NP-ADMIN', 'name' => 'YUI_PATH', 'default_value' => 'http://yui.yahooapis.com/2.5.2/build', "value" => $_POST['_PATH']."/lib/yui_2.5.2/build"),
-      array('type' => 'NP-ADMIN', 'name' => 'BG_COLOR', 'default_value' => '#9999BB'),
-      array('type' => 'APP', 'name' => 'TITLE', 'default_value' => 'App Name', 'value' => "Example App"),
-      array('type' => 'APP', 'name' => 'FORM_MESSAGE', 'default_value' => "You need a valid and granted user/password")
-   ), 
-   'User' => array(
-      array('user' => 'admin', 'password' => 'd033e22ae348aeb5660fc2140aec35850c4da997', 'email' => 'admin@estilohacker.com', 'real_name' => 'NP-Admin main user')
-   ),
    'Group' => array(
-      array('group_name' => 'Administrators', 'description' => 'NP-Admin administrator users')
+      array('group_id' => 0, 'group_name' => 'Administrators', 'description' => 'NP-Admin administrator users')
    ),
-   'UserGroup' => array(
-      array('group_name' => 'Administrators', 'user' => 'admin')
-   ),
+   'GroupRol' => array(
+      array('group_id' => 0, 'rol_id' => 0)
+   ), 
    'Menu' => array(
       array('id' => 1, 'parent_id' => 0, 'order' => 0, 'text' => 'Main', 'url' => 'panels/mainPanel.php', 'panel_id' => 'mainPanel'),
       array('id' => 2, 'parent_id' => 0, 'order' => 1, 'text' => 'Management'),
@@ -50,10 +38,11 @@ $data = array (
       array('id' => 9, 'parent_id' => 2, 'order' => 3, 'text' => 'Panels', 'url' => 'panels/panelPanel.php', 'panel_id' => 'panelPanel'),
       array('id' => 10, 'parent_id' => 6, 'order' => 1, 'url' => 'panels/phpInfoPanel.php', 'panel_id' => 'phpInfoPanel'),
    ),
-   'MenuGroup' => array(
-      array('menu_id' => 2, 'group_name' => 'Administrators'),
-      array('menu_id' => 6, 'group_name' => 'Administrators'),
-      array('menu_id' => 8, 'group_name' => 'Administrators'),
+   'MenuGroup' => array(),
+   'MenuRol' => array(
+      array('menu_id' => 2, 'rol_id' => 0),
+      array('menu_id' => 6, 'rol_id' => 0),
+      array('menu_id' => 8, 'rol_id' => 0),
    ),
    'Panel' => array(
       array('id' => 'mainPanel', 'title' => 'NP-Admin Home'),
@@ -63,15 +52,34 @@ $data = array (
       array('id' => 'settingsPanel', 'title' => 'Settings administration'),
       array('id' => 'panelPanel', 'title' => 'Panels administration'),
       array('id' => 'phpInfoPanel', 'title' => 'PHP Info'),
-   ),   
-   'PanelGroup' => array(
-      array('panel_id' => 'groupPanel', 'group_name' => 'Administrators'),
-      array('panel_id' => 'mainPanel', 'group_name' => 'Administrators'),
-      array('panel_id' => 'menuPanel', 'group_name' => 'Administrators'),
-      array('panel_id' => 'panelPanel', 'group_name' => 'Administrators'),
-      array('panel_id' => 'settingsPanel', 'group_name' => 'Administrators'),
-      array('panel_id' => 'userPanel', 'group_name' => 'Administrators'),
-      array('panel_id' => 'phpInfoPanel', 'group_name' => 'Administrators'),
+   ),  
+   'PanelGroup' => array(),
+   'PanelRol' => array(
+      array('panel_id' => 'groupPanel', 'rol_id' => 0),
+      array('panel_id' => 'mainPanel', 'rol_id' => 0),
+      array('panel_id' => 'menuPanel', 'rol_id' => 0),
+      array('panel_id' => 'panelPanel', 'rol_id' => 0),
+      array('panel_id' => 'settingsPanel', 'rol_id' => 0),
+      array('panel_id' => 'userPanel', 'rol_id' => 0),
+      array('panel_id' => 'phpInfoPanel', 'rol_id' => 0),
+   ),
+   'Rol' => array(
+   		array('rol_id' => 0, 'rol_name' => 'Administrators', 'description' => 'Administrators')
+   ),  
+   'Setting' => array(
+      array('type' => 'NP-ADMIN', 'name' => 'BASE_URL', 'default_value' => "/np-admin", "value" => $_POST['_PATH']),
+      array('type' => 'NP-ADMIN', 'name' => 'AUTH', 'default_value' => ""),
+      array('type' => 'NP-ADMIN', 'name' => 'AUTH_FORM', 'default_value' => "include/login.php"),
+      array('type' => 'NP-ADMIN', 'name' => 'YUI_PATH', 'default_value' => 'http://yui.yahooapis.com/2.5.2/build', "value" => $_POST['_PATH']."/lib/yui_2.5.2/build"),
+      array('type' => 'NP-ADMIN', 'name' => 'BG_COLOR', 'default_value' => '#9999BB'),
+      array('type' => 'APP', 'name' => 'TITLE', 'default_value' => 'App Name', 'value' => "Example App"),
+      array('type' => 'APP', 'name' => 'FORM_MESSAGE', 'default_value' => "You need a valid and granted user/password")
+   ), 
+   'User' => array(
+      array('userId' => 0, 'user' => 'admin', 'password' => 'd033e22ae348aeb5660fc2140aec35850c4da997', 'email' => 'admin@domain.com', 'real_name' => 'NP-Admin main user')
+   ),
+   'UserGroup' => array(
+      array('group_name' => 'Administrators', 'user' => 'admin')
    )
 );
 ?>
