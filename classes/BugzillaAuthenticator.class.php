@@ -1,66 +1,43 @@
-<? 
+<?
 class BugzillaAuthenticator {
    public $prefix = "bugzilla_";
 
-/*   private function getCookieUserId() {
-      if (isset($_COOKIE) &&isset($_COOKIE['Bugzilla_login'])) {
-         return $_COOKIE['Bugzilla_login'];
-      } else {
-         return null;
-      }
-   }
- */
    private function getCookieUserId() {
-     if (isset($_COOKIE) &&isset($_COOKIE['Bugzilla_login'])) {
-       $user = $_COOKIE['Bugzilla_login'];
-       if ($user == 1){
-         if (isset($_COOKIE['sudo'])){
-           return $_COOKIE['sudo'];
-         } else {
-           return $_COOKIE['Bugzilla_login'];
-         }
-       } else {
-         return $_COOKIE['Bugzilla_login'];
-       }
-     } else {
-      return null;
-     }
+		$login = npadmin_loginData();
+		return $login->getUser()->userId * (-1);
   }
 
-
-   
    public function login($user, $password) {
 	   global $ddbb;
-	   if ($user == null && $password == null) {
-		   $cookie = $this->getCookieUserId();
-		   if ($cookie != null) {
-			   $sql = "SELECT * FROM profiles WHERE userid = ".$cookie;
-			   $data = $ddbb->executePKSelectQuery($sql);
+	   if ($user != null && $password != null) {
+			$defaultDomain = npadmin_setting("AUTH", "DEFAULT_DOMAIN");
 
-			   $user = $this->createUser($data);
+			if (!strstr($user,$defaultDomain)){
+				$user .= "@".$defaultDomain;
+			}
 
-			   //$sql = "SELECT DISTINCT g.name FROM profiles p, user_group_map m, groups g WHERE p.userid = m.user_id AND m.group_id = g.id AND p.userid = ".$cookie;
-			   //$bugzillaGroups = $ddbb->executeSelectQuery($sql);
+			$sql = "SELECT * FROM profiles WHERE login_name='".$user."'";
 
-			   //$groups = array();
-			   $groupsObj = $this->listAssignedGroups($cookie);
-	 /*foreach ($groupsObj as $g) {
-	    $groups[] = $g->groupName;
-	 }*/
+			$data = $ddbb->executePKSelectQuery($sql);
 
-			   return array($user, null, $groupsObj);
-		   } else {
-			   return null;
-		   }
+			if (crypt($password, $data['cryptpassword']) == $data['cryptpassword']) {
+				$user = $this->createUser($data);
+				$groupsObj = $this->listAssignedGroups($data['userid']);
+
+				return array($user, null, $groupsObj);
+			} else {
+				return null;
+			}
+
 	   } else {
 		   return null;
 	   }
    }
-   
+
    public function canLogout() {
-      return false;
+      return true;
    }
-   
+
    public function isLoginFormRequired() {
       return false;
    }
@@ -136,7 +113,7 @@ class BugzillaAuthenticator {
 	   $sql = "SELECT * from groups WHERE name not in (Select DISTINCT g.name FROM profiles p, user_group_map m, groups g WHERE p.userid = m.user_id AND m.group_id = g.id AND p.userid= '".$userId."')";
 	   return $this->createGroups($sql);
    }
-      
+
    private function createUserList($sql) {
 	   global $ddbb;
 	   $users = array();
@@ -183,13 +160,22 @@ class BugzillaAuthenticator {
 
 	   return $this->createUserList($sql);;
    }
-  
+
+   public function listAssignedGroupsToRol($rolId) {
+	   return array();
+   }
+
+   public function listUnassignedGroupsToRol($rolId) {
+	   return array();
+   }
+
+
    public function getUser($userid) {
 	   global $ddbb;
 	   $data = $ddbb->executePKSelectQuery("SELECT * FROM profiles WHERE userid=".$userid);
 	   return $this->createUser($data);
    }
-  
+
 }
 
 ?>

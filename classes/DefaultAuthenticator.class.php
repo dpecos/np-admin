@@ -140,6 +140,22 @@ class DefaultAuthenticator {
 	   return $this->createUserList($sql);;
    }
 
+   public function listAssignedGroupsToRol($rolId) {
+	   global $ddbb;
+
+	   $sql = "SELECT g.* FROM ".$ddbb->getTable("Group")." g, ".$ddbb->getTable("GroupRol")." gr WHERE g.group_id=gr.group_id AND gr.rol_id = ".$rolId." ORDER BY 1";
+
+	   return $this->createGroupList($sql);;
+   }
+
+   public function listUnassignedGroupsToRol($rolId) {
+	   global $ddbb;
+
+	   $sql = "SELECT * FROM ".$ddbb->getTable("Group")." WHERE group_id NOT IN (SELECT group_id FROM ".$ddbb->getTable("GroupRol")." WHERE rol_id = ".$rolId.") ORDER BY 1";
+
+	   return $this->createGroupList($sql);;
+   }
+
 
 
 }

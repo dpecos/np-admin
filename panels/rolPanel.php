@@ -82,7 +82,22 @@ li.li_assigned_users {
     border:1px solid #6B4C86;
 }
 
+li.li_unassigned_groups {
+    background-color: #D1E6EC;
+    border:1px solid #7EA6B2;
+}
+
+li.li_assigned_groups {
+    background-color: #D8D4E2;
+    border:1px solid #6B4C86;
+}
+
 .yui-button#saveUsersButton button {
+   padding-left: 2em;
+   background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/save.gif) 5% 50% no-repeat;
+}
+
+.yui-button#saveGroupsButton button {
    padding-left: 2em;
    background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/save.gif) 5% 50% no-repeat;
 }
@@ -131,7 +146,7 @@ li.li_assigned_users {
             var rol = oParsedResponse.results[id];
             if (typeof(rol) != "function") {
                rol_user_list.getMenu().addItem({ text: rol.rolName, value: rol.rolId, onclick: { fn: populateUsersLists } });
-	       rol_group_list.getMenu().addItem({ text: rol.rolName, value: rol.rolId, onclick: { fn: populateUsersLists } });
+	       rol_group_list.getMenu().addItem({ text: rol.rolName, value: rol.rolId, onclick: { fn: populateGroupsLists } });
 	    }
          }
          rol_user_list.getMenu().render(document.body);
@@ -192,13 +207,20 @@ li.li_assigned_users {
                          recoverDataUsersLists(rolId, rolName);
                          tabView.set("activeTab",tabView.getTab(1));
                          break;                         
+                      case 2:
+                         var oRecord = p_myDataTable.getRecord(elRow);
+                         var rolId = oRecord.getData("rolId");
+                         var rolName = oRecord.getData("rolName");
+                         recoverDataGroupsLists(rolId, rolName);
+                         tabView.set("activeTab",tabView.getTab(2));
+                         break;                         
                  }
              }
          }
       };
 
       var contextMenu = new YAHOO.widget.ContextMenu("mycontextmenu", { trigger:rolDatatable.getTbodyEl() });
-      contextMenu.addItems(["Delete Item", "Manage users"]);
+      contextMenu.addItems(["Delete Item", "Manage users", "Manage groups"]);
       contextMenu.render("rol_datatable");
       contextMenu.clickEvent.subscribe(onContextMenuClick, rolDatatable);
       
@@ -218,10 +240,16 @@ li.li_assigned_users {
       new YAHOO.util.DDTarget("assigned_groups");
 
       var saveUsersButton = new YAHOO.widget.Button({ 
-            label:"Save", 
+            label:"Save users", 
             id:"saveUsersButton", 
             container:"users_buttons" });
       saveUsersButton.on("click", assignUsers);
+
+      var saveGroupsButton = new YAHOO.widget.Button({ 
+            label:"Save groups", 
+            id:"saveGroupsButton", 
+            container:"groups_buttons" });
+      saveGroupsButton.on("click", assignGroups);
 
    });
    
@@ -452,23 +480,23 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
    }
    
    function assignUsers() {
-      var rolName = rol_user_list.get("label");
-      var rolId = rol_user_list.value;
-      if (rolName != "Select rol") {
-         var parseList = function(listName) {
-              ul = YAHOO.util.Dom.get(listName)
-              var items = ul.getElementsByTagName("li");
-              var list = "";
-              for (i=0; i<items.length; i=i+1) {
-                  list += items[i].title+ ",";
-              }
-              list = list.substring(0, list.length - 1);
-              return list;
-          };
+	   var rolName = rol_user_list.get("label");
+	   var rolId = rol_user_list.value;
+	   if (rolName != "Select rol") {
+		   var parseList = function(listName) {
+			   ul = YAHOO.util.Dom.get(listName)
+				   var items = ul.getElementsByTagName("li");
+			   var list = "";
+			   for (i=0; i<items.length; i=i+1) {
+				   list += items[i].title+ ",";
+			   }
+			   list = list.substring(0, list.length - 1);
+			   return list;
+		   };
 
-          var list = parseList("assigned_users");
-          var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/rols.php", {success:assignUsersCallback, argument:[rolId, rolName]}, "op=assignUsers&rol_id="+rolId+"&list="+list);
-       }
+		   var list = parseList("assigned_users");
+		   var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/rols.php", {success:assignUsersCallback, argument:[rolId, rolName]}, "op=assignUsers&rol_id="+rolId+"&list="+list);
+	   }
    }
 
    function assignUsersCallback(response) {
@@ -476,6 +504,70 @@ YAHOO.extend(DDList, YAHOO.util.DDProxy, {
       var rolName = response.argument[1];
       box_info("user_users_info", "Rols configuration saved correctly!");
       recoverDataUsersLists(rolId, rolName);
+   }  
+
+   function populateGroupsLists(p_sType, p_aArgs, p_oItem) {
+      rolId = p_oItem.value;
+      rolName = p_oItem.cfg.getProperty("text");
+      recoverDataGroupsLists(rolId, rolName);
+   }
+
+   function recoverDataGroupsLists(rolId, rolName) {
+      rol_group_list.set("label", rolName);
+      rol_group_list.value = rolId;
+
+      emptyList("unassigned_groups");
+      emptyList("assigned_groups");
+      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/rols.php", {success:groupListCallback, argument:["unassigned_groups"]}, "op=listUnassignedGroups&rol_id="+rolId);
+      var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/rols.php", {success:groupListCallback, argument:["assigned_groups"]}, "op=listAssignedGroups&rol_id="+rolId);   
+   }
+   
+   function groupListCallback(response) {
+      var listId = response.argument[0];
+      
+      groupsList = document.getElementById(listId);
+      
+      data = YAHOO.lang.JSON.parse(response.responseText);
+
+      for(id in data) {
+         group = data[id];
+         if (typeof(group) != "function") {
+            var group_element = document.createElement('li');
+            group_element.innerHTML = group.groupName;
+            group_element.setAttribute("id", listId + "_" + group.groupId);
+            group_element.setAttribute("title", group.groupId);
+            group_element.className = "li_" + listId;
+            groupsList.appendChild(group_element);
+            new DDList(listId + "_" + group.groupId);
+         }
+      }   
+   }
+   
+   function assignGroups() {
+	   var rolName = rol_group_list.get("label");
+	   var rolId = rol_group_list.value;
+	   if (rolName != "Select rol") {
+		   var parseList = function(listName) {
+			   ul = YAHOO.util.Dom.get(listName)
+				   var items = ul.getElementsByTagName("li");
+			   var list = "";
+			   for (i=0; i<items.length; i=i+1) {
+				   list += items[i].title+ ",";
+			   }
+			   list = list.substring(0, list.length - 1);
+			   return list;
+		   };
+
+		   var list = parseList("assigned_groups");
+		   var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/rols.php", {success:assignGroupsCallback, argument:[rolId, rolName]}, "op=assignGroups&rol_id="+rolId+"&list="+list);
+	   }
+   }
+
+   function assignGroupsCallback(response) {
+      var rolId = response.argument[0];
+      var rolName = response.argument[1];
+      box_info("user_groups_info", "Rols configuration saved correctly!");
+      recoverDataGroupsLists(rolId, rolName);
    }  
 </script>
 

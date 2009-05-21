@@ -69,6 +69,20 @@ function npadmin_security($rols = null, $showLoginForm = true) {
 	}
 }
 
+function npadmin_isAllowed($rols) {
+	$login = npadmin_loginData();
+	if ($login != null) {
+		if ($rols != null && is_array($rols)) 
+			return $login->isAllowed($rols);
+		else if ($rols != null)
+			return $login->isAllowed(array($rols));
+		else 
+			return false;
+	} else {
+		return false;
+	}
+}
+
 function npadmin_setting($type, $name) {
    global $_settingsCache, $ddbb;
    

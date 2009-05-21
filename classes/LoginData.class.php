@@ -42,11 +42,12 @@ class LoginData {
 		   if ($data != null) {
 			   $this->user = $data[0];
 			   $this->rols = $this->defaultAuthenticator->listAssignedRolsToUser($this->user->userId);
-			   $this->groups = array_merge($data[2], $this->defaultAuthenticator->listAssignedGroupsToUser($this->user->userId));
+			   //$this->groups = array_merge($data[2], $this->defaultAuthenticator->listAssignedGroupsToUser($this->user->userId));
+			   $this->groups = $this->defaultAuthenticator->listAssignedGroupsToUser($this->user->userId);
 
 			   if (npadmin_setting("AUTH","DEFAULT_GROUP") != null) {
-				   $data = $ddbb->executePKSelectQuery("SELECT * FROM ".$ddbb->getTable("Group")." WHERE ".$ddbb->getMapping("Group", "groupId")."=".NP_DDBB::encodeSQLValue(npadmin_setting("AUTH","DEFAULT_GROUP"), $ddbb->getType('Group','groupId')));
-				   $this->groups = array_merge(array(new Group($data)), $this->groups);
+				   /*$data = $ddbb->executePKSelectQuery("SELECT * FROM ".$ddbb->getTable("Group")." WHERE ".$ddbb->getMapping("Group", "groupId")."=".NP_DDBB::encodeSQLValue(npadmin_setting("AUTH","DEFAULT_GROUP"), $ddbb->getType('Group','groupId')));
+				   $this->groups = array_merge(array(new Group($data)), $this->groups);*/
 
 				   $data = $ddbb->executeSelectQuery("SELECT r.* FROM ".$ddbb->getTable("Rol")." r, ".$ddbb->getTable("GroupRol")." gr WHERE gr.rol_id=r.rol_id AND ".$ddbb->getMapping("GroupRol", "groupId")."=".NP_DDBB::encodeSQLValue(npadmin_setting("AUTH","DEFAULT_GROUP"), $ddbb->getType('GroupRol','groupId')));
 				   foreach ($data as $idx => $dataRol) {
@@ -136,6 +137,10 @@ class LoginData {
 		   $data[] = $g->rolId;
 	   }
 	   return $data;
+   }
+
+   public function getGroups() {
+	   return $this->groups;
    }
 }
 ?>
