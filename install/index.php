@@ -21,10 +21,10 @@ if (!array_key_exists('_PATH', $_POST))
 /* Fresh install data */
 $data = array (
    'Group' => array(
-      array('group_id' => 0, 'group_name' => 'Administrators', 'description' => 'NP-Admin administrator users')
+      array('group_name' => 'Administrators', 'description' => 'NP-Admin administrator users')
    ),
    'GroupRol' => array(
-      array('group_id' => 0, 'rol_id' => 0)
+      array('group_id' => 1, 'rol_id' => 1)
    ), 
    'Menu' => array(
       array('id' => 1, 'parent_id' => 0, 'order' => 0, 'text' => 'Main', 'url' => 'panels/mainPanel.php', 'panel_id' => 'mainPanel'),
@@ -40,9 +40,9 @@ $data = array (
    ),
    'MenuGroup' => array(),
    'MenuRol' => array(
-      array('menu_id' => 2, 'rol_id' => 0),
-      array('menu_id' => 6, 'rol_id' => 0),
-      array('menu_id' => 8, 'rol_id' => 0),
+      array('menu_id' => 2, 'rol_id' => 1),
+      array('menu_id' => 6, 'rol_id' => 1),
+      array('menu_id' => 8, 'rol_id' => 1),
    ),
    'Panel' => array(
       array('id' => 'mainPanel', 'title' => 'NP-Admin Home'),
@@ -55,16 +55,16 @@ $data = array (
    ),  
    'PanelGroup' => array(),
    'PanelRol' => array(
-      array('panel_id' => 'groupPanel', 'rol_id' => 0),
-      array('panel_id' => 'mainPanel', 'rol_id' => 0),
-      array('panel_id' => 'menuPanel', 'rol_id' => 0),
-      array('panel_id' => 'panelPanel', 'rol_id' => 0),
-      array('panel_id' => 'settingsPanel', 'rol_id' => 0),
-      array('panel_id' => 'userPanel', 'rol_id' => 0),
-      array('panel_id' => 'phpInfoPanel', 'rol_id' => 0),
+      array('panel_id' => 'groupPanel', 'rol_id' => 1),
+      array('panel_id' => 'mainPanel', 'rol_id' => 1),
+      array('panel_id' => 'menuPanel', 'rol_id' => 1),
+      array('panel_id' => 'panelPanel', 'rol_id' => 1),
+      array('panel_id' => 'settingsPanel', 'rol_id' => 1),
+      array('panel_id' => 'userPanel', 'rol_id' => 1),
+      array('panel_id' => 'phpInfoPanel', 'rol_id' => 1),
    ),
    'Rol' => array(
-   		array('rol_id' => 0, 'rol_name' => 'Administrators', 'description' => 'Administrators')
+   		array('rol_name' => 'Administrators', 'description' => 'Administrators')
    ),  
    'Setting' => array(
       array('type' => 'NP-ADMIN', 'name' => 'BASE_URL', 'default_value' => "/np-admin", "value" => $_POST['_PATH']),
@@ -76,10 +76,10 @@ $data = array (
       array('type' => 'APP', 'name' => 'FORM_MESSAGE', 'default_value' => "You need a valid and granted user/password")
    ), 
    'User' => array(
-      array('userId' => 0, 'user' => 'admin', 'password' => 'd033e22ae348aeb5660fc2140aec35850c4da997', 'email' => 'admin@domain.com', 'real_name' => 'NP-Admin main user')
+      array('user' => 'admin', 'password' => 'd033e22ae348aeb5660fc2140aec35850c4da997', 'email' => 'admin@domain.com', 'real_name' => 'NP-Admin main user')
    ),
    'UserGroup' => array(
-      array('group_name' => 'Administrators', 'user' => 'admin')
+      array('group_id' => 1, 'user_id' => 1)
    )
 );
 ?>
