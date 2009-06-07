@@ -35,6 +35,20 @@ require_once($NPADMIN_PATH."classes/Panel.class.php");
 require_once($NPADMIN_PATH."classes/PanelRol.class.php");
 require_once($NPADMIN_PATH."classes/PanelGroup.class.php");
 
+require_once($NPADMIN_PATH."classes/Logger.class.php");
+
+Logger::init(array("npadmin", "nplib"));
+$vars = "";
+if (strlen($_SERVER["QUERY_STRING"]) > 0)
+	$vars = $_SERVER["QUERY_STRING"];
+else {
+	foreach ($_POST as $k => $v)
+		$vars .= $k."=".$v."&";
+	$vars = substr($vars, 0, strlen($vars)-1);
+}
+Logger::info("npadmin", "Request received: ".$_SERVER["REQUEST_URI"].$vars);
+
+
 function __autoload($class_name) {
    global $NPADMIN_PATH;
    add_include_path($NPADMIN_PATH);

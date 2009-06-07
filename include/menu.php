@@ -3,7 +3,7 @@
       margin-bottom: 10px;   
    }
 
-   .menu_logout {
+   .menu_rightside {
      float: right;
    }   
 
@@ -16,17 +16,28 @@
    }
    
    em#npadminsettings {
-       text-indent: -6em;
+       text-indent: 2.5em;
+       font-style: italic;
        display: block;
-       background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/settings.png) center center no-repeat;
+       background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/settings.png) left center no-repeat;
+       /*text-indent: -6em;
+       display: block;
        width: 2em;
-       overflow: hidden;
+       overflow: hidden;*/
    }
    
    em#npadminlogout {
        text-indent: 2.5em;
+       font-style: italic;
        display: block;
        background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/logout.png) left center no-repeat;
+   }
+   
+   em#npadminlogin {
+       text-indent: 2.5em;
+       font-style: italic;
+       display: block;
+       background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/login.png) left center no-repeat;
    }
    
    #filemenu.visible .yuimenuitemlabel,
@@ -63,7 +74,9 @@ function createMenus($parentId = 0) {
    $login = npadmin_loginData();
    $menus = array();
    
-   if ($login != null) {
+   if (npadmin_setting("NP-ADMIN","CACHE_MENUS") && isset($_SESSION) && array_key_exists("npadmin_menus_".$parentId, $_SESSION))
+   	  $menus = $_SESSION["npadmin_menus_".$parentId];
+   else if ($login != null) {
       $myRols = $login->getRolsIds();
    
       $menus[$parentId] = array();
@@ -93,6 +106,8 @@ function createMenus($parentId = 0) {
       //echo $sql;
       $ddbb->executeSelectQuery($sql, "createMenuList", array($parentId, &$menus));
       //print_r($menus);
+      if (npadmin_setting("NP-ADMIN","CACHE_MENUS") && isset($_SESSION))
+         $_SESSION["npadmin_menus_".$parentId] = $menus;
    }
    if (array_key_exists($parentId, $menus) && sizeof($menus[$parentId]) > 0) {
       foreach ($menus[$parentId] as $menu) { 
@@ -142,32 +157,41 @@ submenu: {
 YAHOO.util.Event.onDOMReady(function () {
 
     var aItemData = [
-    
+        <? //Console::logSpeed('INI: Creación estructua de menús'); ?>
         { 
             text: "<em id=\"npadminlabel\">NP-Admin</em>", 
             submenu: { 
                 id: "npadmin", 
                 itemdata: [
                     "About NP-Admin",
-                    { text: "Visit NP-Admin homepage", url: "http://netpecos.org/projects/np-admin", target: "_new"}
+                    { text: "Visit NP-Admin site", url: "http://code.google.com/p/np-admin/", target: "_new"}
                 ]
             } 
         },
-        <? if (isset($ddbb)) createMenus(); ?>
+        <? 
+        if (isset($ddbb)) 
+        	createMenus(); 
+        ?>
         <? 
         $login = npadmin_loginData();
         if ($login != null) {
             if ($login->canLogout()) {
         ?>
-        { text: "<em id=\"npadminlogout\">Log-out <?= $login->getUser()->user ?></em>", classname: "menu_logout", onclick: { fn: logout }, disabled: false},
+        { text: "<em id=\"npadminlogout\">Log-out <?= $login->getUser()->user ?></em>", classname: "menu_rightside", onclick: { fn: logout }, disabled: false},
         <?   } else { ?>
-        { text: "<?= $login->getUser()->user ?>", classname: "menu_logout", disabled: true},
+        { text: "<?= $login->getUser()->user ?>", classname: "menu_rightside", disabled: true},
         <? 
             }
         } 
+        if ($login == null) {
+        ?>
+        <!--{ text: "<em id=\"npadminlogin\">Login</em>", classname: "menu_rightside", url: "<?= npadmin_setting('NP-ADMIN', 'BASE_URL')?>/login.php?referrer=<?= $_SERVER['REQUEST_URI']?>", disabled: false},-->
+        { text: "<em id=\"npadminlogin\">Login</em>", classname: "menu_rightside", url: "javascript: npadmin_showLogin(false)", disabled: false},
+        <? 
+        }        
         if ($login == null || !in_array("Administrators", $login->getRolsNames())) { 
         ?>
-        { text: "<em id=\"npadminsettings\">Log-in</em>", classname: "menu_logout", url: "<?= npadmin_setting('NP-ADMIN', 'BASE_URL')?>/panels/mainPanel.php", disabled: false}
+        { text: "<em id=\"npadminsettings\">Administration login</em>", classname: "menu_rightside", url: "<?= npadmin_setting('NP-ADMIN', 'BASE_URL')?>/panels/mainPanel.php?referrer=<?= $_SERVER['REQUEST_URI']?>", disabled: false}
         <? 
         } 
         ?>
@@ -212,4 +236,3 @@ YAHOO.util.Event.onDOMReady(function () {
 });
 
 </script>
-

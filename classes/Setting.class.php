@@ -4,8 +4,8 @@ global $ddbb;
 $ddbb->addTable("Setting", "settings");
 $ddbb->addField("Setting", "name", null, "STRING", array("PK" => true, "NULLABLE" => false, "LENGTH" => 60));
 $ddbb->addField("Setting", "type", null, "STRING", array("PK" => true, "NULLABLE" => false, "LENGTH" => 40));
-$ddbb->addField("Setting", "value", null, "STRING", array("LENGTH" => 100, "DEFAULT" => NULL));
-$ddbb->addField("Setting", "defaultValue", "default_value", "STRING", array("LENGTH" => 100, "DEFAULT" => NULL));
+$ddbb->addField("Setting", "value", null, "TEXT", array("DEFAULT" => NULL));
+$ddbb->addField("Setting", "defaultValue", "default_value", "TEXT", array("DEFAULT" => NULL));
 
 class Setting {
    public function __construct($data = null, $type = null) {     
@@ -21,6 +21,11 @@ class Setting {
    public function store() {
       global $ddbb;
       $ddbb->insertObject($this);
+      
+	  if (isset($_SESSION) && array_key_exists("npadmin_settingsCache", $_SESSION)){
+	  	 if (array_key_exists($this->type, $_SESSION["npadmin_settingsCache"]) && array_key_exists($this->name, $_SESSION["npadmin_settingsCache"][$this->type]))
+	  	 	$_SESSION["npadmin_settingsCache"][$this->type][$this->name] = $this; 
+   	  }
       return true;
    }
    
@@ -31,6 +36,10 @@ class Setting {
 
       $ddbb->executeInsertUpdateQuery($sql);
 
+   	  if (isset($_SESSION) && array_key_exists("npadmin_settingsCache", $_SESSION)){
+	  	 if (array_key_exists($this->type, $_SESSION["npadmin_settingsCache"]) && array_key_exists($this->name, $_SESSION["npadmin_settingsCache"][$this->type]))
+	  	 	$_SESSION["npadmin_settingsCache"][$this->type][$this->name] = $this; 
+   	  }
       return true;
    }
    

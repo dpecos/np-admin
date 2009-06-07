@@ -14,47 +14,13 @@
       <? } ?>
       
       <? require_once($NPADMIN_PATH."include/menu.php") ?>
-      
-      <style>
-         html {
-            background-color: <?= npadmin_setting('NP-ADMIN', 'BG_COLOR') ?>;            
-         }
 
-         #main_body {
-            margin: 20px;
-            background-color: #FFFFFF; 
-            padding: 15px;
-            border: #000000 1px solid;
-            /*min-height: 80%;
-            height: auto !important;
-            height: 80%;*/
-         }
-
-         #mainTabs div.yui-content {
-            padding: 15px;
-         }
-
-         .page_title {
-            font-size: 22px;
-            font-weight: bold;
-	    font-family: "Arial";
-            margin-top: 5px;
-            margin-bottom: 15px;
-	    background-color: rgb(188,193,214);
-            border: 2px solid black;
-            padding:10px;
-         }
-
-	 .buttonBox {
-            border: 1px solid black;
-            margin-bottom:10px;
-            padding:10px;
-	    background-color: rgb(190,211,206);
-	 }
-
-      </style>
+	  <style type="text/css">
+	  <?php require_once($NPADMIN_PATH."static/npadmin_style.php"); ?>
+	  </style>
       
       <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/npadmin_javascript.js"></script>
+      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/npadmin_login.php"></script>
       
       <? if (function_exists("html_head")) html_head() ?>
 
