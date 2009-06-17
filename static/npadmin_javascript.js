@@ -1,16 +1,24 @@
+var npadmin_dialogs = [];
+
 function box(id, title, text, icon) {
-	var dialog = new YAHOO.widget.SimpleDialog(id,
-			{ width: "300px",
-		effect: {effect:YAHOO.widget.ContainerEffect.FADE, duration:0.25},
-		fixedcenter: true,
-		visible: false,
-		draggable: true,
-		close: false,
-		icon: icon,
-		text: text,
-		constraintoviewport: true,
-		modal: true
-			} );
+	var dialog = null;
+	if (npadmin_dialogs[id] == null) {
+		dialog = new YAHOO.widget.SimpleDialog(id,
+				{ width: "300px",
+					effect: {effect:YAHOO.widget.ContainerEffect.FADE, duration:0.25},
+					fixedcenter: true,
+					visible: false,
+					draggable: true,
+					close: false,
+					icon: icon,
+					text: text,
+					constraintoviewport: true,
+					modal: true
+				} );
+		npadmin_dialogs[id] = dialog;
+	} else {
+		dialog = npadmin_dialogs[id];
+	}
 	dialog.setHeader(title);
 	var kl_close = new YAHOO.util.KeyListener(document, { keys:[YAHOO.util.KeyListener.KEY.ENTER, 27] },  							
 			{ fn: defaultButtonHandler,

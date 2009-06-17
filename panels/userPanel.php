@@ -120,6 +120,7 @@ li.li_assigned_groups {
 	   dataSource.responseType = YAHOO.util.DataSource.TYPE_JSON; 
       dataSource.connXhrMode = "queueRequests"; 
       dataSource.responseSchema = {
+    		resultsList: "Results",
             fields: ["userId", "user","creationDate","email","realName"]
       };
       dataSource.doBeforeCallback = function(oRequest , oFullResponse , oParsedResponse) {

@@ -23,15 +23,15 @@ class YUI {
 		
 		$this->js = array(
 		   "standar" => array("utilities/utilities.js"),
-		   "tabview" => array("yahoo-dom-event/yahoo-dom-event.js","element/element-beta-min.js", "tabview/tabview.js"),
-		   "button" => array("yahoo-dom-event/yahoo-dom-event.js", "element/element-beta.js", "button/button.js"),
+		   "tabview" => array("yahoo-dom-event/yahoo-dom-event.js","element/element-min.js", "tabview/tabview.js"),
+		   "button" => array("yahoo-dom-event/yahoo-dom-event.js", "element/element.js", "button/button.js"),
 		   "menu" => array("yahoo-dom-event/yahoo-dom-event.js", "container/container_core.js", "menu/menu.js"),
-		   "datatable" => array("yahoo-dom-event/yahoo-dom-event.js","element/element-beta.js", "datasource/datasource-beta.js", "datatable/datatable-beta.js"),
+		   "datatable" => array("yahoo-dom-event/yahoo-dom-event.js","element/element.js", "datasource/datasource.js", "datatable/datatable.js"),
 		   "ajax" => array("yahoo/yahoo.js", "connection/connection.js"),
 		   "events" => array("event/event.js"),
 		   "json" => array("yahoo/yahoo.js", "json/json.js"),
 		   "logger" => array("yahoo-dom-event/yahoo-dom-event.js", "logger/logger.js"),
-		   "simpledialog" => array("yahoo-dom-event/yahoo-dom-event.js", "animation/animation.js", "dragdrop/dragdrop.js", "element/element-beta.js", "button/button.js", "container/container.js"),
+		   "simpledialog" => array("yahoo-dom-event/yahoo-dom-event.js", "animation/animation.js", "dragdrop/dragdrop.js", "element/element.js", "button/button.js", "container/container.js"),
 		   "treeview" => array("yahoo/yahoo.js", "event/event.js", "treeview/treeview.js"),
 		   "calendar" => array("yahoo-dom-event/yahoo-dom-event.js", "calendar/calendar.js")
 		);

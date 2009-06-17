@@ -32,17 +32,6 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
 <?
 }
-if (npadmin_isAllowed("Usuarios vacaciones")) {
-?>
-<b>Acciones:</b><br/>
-&nbsp;&raquo; <a href="/arq/gestion/work/gestion_panels/gestionVacaciones.php">Añadir vacaciones</a><br><br>
-<?
-}
-if (npadmin_isAllowed("Usuarios estadisticas SPD")) {
-?>
-        <?php include("/var/www/arq/gestion/pers/index.html"); ?>
-<?
-}
 ?>
 
 <? require_once($NPADMIN_PATH."include/footer.php"); ?>

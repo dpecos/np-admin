@@ -106,13 +106,14 @@ li.li_assigned_users {
       columnDefs = [ 
          {key:"groupName", label:"Name", sortable:true},
          {key:"description", label:"Description", sortable:true},
-	   ]; 
+	  ]; 
 	        
-	   dataSource = new YAHOO.util.DataSource("<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/groups.php?");
-  	   dataSource.connMethodPost = true;
-	   dataSource.responseType = YAHOO.util.DataSource.TYPE_JSON; 
+	  dataSource = new YAHOO.util.DataSource("<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/groups.php?");
+  	  dataSource.connMethodPost = true;
+	  dataSource.responseType = YAHOO.util.DataSource.TYPE_JSON; 
       dataSource.connXhrMode = "queueRequests"; 
       dataSource.responseSchema = {
+      		resultsList: "Results",
             fields: ["groupId", "groupName","description"]
       };
       dataSource.doBeforeCallback = function(oRequest , oFullResponse , oParsedResponse) {

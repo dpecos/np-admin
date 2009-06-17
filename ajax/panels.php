@@ -96,7 +96,7 @@ if (array_key_exists("op", $_POST)) {
    
       $ddbb->executeSelectQuery("SELECT * FROM ".$ddbb->getTable("Panel")." ORDER BY 1", "createPanelList");
    
-      echo NP_json_encode($panels); 
+      echo NP_json_encode(array("Results" => $panels)); 
    } 
 }
 ?>

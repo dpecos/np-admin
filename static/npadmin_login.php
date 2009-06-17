@@ -50,12 +50,18 @@ function npadmin_showLogin(modal, ref) {
 function doLogin() {
         	npadmin_loginDialog.hide();
             var formObject = document.getElementById('npadmin_loginForm');
-            if (formObject.user.value.trim().length == 0 || formObject.password.value.trim().length == 0) {
-               box_block("userlogin_block", "All the required fields have to be filled", "npadmin_loginDialog.show()");
+            var seed = document.getElementById('npadmin_login_seed');
+            if (seed != null) {
+	            if (formObject.user.value.trim().length == 0 || formObject.password.value.trim().length == 0) {
+	               box_block("userlogin_block", "All the required fields have to be filled", "npadmin_loginDialog.show()");
+	            } else {
+	               npadmin_messageBox = box_msg("userlogin_login", "Login", "Checking credentials...");
+	               formObject.password.value = AESEncryptCtr(formObject.password.value, seed.value, 256);
+	               YAHOO.util.Connect.setForm(formObject);
+	               var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/users.php", {success:loginCallback});
+	            }
             } else {
-               npadmin_messageBox = box_msg("userlogin_login", "Login", "Checking credentials...");
-               YAHOO.util.Connect.setForm(formObject);
-               var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/users.php", {success:loginCallback});
+            	box_error("userlogin_error", "Your browser does not accept cookies");
             }
 }
 

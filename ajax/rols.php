@@ -122,7 +122,7 @@ if (array_key_exists("op", $_POST)) {
    if ($returnList) {
 	   $rols = $defaultAuthenticator->listRols();
 
-	   echo NP_json_encode($rols);
+	   echo NP_json_encode(array("Results" => $rols));
    }
 }
 ?>

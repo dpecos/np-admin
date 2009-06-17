@@ -20,7 +20,12 @@ class LoginData {
 	   if (!isset($_SESSION)) {
 		   session_start();
 	   }
+	   $seed = null;
+	   if (array_key_exists("npadmin_login_seed", $_SESSION))
+	      $seed = $_SESSION['npadmin_login_seed'];
 	   session_unset();
+	   if ($seed != null)
+	      $_SESSION['npadmin_login_seed'] = $seed;
    }
    
    private function storeInSession($name, $data) {
@@ -33,7 +38,8 @@ class LoginData {
    
    public function login($user, $password) {
 	   global $ddbb;
-	   $this->clearSession();
+	   if ($user != null && $password != null)
+	       $this->clearSession();
 
 	   $data = null;
 

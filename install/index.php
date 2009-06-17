@@ -74,7 +74,7 @@ $data = array (
       array('type' => 'NP-ADMIN', 'name' => 'AUTH', 'default_value' => ""),
       array('type' => 'NP-ADMIN', 'name' => 'AUTH_FORM', 'default_value' => "include/login.php"),
       //array('type' => 'NP-ADMIN', 'name' => 'YUI_PATH', 'default_value' => 'http://yui.yahooapis.com/2.5.2/build', "value" => $path."/lib/yui_2.5.2/build"),
-      array('type' => 'NP-ADMIN', 'name' => 'YUI_PATH', 'default_value' => 'http://yui.yahooapis.com/2.5.2/build', "value" => null),
+      array('type' => 'NP-ADMIN', 'name' => 'YUI_PATH', 'default_value' => 'http://yui.yahooapis.com/2.7.0/build', "value" => null),
       array('type' => 'NP-ADMIN', 'name' => 'BG_COLOR', 'default_value' => '#9999BB'),
       array('type' => 'APP', 'name' => 'TITLE', 'default_value' => 'App Name', 'value' => "Example App"),
       array('type' => 'APP', 'name' => 'FORM_MESSAGE', 'default_value' => "You need a valid and granted user/password")

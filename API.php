@@ -1,8 +1,9 @@
 <?
 require_once($NPADMIN_PATH."include/common.php");
 
-if (session_id() === "")
+if (session_id() === "") {
 session_start();
+}
 
 function npadmin_login($user, $password) {
 	if (session_id() === "")
@@ -88,10 +89,10 @@ function npadmin_setting($type, $name) {
 	 
 	if (isset($ddbb) && $ddbb->isInitialized()) {
 		$value = null;
-		if ($cacheSettings === null)
+		if ($cacheSettings === null || (!isset($cacheSettings->value) && !isset($cacheSettings->defaultValue)) || ($cacheSettings->value === null && $cacheSettings->defaultValue === null))
 			$cacheSettings = new Setting("CACHE_SETTINGS", "NP-ADMIN");
 		 
-		if ($cacheSettings->value || (!$cacheSettings->value && $cacheSettings->defaultValue)) {
+		if ($cacheSettings->value || ($cacheSettings->value === null && $cacheSettings->defaultValue === "true")) {
 			$_settingsCache = __npadmin_settings_cache($type);
 				
 			if (array_key_exists($type, $_settingsCache) && array_key_exists($name, $_settingsCache[$type])) {
@@ -164,10 +165,12 @@ function npadmin_panel($panelID) {
 }
 
 function npadmin_html_loginForm() {
+	$_SESSION["npadmin_login_seed"] = NP_random_string(10);
 ?>
 <div style="visibility: hidden; display:none">
    <div id="login_form_table">
       <div class="bd">
+      <input id="npadmin_login_seed" type="hidden" value="<?= $_SESSION["npadmin_login_seed"] ?>"/>
       <form id="npadmin_loginForm">
          <table style="margin: 5px">
             <tr>

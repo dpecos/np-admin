@@ -106,6 +106,7 @@ li.li_assigned_rols {
       dataSource.responseType = YAHOO.util.DataSource.TYPE_JSON; 
       dataSource.connXhrMode = "queueRequests"; 
       dataSource.responseSchema = {
+    		resultsList: "Results",
             fields: ["id","title","rols"]
       };
       dataSource.doBeforeCallback = function(oRequest , oFullResponse , oParsedResponse) {

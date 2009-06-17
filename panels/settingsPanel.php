@@ -59,6 +59,7 @@ function html_head() {
          dataSource.responseType = YAHOO.util.DataSource.TYPE_JSON; 
          dataSource.connXhrMode = "queueRequests"; 
          dataSource.responseSchema = {
+         	resultsList: "Results",
             fields: ["type", "name", "default_value", "value"]
          };
          dataSource.doBeforeCallback = function(oRequest , oFullResponse , oParsedResponse) {

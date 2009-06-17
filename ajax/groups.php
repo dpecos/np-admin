@@ -96,7 +96,7 @@ if (array_key_exists("op", $_POST)) {
    
    if ($returnList) {
 	   $groups = $defaultAuthenticator->listGroups();
-	   echo NP_json_encode($groups); 
+	   echo NP_json_encode(array("Results" => $groups)); 
    } 
 }
 ?>

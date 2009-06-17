@@ -63,7 +63,7 @@ if (array_key_exists("op", $_POST)) {
          
       $ddbb->executeSelectQuery($sql, "createSettingsList");
    
-      echo NP_json_encode($settings); 
+      echo NP_json_encode(array("Results" => $settings)); 
    } 
 }
 ?>
