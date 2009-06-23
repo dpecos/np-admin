@@ -20,11 +20,17 @@ function box(id, title, text, icon) {
 		dialog = npadmin_dialogs[id];
 	}
 	dialog.setHeader(title);
-	var kl_close = new YAHOO.util.KeyListener(document, { keys:[YAHOO.util.KeyListener.KEY.ENTER, 27] },  							
-			{ fn: defaultButtonHandler,
-		scope: dialog,
-		correctScope:true } );
-	dialog.cfg.queueProperty("keylisteners", kl_close);
+	
+    var kl_enter = new YAHOO.util.KeyListener(document, { keys:YAHOO.util.KeyListener.KEY.ENTER },  							
+			  { fn: defaultButtonHandler,
+				scope: dialog,
+				correctScope:true } );
+    var kl_esc = new YAHOO.util.KeyListener(document, { keys:27 },  							
+			  { fn: (defaultButtonHandler),
+				scope: dialog,
+				correctScope:true } );
+    dialog.cfg.queueProperty("keylisteners", [kl_enter, kl_esc]);
+    
 	return dialog;
 }
 
