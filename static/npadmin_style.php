@@ -4,6 +4,7 @@ html {
 
 #main_body {
     margin: 20px;
+    margin-top: 44px;
     background-color: #FFFFFF; 
     padding: 15px;
     border: #000000 1px solid;

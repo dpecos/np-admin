@@ -1,6 +1,7 @@
 <style type="text/css">
    #npadmin_menubar {
-      margin-bottom: 10px;   
+      margin-bottom: 10px;  
+      top:0px; 
    }
 
    .menu_rightside {
@@ -16,14 +17,10 @@
    }
    
    em#npadminsettings {
-       text-indent: 2.5em;
-       font-style: italic;
+       text-indent: 2.5em;		      
        display: block;
        background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/settings.png) left center no-repeat;
-       /*text-indent: -6em;
-       display: block;
-       width: 2em;
-       overflow: hidden;*/
+       height: 20px;
    }
    
    em#npadminlogout {
@@ -157,14 +154,25 @@ submenu: {
 YAHOO.util.Event.onDOMReady(function () {
 
     var aItemData = [
-        <? //Console::logSpeed('INI: Creación estructua de menús'); ?>
         { 
             text: "<em id=\"npadminlabel\">NP-Admin</em>", 
             submenu: { 
                 id: "npadmin", 
                 itemdata: [
-                    "About NP-Admin",
-                    { text: "Visit NP-Admin site", url: "http://code.google.com/p/np-admin/", target: "_new"}
+					<?
+					$login = npadmin_loginData();
+			        if ($login == null || !in_array("Administrators", $login->getRolsNames())) { 
+			        ?>
+			 		[	
+			        	{ text: "<em id=\"npadminsettings\">Administration login</em>", url: "<?= npadmin_setting('NP-ADMIN', 'BASE_URL')?>/panels/mainPanel.php?referrer=<?= $_SERVER['REQUEST_URI']?>", disabled: false}
+			        ],
+			        <? 
+			        }
+			        ?> 
+                    [
+                    	"About NP-Admin",
+                    	{ text: "Visit NP-Admin site", url: "http://code.google.com/p/np-admin/", target: "_new"}
+                    ]
                 ]
             } 
         },
@@ -173,7 +181,6 @@ YAHOO.util.Event.onDOMReady(function () {
         	createMenus(); 
         ?>
         <? 
-        $login = npadmin_loginData();
         if ($login != null) {
             if ($login->canLogout()) {
         ?>
@@ -189,27 +196,39 @@ YAHOO.util.Event.onDOMReady(function () {
         { text: "<em id=\"npadminlogin\">Login</em>", classname: "menu_rightside", url: "javascript: npadmin_showLogin(false)", disabled: false},
         <? 
         }        
-        if ($login == null || !in_array("Administrators", $login->getRolsNames())) { 
-        ?>
-        { text: "<em id=\"npadminsettings\">Administration login</em>", classname: "menu_rightside", url: "<?= npadmin_setting('NP-ADMIN', 'BASE_URL')?>/panels/mainPanel.php?referrer=<?= $_SERVER['REQUEST_URI']?>", disabled: false}
-        <? 
-        } 
         ?>
     ];
 
-    var oMenuBar = new YAHOO.widget.MenuBar("npadmin_menubar", { 
-                                                lazyload: true, 
-                                                itemdata: aItemData 
-                                                });
+    var oMenuBar = new YAHOO.widget.MenuBar("npadmin_menubar");
+    oMenuBar.addItems(aItemData);
     oMenuBar.cfg.setProperty("zindex", "9");
+    //oMenuBar.cfg.setProperty("position", "fixed");
     oMenuBar.render(document.body);
-
+    
+    if (YAHOO.env.ua.ie > 0 && YAHOO.env.ua.ie < 7) {
+		if (npadmin_setting("NP-ADMIN", "IE6_FIXED_MENU")) {
+			YAHOO.util.Event.addListener(window, "scroll", function() {
+		    	var menu = document.getElementById("npadmin_menubar");
+			    menu.style.margin="0px";
+			    oMenuBar.moveTo(0,0);
+			    menu.style.left="0px";
+			    menu.style.margin="-10px 0 0 0";
+			    oMenuBar.render(document.body);
+		    });
+		}
+    } else {
+	    var menu = document.getElementById("npadmin_menubar");
+	    if (menu != null) {
+	        menu.style.position = "fixed";
+	        menu.style.width = "100%";
+	        menu.style.left = "0px";
+	    }
+    }
 
     // Add a "show" event listener for each submenu.
     function onSubmenuShow() {
 
       var oIFrame, oElement, nOffsetWidth;
-
 
       // Keep the left-most submenu against the left edge of the browser viewport
       if (this.id == "npadmin") {
@@ -225,14 +244,6 @@ YAHOO.util.Event.onDOMReady(function () {
 
     // Subscribe to the "show" event for each submenu
     oMenuBar.subscribe("show", onSubmenuShow);
-
-    window.onscroll = function () {
-	    document.getElementById("npadmin_menubar").style.margin="0px";
-	    oMenuBar.moveTo(0,0);
-	    document.getElementById("npadmin_menubar").style.left="0px";
-	    document.getElementById("npadmin_menubar").style.margin="-10px 0 0 0";
-	    oMenuBar.render(document.body);
-    }
 });
 
 </script>
