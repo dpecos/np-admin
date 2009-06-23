@@ -164,7 +164,7 @@ YAHOO.util.Event.onDOMReady(function () {
 			        if ($login == null || !in_array("Administrators", $login->getRolsNames())) { 
 			        ?>
 			 		[	
-			        	{ text: "<em id=\"npadminsettings\">Administration login</em>", url: "<?= npadmin_setting('NP-ADMIN', 'BASE_URL')?>/panels/mainPanel.php?referrer=<?= $_SERVER['REQUEST_URI']?>", disabled: false}
+			        	{ text: "<em id=\"npadminsettings\">Administration login</em>", url: "<?= npadmin_setting('NP-ADMIN', 'BASE_URL')?>/panels/mainPanel.php", disabled: false}
 			        ],
 			        <? 
 			        }
