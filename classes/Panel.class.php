@@ -1,4 +1,12 @@
 <?
+/** 
+ * @package np-admin
+ * @version 20090624
+ * 
+ * @author Daniel Pecos Martínez
+ * @copyright Copyright (c) Daniel Pecos Martínez 
+ * @license http://www.gnu.org/licenses/lgpl.html  LGPL License
+ */
 global $ddbb;
 
 $ddbb->addTable("Panel", "panels");
@@ -34,7 +42,7 @@ class Panel {
       return $this->rols;
    }
    
-   public function getTitle() {
+   public function getTitle() { 
       return $this->title;
    }
    

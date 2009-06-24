@@ -1,4 +1,12 @@
 <? 
+/** 
+ * @package np-admin
+ * @version 20090624
+ * 
+ * @author Daniel Pecos Martínez
+ * @copyright Copyright (c) Daniel Pecos Martínez 
+ * @license http://www.gnu.org/licenses/lgpl.html  LGPL License
+ */
 class DefaultAuthenticator {
    
    private function doLogin($user, $password) {
