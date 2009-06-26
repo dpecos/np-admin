@@ -30,17 +30,17 @@ class YUI {
 
 		$this->js = array(
 		   "standar" => array("utilities/utilities.js"),
-		   "tabview" => array("yahoo-dom-event/yahoo-dom-event.js","element/element.js", "tabview/tabview.js"),
-		   "button" => array("yahoo-dom-event/yahoo-dom-event.js", "element/element.js", "button/button.js"),
-		   "menu" => array("yahoo-dom-event/yahoo-dom-event.js", "container/container_core.js", "menu/menu.js"),
-		   "datatable" => array("yahoo-dom-event/yahoo-dom-event.js","element/element.js", "datasource/datasource.js", "datatable/datatable.js"),
-		   "ajax" => array("yahoo/yahoo.js", "connection/connection.js"),
-		   "events" => array("event/event.js"),
-		   "json" => array("yahoo/yahoo.js", "json/json.js"),
-		   "logger" => array("yahoo-dom-event/yahoo-dom-event.js", "logger/logger.js"),
-		   "simpledialog" => array("yahoo-dom-event/yahoo-dom-event.js", "animation/animation.js", "dragdrop/dragdrop.js", "element/element.js", "button/button.js", "container/container.js"),
-		   "treeview" => array("yahoo/yahoo.js", "event/event.js", "treeview/treeview.js"),
-		   "calendar" => array("yahoo-dom-event/yahoo-dom-event.js", "calendar/calendar.js")
+		   "tabview" => array("yahoo-dom-event/yahoo-dom-event.js","element/element-min.js", "tabview/tabview-min.js"),
+		   "button" => array("yahoo-dom-event/yahoo-dom-event.js", "element/element-min.js", "button/button-min.js"),
+		   "menu" => array("yahoo-dom-event/yahoo-dom-event.js", "container/container_core-min.js", "menu/menu-min.js"),
+		   "datatable" => array("yahoo-dom-event/yahoo-dom-event.js","element/element-min.js", "datasource/datasource-min.js", "datatable/datatable-min.js"),
+		   "ajax" => array("yahoo/yahoo-min.js", "connection/connection-min.js"),
+		   "events" => array("event/event-min.js"),
+		   "json" => array("yahoo/yahoo-min.js", "json/json-min.js"),
+		   "logger" => array("yahoo-dom-event/yahoo-dom-event.js", "logger/logger-min.js"),
+		   "simpledialog" => array("yahoo-dom-event/yahoo-dom-event.js", "animation/animation-min.js", "dragdrop/dragdrop-min.js", "element/element-min.js", "button/button-min.js", "container/container-min.js"),
+		   "treeview" => array("yahoo/yahoo-min.js", "event/event-min.js", "treeview/treeview-min.js"),
+		   "calendar" => array("yahoo-dom-event/yahoo-dom-event.js", "calendar/calendar-min.js")
 		);
 
 		$this->loadComponents = array();

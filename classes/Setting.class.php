@@ -40,14 +40,14 @@ class Setting {
    public function update() {
       global $ddbb;
       
-      $sql = "UPDATE ".$ddbb->getTable('Setting')." SET ".$ddbb->getMapping('Setting', 'value')."=".NP_DDBB::encodeSQLValue($this->value, $ddbb->getType('Setting', 'value')).", ".$ddbb->getMapping('Setting', 'defaultValue')."=".NP_DDBB::encodeSQLValue($this->defaultValue, $ddbb->getType('Setting', 'defaultValue'))." WHERE ".$ddbb->getMapping('Setting', 'name')." = ".NP_DDBB::encodeSQLValue($this->name, $ddbb->getType('Setting', 'name'))." AND ".$ddbb->getMapping('Setting', 'type')." = ".NP_DDBB::encodeSQLValue($this->type, $ddbb->getType('Setting', 'type'));
+      //$sql = "UPDATE ".$ddbb->getTable('Setting')." SET ".$ddbb->getMapping('Setting', 'value')."=".NP_DDBB::encodeSQLValue($this->value, $ddbb->getType('Setting', 'value')).", ".$ddbb->getMapping('Setting', 'defaultValue')."=".NP_DDBB::encodeSQLValue($this->defaultValue, $ddbb->getType('Setting', 'defaultValue'))." WHERE ".$ddbb->getMapping('Setting', 'name')." = ".NP_DDBB::encodeSQLValue($this->name, $ddbb->getType('Setting', 'name'))." AND ".$ddbb->getMapping('Setting', 'type')." = ".NP_DDBB::encodeSQLValue($this->type, $ddbb->getType('Setting', 'type'));
+      //$ddbb->executeInsertUpdateQuery($sql);
+      $ddbb->updateObject($this);
 
-      $ddbb->executeInsertUpdateQuery($sql);
-
-   	  if (isset($_SESSION) && array_key_exists("npadmin_settingsCache", $_SESSION)){
-	  	 if (array_key_exists($this->type, $_SESSION["npadmin_settingsCache"]) && array_key_exists($this->name, $_SESSION["npadmin_settingsCache"][$this->type]))
-	  	 	$_SESSION["npadmin_settingsCache"][$this->type][$this->name] = $this; 
-   	  }
+   	if (isset($_SESSION) && array_key_exists("npadmin_settingsCache", $_SESSION)){
+	  	   if (array_key_exists($this->type, $_SESSION["npadmin_settingsCache"]) && array_key_exists($this->name, $_SESSION["npadmin_settingsCache"][$this->type]))
+	  	 	   $_SESSION["npadmin_settingsCache"][$this->type][$this->name] = $this; 
+   	}
       return true;
    }
    

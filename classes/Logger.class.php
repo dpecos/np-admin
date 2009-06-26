@@ -22,8 +22,10 @@ class Logger {
 		foreach ($names as $name) {	
 			//$file = $NPADMIN_PATH."log/".$name."_".date("Ymd").".log";
 			$logfile = npadmin_setting("NPLOG", "LOG_FILE_".$name);
-			$logfile = str_replace("#date#", date("Ymd"), $logfile);
-			NPLogger::init($name, $NPADMIN_PATH.$logfile, "ALL");
+			if ($logfile != null) {
+   			$logfile = str_replace("#date#", date("Ymd"), $logfile);
+   			NPLogger::init($name, $NPADMIN_PATH.$logfile, "ALL");
+		   }
 		}
 	}
 	
