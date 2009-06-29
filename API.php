@@ -190,4 +190,34 @@ function npadmin_html_loginForm() {
 </div>
 <?	
 }
+
+function npadmin_html_changePasswordForm() {
+?>
+<div style="visibility: hidden; display:none">
+   <div id="changePassword_form_table">
+      <div class="bd">
+      <input id="npadmin_changePassword_seed" type="hidden" value=""/>
+      <form id="npadmin_changePasswordForm">
+         <table style="margin: 5px">
+            <tr>
+              <td rowspan="3" style="padding: 5px;"><img src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/change_password_big.png"/></td>
+              <td style="padding: 10px; padding-bottom: 0px;">Old password:</td>
+              <td style="padding: 10px; padding-bottom: 0px;"><input type="password" name="old_password"/></td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; padding-bottom: 0px;">New password:</td>
+              <td style="padding: 10px; padding-bottom: 0px;"><input type="password" name="new_password"/></td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; padding-bottom: 0px;">Repeat new password:</td>
+              <td style="padding: 10px; padding-bottom: 0px;"><input type="password" name="new_password_2"/></td>
+            </tr>
+         </table>
+         <input type="hidden" name="op" value="changePassword"/>
+      </form>
+      </div>
+   </div>
+</div>
+<?	
+}
 ?>

@@ -22,14 +22,39 @@ foreach ($_POST as $k => $v) {
 if (array_key_exists("op", $_POST) && ($_POST['op'] == "login" || $_POST['op'] == "logout") || isset($_GET['op']) && $_GET['op'] == "logout") {
 
 	if (array_key_exists("op", $_POST) && $_POST['op'] == "login") {
-		$password = AESDecryptCtr($_POST['password'], $_SESSION['npadmin_login_seed'], 256);
+		$password = NP_decrypt("AES", $_POST['password'], $_SESSION['npadmin_login_seed']);
 		echo npadmin_login($_POST['user'], $password) ? "OK" : "ERROR";
 
 	} else if (array_key_exists("op", $_POST) && $_POST['op'] == "logout" || array_key_exists("op", $_GET) && $_GET['op'] == "logout") {
 		npadmin_logout();
 		echo "OK";
 	}
-
+	
+} else if (array_key_exists("op", $_GET) && ($_GET['op'] == "generateSeed")) {
+   if (npadmin_loginData() != null) {
+      $_SESSION["npadmin_login_seed"] = NP_random_string(10);
+      echo $_SESSION["npadmin_login_seed"];
+   }
+} else if (array_key_exists("op", $_POST) && ($_POST['op'] == "changePassword")) {
+   $loginData = npadmin_loginData();
+   if ($loginData != null) {
+      $userId = $loginData->getUser()->userId;
+      $old_password = NP_decrypt("AES", $_POST['old_password'], $_SESSION['npadmin_login_seed']);
+      $new_password = NP_decrypt("AES", $_POST['new_password'], $_SESSION['npadmin_login_seed']);
+      
+      if (DefaultAuthenticator::login($loginData->getUser()->user, $old_password)) {
+         $user = new User();
+         $user->userId = $userId;
+         $user->password = NP_hash("SHA1", $new_password);
+        
+         if ($ddbb->updateObject($user) !== null)
+            echo "OK";
+         else
+            echo "User not found";
+      } else {
+         echo "NOK";
+      }
+   }
 } else {
 
 	npadmin_security(array("Administrators"), false);
@@ -40,7 +65,7 @@ if (array_key_exists("op", $_POST) && ($_POST['op'] == "login" || $_POST['op'] =
 	exit;
 
 	if ($_POST['op'] == "add") {
-		$_POST['password'] = sha1($_POST['password']);
+		$_POST['password'] = NP_hash("SHA1", $_POST['password']);
 		$user = new User($_POST);
 		if ($user->store())
 			echo "OK";

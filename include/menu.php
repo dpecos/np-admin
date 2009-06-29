@@ -17,7 +17,7 @@
    }
    
    em#npadminsettings {
-       text-indent: 2.5em;		      
+       text-indent: 2.5em;          
        display: block;
        background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/settings.png) left center no-repeat;
        height: 20px;
@@ -72,7 +72,7 @@ function createMenus($parentId = 0) {
    $menus = array();
    
    if (npadmin_setting("NP-ADMIN","CACHE_MENUS") && isset($_SESSION) && array_key_exists("npadmin_menus_".$parentId, $_SESSION))
-   	  $menus = $_SESSION["npadmin_menus_".$parentId];
+        $menus = $_SESSION["npadmin_menus_".$parentId];
    else if ($login != null) {
       $myRols = $login->getRolsIds();
    
@@ -150,6 +150,8 @@ submenu: {
       }
    }
 }
+
+$login = npadmin_loginData();
 ?>
 YAHOO.util.Event.onDOMReady(function () {
 
@@ -158,45 +160,57 @@ YAHOO.util.Event.onDOMReady(function () {
             text: "<em id=\"npadminlabel\">NP-Admin</em>", 
             submenu: { 
                 id: "npadmin", 
-                itemdata: [
-					<?
-					$login = npadmin_loginData();
-			        if ($login == null || !in_array("Administrators", $login->getRolsNames())) { 
-			        ?>
-			 		[	
-			        	{ text: "<em id=\"npadminsettings\">Administration login</em>", url: "<?= npadmin_setting('NP-ADMIN', 'BASE_URL')?>/panels/mainPanel.php", disabled: false}
-			        ],
-			        <? 
-			        }
-			        ?> 
+                itemdata: [    
+                    <?
+                    if ($login == null || !in_array("Administrators", $login->getRolsNames())) { 
+                    ?>
                     [
-                    	"About NP-Admin",
-                    	{ text: "Visit NP-Admin site", url: "http://code.google.com/p/np-admin/", target: "_new"}
+                     { text: "<em id=\"npadminsettings\">Administration login</em>", url: "<?= npadmin_setting('NP-ADMIN', 'BASE_URL')?>/panels/mainPanel.php", disabled: false}
+                    ],
+                    <? 
+                    }
+                    ?>
+                    [
+                     "About NP-Admin",
+                     { text: "Visit NP-Admin site", url: "http://code.google.com/p/np-admin/", target: "_new"}
                     ]
                 ]
             } 
         },
         <? 
         if (isset($ddbb)) 
-        	createMenus(); 
-        ?>
-        <? 
+         createMenus(); 
+
         if ($login != null) {
-            if ($login->canLogout()) {
         ?>
-        { text: "<em id=\"npadminlogout\">Log-out <?= $login->getUser()->user ?></em>", classname: "menu_rightside", onclick: { fn: logout }, disabled: false},
-        <?   } else { ?>
-        { text: "<?= $login->getUser()->user ?>", classname: "menu_rightside", disabled: true},
-        <? 
-            }
-        } 
-        if ($login == null) {
+           { text: "<em id=\"npadminlogin\"><?= $login->getUser()->user ?></em>", classname: "menu_rightside", 
+              submenu: {
+                 id: "npadminlogin_menu",
+                 itemdata: [
+                    [
+                       {text: "Change my password", url: "javascript:npadmin_showChangePassword()", disabled: false}
+                    ],
+                    [
+                 <?
+                 if ($login->canLogout()) {
+                 ?>
+                       { text: "<em id=\"npadminlogout\">Log-out <?= $login->getUser()->user ?></em>", onclick: { fn: logout }, disabled: false},
+                 <? } else { ?>
+                       { text: "<?= $login->getUser()->user ?>", disabled: true},
+                 <? 
+                    }
+                 ?>  
+                    ]
+                 ]
+              }
+           },   
+        <?    
+        } else {
         ?>
-        <!--{ text: "<em id=\"npadminlogin\">Login</em>", classname: "menu_rightside", url: "<?= npadmin_setting('NP-ADMIN', 'BASE_URL')?>/login.php?referrer=<?= $_SERVER['REQUEST_URI']?>", disabled: false},-->
-        { text: "<em id=\"npadminlogin\">Login</em>", classname: "menu_rightside", url: "javascript: npadmin_showLogin(false)", disabled: false},
+           { text: "<em id=\"npadminlogin\">Login</em>", classname: "menu_rightside", url: "javascript: npadmin_showLogin(false)", disabled: false},
         <? 
         }        
-        ?>
+        ?>     
     ];
 
     var oMenuBar = new YAHOO.widget.MenuBar("npadmin_menubar");
@@ -206,23 +220,23 @@ YAHOO.util.Event.onDOMReady(function () {
     oMenuBar.render(document.body);
     
     if (YAHOO.env.ua.ie > 0 && YAHOO.env.ua.ie < 7) {
-		if (npadmin_setting("NP-ADMIN", "IE6_FIXED_MENU")) {
-			YAHOO.util.Event.addListener(window, "scroll", function() {
-		    	var menu = document.getElementById("npadmin_menubar");
-			    menu.style.margin="0px";
-			    oMenuBar.moveTo(0,0);
-			    menu.style.left="0px";
-			    menu.style.margin="-10px 0 0 0";
-			    oMenuBar.render(document.body);
-		    });
-		}
+      if (npadmin_setting("NP-ADMIN", "IE6_FIXED_MENU")) {
+         YAHOO.util.Event.addListener(window, "scroll", function() {
+            var menu = document.getElementById("npadmin_menubar");
+             menu.style.margin="0px";
+             oMenuBar.moveTo(0,0);
+             menu.style.left="0px";
+             menu.style.margin="-10px 0 0 0";
+             oMenuBar.render(document.body);
+          });
+      }
     } else {
-	    var menu = document.getElementById("npadmin_menubar");
-	    if (menu != null) {
-	        menu.style.position = "fixed";
-	        menu.style.width = "100%";
-	        menu.style.left = "0px";
-	    }
+       var menu = document.getElementById("npadmin_menubar");
+       if (menu != null) {
+           menu.style.position = "fixed";
+           menu.style.width = "100%";
+           menu.style.left = "0px";
+       }
     }
 
     // Add a "show" event listener for each submenu.
@@ -235,7 +249,7 @@ YAHOO.util.Event.onDOMReady(function () {
          YAHOO.util.Dom.setX(this.element, 0);
          oIFrame = this.iframe;            
          if (oIFrame) {
-	         YAHOO.util.Dom.setX(oIFrame, 0);
+            YAHOO.util.Dom.setX(oIFrame, 0);
          }
          this.cfg.setProperty("x", 0, true);
       }

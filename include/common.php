@@ -51,7 +51,7 @@ Logger::info("npadmin", "Request received: ".$_SERVER["REQUEST_URI"].$vars);
 
 function __autoload($class_name) {
    global $NPADMIN_PATH;
-   add_include_path($NPADMIN_PATH);
+   NP_addIncludePath($NPADMIN_PATH);
    
    if (isset($class_name) && $class_name != null && trim($class_name) != "")
       require_once("classes/".trim($class_name).".class.php");
