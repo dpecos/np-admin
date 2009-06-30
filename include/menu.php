@@ -36,6 +36,13 @@
        display: block;
        background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/login.png) left center no-repeat;
    }
+
+<? foreach (split(",", npadmin_setting('NP-ADMIN', 'LANGUAGE_LIST')) as $lang) { ?>   
+   #npadminlang_<?= $lang ?> {
+      display: block;
+      background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/flags/<?= $lang ?>.gif) left center no-repeat;
+   }
+<? } ?>
    
    #filemenu.visible .yuimenuitemlabel,
    #editmenu.visible .yuimenuitemlabel {
@@ -45,13 +52,15 @@
    #filemenu.visible .yuimenu .yuimenuitemlabel {
        *zoom: normal;
    }
+   
+
 
 </style>
 
 
 <script type="text/javascript">
 function logout() {
-   box_question("userlogout_question", "Are you sure you want to logout?", logoutConfirm);
+   box_question("userlogout_question", "<?= _("Are you sure you want to logout?") ?>", logoutConfirm);
 }
 
 function logoutConfirm() {
@@ -165,21 +174,46 @@ YAHOO.util.Event.onDOMReady(function () {
                     if ($login == null || !in_array("Administrators", $login->getRolsNames())) { 
                     ?>
                     [
-                     { text: "<em id=\"npadminsettings\">Administration login</em>", url: "<?= npadmin_setting('NP-ADMIN', 'BASE_URL')?>/panels/mainPanel.php", disabled: false}
+                       { text: "<em id=\"npadminsettings\"><?= _("Administration login") ?></em>", url: "<?= npadmin_setting('NP-ADMIN', 'BASE_URL')?>/panels/mainPanel.php", disabled: false}
                     ],
                     <? 
                     }
                     ?>
                     [
-                     "About NP-Admin",
-                     { text: "Visit NP-Admin site", url: "http://code.google.com/p/np-admin/", target: "_new"}
+                       {  text: "<?= _("Language") ?>",
+                          submenu: {
+                             id: "npadmin_languages",
+                             itemdata: [
+                             <? 
+                             $langList = split(",", npadmin_setting('NP-ADMIN', 'LANGUAGE_LIST'));
+                             $i = 0;
+                             foreach ($langList as $lang) { 
+                                $text = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                                if ($lang == NP_LANG)
+                                   $text .= "&nbsp;&nbsp;*";
+                                if (++$i == count($langList)) {
+                             ?>
+                                { text: "<em id=\"npadminlang_<?= $lang ?>\"><?= $text ?></em>", url: "javascript:changeLanguage('<?= $lang ?>')" }
+                             <? } else { ?>
+                                { text: "<em id=\"npadminlang_<?= $lang ?>\"><?= $text ?></em>", url: "javascript:changeLanguage('<?= $lang ?>')" },
+                             <? 
+                                } 
+                             } 
+                             ?>
+                             ]
+                          }
+                       }
+                    ],
+                    [
+                       "<?= _("About NP-Admin") ?>",
+                       { text: "<?= _("Visit NP-Admin site") ?>", url: "http://code.google.com/p/np-admin/", target: "_new"}
                     ]
                 ]
             } 
         },
         <? 
         if (isset($ddbb)) 
-         createMenus(); 
+           createMenus(); 
 
         if ($login != null) {
         ?>
@@ -188,13 +222,13 @@ YAHOO.util.Event.onDOMReady(function () {
                  id: "npadminlogin_menu",
                  itemdata: [
                     [
-                       {text: "Change my password", url: "javascript:npadmin_showChangePassword()", disabled: false}
+                       {text: "<?= _("Change my password") ?>", url: "javascript:npadmin_showChangePassword()", disabled: false}
                     ],
                     [
                  <?
                  if ($login->canLogout()) {
                  ?>
-                       { text: "<em id=\"npadminlogout\">Log-out <?= $login->getUser()->user ?></em>", onclick: { fn: logout }, disabled: false},
+                       { text: "<em id=\"npadminlogout\"><?= sprintf(_("Log-out %s"), $login->getUser()->user) ?></em>", onclick: { fn: logout }, disabled: false},
                  <? } else { ?>
                        { text: "<?= $login->getUser()->user ?>", disabled: true},
                  <? 
@@ -203,14 +237,14 @@ YAHOO.util.Event.onDOMReady(function () {
                     ]
                  ]
               }
-           },   
+           } 
         <?    
         } else {
         ?>
-           { text: "<em id=\"npadminlogin\">Login</em>", classname: "menu_rightside", url: "javascript: npadmin_showLogin(false)", disabled: false},
+           { text: "<em id=\"npadminlogin\"><?= _("Login") ?></em>", classname: "menu_rightside", url: "javascript: npadmin_showLogin(false)", disabled: false}
         <? 
         }        
-        ?>     
+        ?>
     ];
 
     var oMenuBar = new YAHOO.widget.MenuBar("npadmin_menubar");

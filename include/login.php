@@ -22,7 +22,7 @@ $NPADMIN_PATH = "../";
       <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/np-lib/security/AES.js"></script>
       <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/np-lib/nplib_security.js"></script>
             
-      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/npadmin_javascript.js"></script>
+      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/npadmin_javascript.php"></script>
       <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/npadmin_login.php"></script>
       
       <script>
@@ -36,7 +36,7 @@ $NPADMIN_PATH = "../";
 
       <div id="main_body">
          <? if (npadmin_loginData() != null) { ?>
-         <div class="page_title">You are not allowed to access this page</div>
+         <div class="page_title"><?= _("You are not allowed to access this page") ?></div>
          <? } ?>
          <div class="page_title"><?= npadmin_setting("APP", "FORM_MESSAGE") ?></div>
          

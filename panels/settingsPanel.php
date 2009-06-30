@@ -24,12 +24,14 @@ function html_head() {
 
 <style type="text/css">
 <?
+global $npyui_setting;
 $npyui_setting->generateCSS();
 ?>
 </style>
 
 <script>
 <?
+global $npyui_setting;
 $npyui_setting->generateJS();
 ?>
 </script>
@@ -72,6 +74,7 @@ $npyui_setting->generateJS();
          type_list.getMenu().render(document.body);
       }
       <?
+      global $npyui_setting;
       $npyui_setting->generateInitJS("SettingHooks");
       ?>
    

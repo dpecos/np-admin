@@ -51,14 +51,14 @@ function npadmin_security($rols = null, $showLoginForm = true) {
 		if ($showLoginForm)
 			npadmin_loginForm();
 		else
-			die("You are not allowed to access this page");
+			die(_("You are not allowed to access this page"));
 	} else {
 		if (is_array($rols)) {
 			if (!$login->isAllowed($rols)) {
 				if ($showLoginForm)
 					npadmin_loginForm();
 				else
-					die("You are not allowed to access this page");
+					die(_("You are not allowed to access this page"));
 			}
 		} else {
 			// TODO:rols contains panelId
@@ -175,11 +175,11 @@ function npadmin_html_loginForm() {
          <table style="margin: 5px">
             <tr>
               <td rowspan="2" style="padding: 5px;"><img src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/login_big.png"/></td>
-              <td style="padding: 10px; padding-bottom: 0px;">User name:</td>
+              <td style="padding: 10px; padding-bottom: 0px;"><?= _("User name") ?>:</td>
               <td style="padding: 10px; padding-bottom: 0px;"><input type="text" name="user"/></td>
             </tr>
             <tr>
-              <td style="padding: 10px; padding-bottom: 0px;">Password:</td>
+              <td style="padding: 10px; padding-bottom: 0px;"><?= _("Password") ?>:</td>
               <td style="padding: 10px; padding-bottom: 0px;"><input type="password" name="password"/></td>
             </tr>
          </table>
@@ -201,15 +201,15 @@ function npadmin_html_changePasswordForm() {
          <table style="margin: 5px">
             <tr>
               <td rowspan="3" style="padding: 5px;"><img src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/change_password_big.png"/></td>
-              <td style="padding: 10px; padding-bottom: 0px;">Old password:</td>
+              <td style="padding: 10px; padding-bottom: 0px;"><?= _("Old password") ?>:</td>
               <td style="padding: 10px; padding-bottom: 0px;"><input type="password" name="old_password"/></td>
             </tr>
             <tr>
-              <td style="padding: 10px; padding-bottom: 0px;">New password:</td>
+              <td style="padding: 10px; padding-bottom: 0px;"><?= _("New password") ?>:</td>
               <td style="padding: 10px; padding-bottom: 0px;"><input type="password" name="new_password"/></td>
             </tr>
             <tr>
-              <td style="padding: 10px; padding-bottom: 0px;">Repeat new password:</td>
+              <td style="padding: 10px; padding-bottom: 0px;"><?= _("Repeat new password") ?>:</td>
               <td style="padding: 10px; padding-bottom: 0px;"><input type="password" name="new_password_2"/></td>
             </tr>
          </table>

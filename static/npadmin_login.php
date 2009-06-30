@@ -25,15 +25,15 @@ function npadmin_showLogin(modal, ref) {
             fixedcenter: true,
             draggable: true,
             constraintoviewport: true,
-            text: "NP-Admin - Login",
+            text: "<?= _("NP-Admin - Login") ?>",
             modal: modal,
             close: !modal,
             buttons: [
-               { text:"Cancel", handler: (modal ? doExit : defaultButtonHandler) },
-               { text:"Login", handler:doLogin, isDefault:true }
+               { text:"<?= _("Cancel") ?>", handler: (modal ? doExit : defaultButtonHandler) },
+               { text:"<?= _("Login") ?>", handler:doLogin, isDefault:true }
             ]
           });
-      npadmin_loginDialog.setHeader("NP-Admin - Login");
+      npadmin_loginDialog.setHeader("<?= _("NP-Admin - Login") ?>");
       var kl_enter = new YAHOO.util.KeyListener(document, { keys:YAHOO.util.KeyListener.KEY.ENTER },  							
    		  { fn: doLogin,
    			scope: npadmin_loginDialog,
@@ -58,15 +58,15 @@ function doLogin() {
    var seed = document.getElementById('npadmin_login_seed');
    if (seed != null) {
       if (formObject.user.value.trim().length == 0 || formObject.password.value.trim().length == 0) {
-         box_block("userlogin_block", "All the required fields have to be filled", "npadmin_loginDialog.show()");
+         box_block("userlogin_block", "<?= _("All the required fields have to be filled") ?>", "npadmin_loginDialog.show()");
       } else {
-         npadmin_messageBox = box_msg("userlogin_login", "Login", "Checking credentials...");
+         npadmin_messageBox = box_msg("userlogin_login", "<?= _("Login") ?>", "<?= _("Checking credentials...") ?>");
          formObject.password.value = np_encrypt("AES", formObject.password.value, seed.value);
          YAHOO.util.Connect.setForm(formObject);
          var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/users.php", {success:loginCallback});
       }
    } else {
-   	box_error("userlogin_error", "Your browser does not accept cookies");
+   	box_error("userlogin_error", "<?= _("Your browser does not accept cookies") ?>");
    }
 }
 
@@ -79,7 +79,7 @@ function doExit() {
 }
 
 function loginCallback(response) {
-   if (response.responseText.trim() == "OK") {
+   if (response.responseText.trim() == "<?= _("OK") ?>") {
       if (referrer != null)
          document.location.href = referrer;
       else                   
@@ -88,7 +88,7 @@ function loginCallback(response) {
       var formObject = document.getElementById('npadmin_loginForm');
       formObject.password.value = "";
       npadmin_messageBox.hide();
-      box_error("userlogin_error", "Incorrect user/password", "npadmin_loginDialog.show()");
+      box_error("userlogin_error", "<?= _("Incorrect user/password") ?>", "npadmin_loginDialog.show()");
    }
 }
 
@@ -100,15 +100,15 @@ function npadmin_showChangePassword() {
             fixedcenter: true,
             draggable: true,
             constraintoviewport: true,
-            text: "NP-Admin - Change Password",
+            text: "<?= _("NP-Admin - Change Password") ?>",
             modal: true,
             close: true,
             buttons: [
-               { text:"Cancel", handler: defaultButtonHandler },
-               { text:"Change", handler: doChangePassword, isDefault:true }
+               { text:"<?= _("Cancel") ?>", handler: defaultButtonHandler },
+               { text:"<?= _("Change") ?>", handler: doChangePassword, isDefault:true }
             ]
           });
-      npadmin_changePasswordDialog.setHeader("NP-Admin - Change Password");
+      npadmin_changePasswordDialog.setHeader("<?= _("NP-Admin - Change Password") ?>");
       var kl_enter = new YAHOO.util.KeyListener(document, { keys:YAHOO.util.KeyListener.KEY.ENTER },  							
    		  { fn: doChangePassword,
    			scope: npadmin_changePasswordDialog,
@@ -132,12 +132,12 @@ function doChangePassword() {
    var seed = document.getElementById('npadmin_changePassword_seed');
    if (seed != null) {
       if (formObject.old_password.value.trim().length == 0 || formObject.new_password.value.trim().length == 0 || formObject.new_password_2.value.trim().length == 0) {
-         box_block("changepassword_block", "All the required fields have to be filled", "npadmin_changePasswordDialog.show()");
+         box_block("changepassword_block", "<?= _("All the required fields have to be filled") ?>", "npadmin_changePasswordDialog.show()");
       } else {
          if (formObject.new_password.value != formObject.new_password_2.value) {
-            box_block("changepassword_block", "New passwords doesn't match", "npadmin_changePasswordDialog.show()");
+            box_block("changepassword_block", "<?= _("New passwords doesn't match") ?>", "npadmin_changePasswordDialog.show()");
          } else {
-            npadmin_messageBox = box_msg("changepassword_change", "Change password", "Changing password...");
+            npadmin_messageBox = box_msg("changepassword_change", "<?= _("Change password") ?>", "<?= _("Changing password...") ?>");
             
             if (seed.value != null && seed.value != "")
                startChangePassword({responseText:seed.value});
@@ -146,7 +146,7 @@ function doChangePassword() {
          }
       }
    } else {
-   	box_error("changepassword_error", "Your browser does not accept cookies");
+   	box_error("changepassword_error", "<?= _("Your browser does not accept cookies") ?>");
    }
 }
 
@@ -168,8 +168,8 @@ function startChangePassword(response) {
 function changePasswordCallback(response) {
    npadmin_messageBox.hide();
    if (response.responseText.trim() == "OK") {
-      box_info("changepassword_result", "Password changed correctly");
+      box_info("changepassword_result", "<?= _("Password changed correctly") ?>");
    } else {
-      box_error("changepassword_result", "Incorrect old password", "npadmin_showChangePassword()");
+      box_error("changepassword_result", "<?= _("Incorrect old password") ?>", "npadmin_showChangePassword()");
    }
 }

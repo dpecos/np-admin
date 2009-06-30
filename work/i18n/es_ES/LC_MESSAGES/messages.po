@@ -1,0 +1,160 @@
+# Spanish translations for np-admin package.
+# Copyright (C) 2009 Daniel Pecos Martinez
+# This file is distributed under the same license as the np-admin package.
+# Daniel Pecos <contact@danielpecos.com>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: np-admin\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-07-01 01:15+0200\n"
+"PO-Revision-Date: 2009-07-01 01:15+0200\n"
+"Last-Translator: Daniel Pecos <contact@danielpecos.com>\n"
+"Language-Team: Spanish <>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../API.php:54 ../API.php:61 ../login.php:39
+msgid "You are not allowed to access this page"
+msgstr "No tienes permiso para acceder a esta página"
+
+#: ../API.php:178
+msgid "User name"
+msgstr "Usuario"
+
+#: ../API.php:182
+msgid "Password"
+msgstr "Contraseña"
+
+#: ../API.php:204
+msgid "Old password"
+msgstr "Antigua contraseña"
+
+#: ../API.php:208
+msgid "New password"
+msgstr "Nueva contraseña"
+
+#: ../API.php:212
+msgid "Repeat new password"
+msgstr "Repite la nueva contraseña"
+
+#: ../menu.php:63
+msgid "Are you sure you want to logout?"
+msgstr "¿Seguro que deseas salir?"
+
+#: ../menu.php:177
+msgid "Administration login"
+msgstr "Login de Administración"
+
+#: ../menu.php:183
+msgid "Language"
+msgstr "Idioma"
+
+#: ../menu.php:208
+msgid "About NP-Admin"
+msgstr "Acerca de NP-Admin"
+
+#: ../menu.php:209
+msgid "Visit NP-Admin site"
+msgstr "Visita la web de NP-Admin"
+
+#: ../menu.php:225
+msgid "Change my password"
+msgstr "Cambia mi contraseña"
+
+#: ../menu.php:231
+#, php-format
+msgid "Log-out %s"
+msgstr "Salir %s"
+
+#: ../menu.php:244 ../npadmin_login.php:33 ../npadmin_login.php:63
+msgid "Login"
+msgstr "Entrar"
+
+#: ../npadmin_javascript.php:49
+msgid "Message"
+msgstr "Mensaje"
+
+#: ../npadmin_javascript.php:51 ../npadmin_javascript.php:64
+#: ../npadmin_javascript.php:77 ../npadmin_javascript.php:90
+#: ../npadmin_login.php:82
+msgid "OK"
+msgstr "OK"
+
+#: ../npadmin_javascript.php:62
+msgid "Information"
+msgstr "Información"
+
+#: ../npadmin_javascript.php:75
+msgid "Warning"
+msgstr "Aviso"
+
+#: ../npadmin_javascript.php:88
+msgid "Error"
+msgstr "Error"
+
+#: ../npadmin_javascript.php:109
+msgid "Question"
+msgstr "Pregunta"
+
+#: ../npadmin_javascript.php:114
+msgid "Yes"
+msgstr "Sí"
+
+#: ../npadmin_javascript.php:115
+msgid "No"
+msgstr "No"
+
+#: ../npadmin_login.php:28 ../npadmin_login.php:36
+msgid "NP-Admin - Login"
+msgstr "NP-Admin - Entrar"
+
+#: ../npadmin_login.php:32 ../npadmin_login.php:107
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: ../npadmin_login.php:61 ../npadmin_login.php:135
+msgid "All the required fields have to be filled"
+msgstr "Debes rellenar todos los campos obligatorios"
+
+#: ../npadmin_login.php:63
+msgid "Checking credentials..."
+msgstr "Comprobando credenciales..."
+
+#: ../npadmin_login.php:69 ../npadmin_login.php:149
+msgid "Your browser does not accept cookies"
+msgstr "Tu navegador no acepta cookies"
+
+#: ../npadmin_login.php:91
+msgid "Incorrect user/password"
+msgstr "Usuario/contraseña incorrectos"
+
+#: ../npadmin_login.php:103
+msgid "NP-Admin - Change Password"
+msgstr "Cambiar contraseña"
+
+#: ../npadmin_login.php:108
+msgid "Change"
+msgstr "Cambiar"
+
+#: ../npadmin_login.php:138
+msgid "New passwords doesn't match"
+msgstr "Los nuevos passwords no coinciden"
+
+#: ../npadmin_login.php:140
+msgid "Change password"
+msgstr "Cambiar mi contraseña"
+
+#: ../npadmin_login.php:140
+msgid "Changing password..."
+msgstr "Cambianado contraseña..."
+
+#: ../npadmin_login.php:171
+msgid "Password changed correctly"
+msgstr "Contraseña cambiada correctamente"
+
+#: ../npadmin_login.php:173
+msgid "Incorrect old password"
+msgstr "Contraseña antigua incorrecta"

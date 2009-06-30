@@ -1,3 +1,7 @@
+<?
+$NPADMIN_PATH = "../";
+require_once($NPADMIN_PATH."include/common.php");
+?>
 var npadmin_dialogs = [];
 
 function box(id, title, text, icon) {
@@ -46,9 +50,9 @@ function defaultButtonHandler() {
 }
 
 function box_block(id, text, fn) {
-	dialog = box(id, "Mensaje", text, YAHOO.widget.SimpleDialog.ICON_BLOCK);
+	dialog = box(id, "<?= _("Message") ?>", text, YAHOO.widget.SimpleDialog.ICON_BLOCK);
 	var buttons = [
-	               { text:"OK", handler:defaultButtonHandler, isDefault:true }
+	               { text:"<?= _("OK") ?>", handler:defaultButtonHandler, isDefault:true }
 	               ];
 	dialog.cfg.queueProperty("buttons", buttons);
 	dialog.callback_func = fn;
@@ -59,9 +63,9 @@ function box_block(id, text, fn) {
 }
 
 function box_info(id, text, fn) {
-	dialog = box(id, "Información", text, YAHOO.widget.SimpleDialog.ICON_INFO);
+	dialog = box(id, "<?= _("Information") ?>", text, YAHOO.widget.SimpleDialog.ICON_INFO);
 	var buttons = [
-	               { text:"OK", handler:defaultButtonHandler, isDefault:true }
+	               { text:"<?= _("OK") ?>", handler:defaultButtonHandler, isDefault:true }
 	               ];
 	dialog.cfg.queueProperty("buttons", buttons);
 	dialog.callback_func = fn;
@@ -72,9 +76,9 @@ function box_info(id, text, fn) {
 }
 
 function box_warn(id, text, fn) {
-	dialog = box(id, "Aviso", text, YAHOO.widget.SimpleDialog.ICON_WARN);
+	dialog = box(id, "<?= _("Warning") ?>", text, YAHOO.widget.SimpleDialog.ICON_WARN);
 	var buttons = [
-	               { text:"OK", handler:defaultButtonHandler, isDefault:true }
+	               { text:"<?= _("OK") ?>", handler:defaultButtonHandler, isDefault:true }
 	               ];
 	dialog.cfg.queueProperty("buttons", buttons);
 	dialog.callback_func = fn;
@@ -85,9 +89,9 @@ function box_warn(id, text, fn) {
 }
 
 function box_error(id, text, fn) {
-	dialog = box(id, "Error", text, YAHOO.widget.SimpleDialog.ICON_ALARM);
+	dialog = box(id, "<?= _("Error") ?>", text, YAHOO.widget.SimpleDialog.ICON_ALARM);
 	var buttons = [
-	               { text:"OK", handler:defaultButtonHandler, isDefault:true }
+	               { text:"<?= _("OK") ?>", handler:defaultButtonHandler, isDefault:true }
 	               ];
 	dialog.cfg.queueProperty("buttons", buttons);
 	dialog.callback_func = fn;
@@ -106,13 +110,13 @@ function box_msg(id, title, text) {
 }
 
 function box_question(id, text, handleYes, handleNo) {
-	dialog = box(id, "Pregunta", text, YAHOO.widget.SimpleDialog.ICON_HELP, {});
+	dialog = box(id, "<?= _("Question") ?>", text, YAHOO.widget.SimpleDialog.ICON_HELP, {});
 
 	if (handleYes == null) handleYes = defaultButtonHandler;
 	if (handleNo == null) handleNo = defaultButtonHandler;
 	var buttons = [
-	               { text:"Yes", handler:handleYes },
-	               { text:"No", handler:handleNo, isDefault:true }
+	               { text:"<?= _("Yes") ?>", handler:handleYes },
+	               { text:"<?= _("No") ?>", handler:handleNo, isDefault:true }
 	               ];
 
 	dialog.cfg.queueProperty("buttons", buttons);
@@ -130,6 +134,24 @@ function emptyList(listId) {
 		}
 	}
 }
+
+function changeLanguage(lang) {
+    href = window.location.href;
+    if (href.indexOf("?") >= 0) {
+        i = href.indexOf("LANG=");
+        if (i >= 0) {
+            href = href.substring(0, i+5) + lang + href.substring(i+10);
+        } else
+            href += "&LANG=" + lang;
+    } else {
+        i = href.indexOf("LANG=");
+        if (i >= 0) { 
+            href = href.substring(0, i+5) + lang + href.substring(i+10);
+        } else
+            href += "?LANG=" + lang;
+    }
+    window.location.href = href;
+}	
 
 String.prototype.trim = function() {
 	return this.replace(/^\s+|\s+$/g,"");

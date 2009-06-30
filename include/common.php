@@ -57,6 +57,19 @@ function __autoload($class_name) {
       require_once("classes/".trim($class_name).".class.php");
 }
 
+define('NP_DEFAULT_LANG', npadmin_setting('NP-ADMIN', 'LANGUAGE_DEFAULT'));
+if (isset($_GET) && array_key_exists("LANG", $_GET)) {
+     define('NP_LANG', $_GET[LANG]);
+     setcookie('NP_LANG', $_GET[LANG]);
+} else {
+    define('NP_LANG', $_COOKIE['NP_LANG'] != NULL ? $_COOKIE['NP_LANG'] : NP_DEFAULT_LANG);
+}
+    
+putenv("LC_ALL=".NP_LANG);
+setlocale(LC_ALL, NP_LANG);
+bindtextdomain("messages", $NPADMIN_PATH."/work/i18n");
+textdomain("messages");
+
 $yui = new YUI(npadmin_setting('NP-ADMIN', 'YUI_PATH'));
 
 $yui->add("standar");
