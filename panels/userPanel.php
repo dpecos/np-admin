@@ -112,7 +112,7 @@ li.li_assigned_groups {
          {key:"user", label:"User", sortable:true},
          {key:"creationDate", label:"Creation date", formatter:YAHOO.widget.DataTable.formatDate, sortable:true, sortOptions:{defaultDir:YAHOO.widget.DataTable.CLASS_DESC}},
          {key:"email", sortable:true},
-         {key:"realName", label:"Real name", sortable:true},
+         {key:"realName", label:"Real name", sortable:true}
 	   ]; 
 	        
 	   dataSource = new YAHOO.util.DataSource("<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/users.php?");

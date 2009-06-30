@@ -105,7 +105,7 @@ li.li_assigned_users {
      
       columnDefs = [ 
          {key:"groupName", label:"Name", sortable:true},
-         {key:"description", label:"Description", sortable:true},
+         {key:"description", label:"Description", sortable:true}
 	  ]; 
 	        
 	  dataSource = new YAHOO.util.DataSource("<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/groups.php?");

@@ -132,6 +132,14 @@ class DefaultAuthenticator {
 	   return DefaultAuthenticator::createUserList($sql);;
    }
 
+	/*public function listUnassignedUsersToGroupFiltro($groupId, $filtro) {
+	   global $ddbb;
+
+	   $sql = "SELECT * FROM ".$ddbb->getTable("User")." WHERE UPPER(".$ddbb->getMapping("User","user").") LIKE UPPER('%".$filtro."%') AND user_id >= 0 AND user_id NOT IN (SELECT user_id FROM ".$ddbb->getTable("UserGroup")." WHERE group_id = ".$groupId.") ORDER BY 1";
+
+	   return $this->createUserList($sql);;
+   }*/
+   
    public static function listAssignedUsersToRol($rolId) {
 	   global $ddbb;
 
@@ -148,6 +156,14 @@ class DefaultAuthenticator {
 	   return DefaultAuthenticator::createUserList($sql);;
    }
 
+   /*public function listUnassignedUsersToRolFiltro($rolId, $filtro) {
+	   global $ddbb;
+
+	   $sql = "SELECT * FROM ".$ddbb->getTable("User")." WHERE UPPER(".$ddbb->getMapping("User","user").") LIKE UPPER('%".$filtro."%') AND user_id >= 0 AND user_id NOT IN (SELECT user_id FROM ".$ddbb->getTable("UserRol")." WHERE rol_id = ".$rolId.") ORDER BY 1";
+
+	   return $this->createUserList($sql);;
+   }*/
+   
    public static function listAssignedGroupsToRol($rolId) {
 	   global $ddbb;
 

@@ -121,7 +121,7 @@ li.li_assigned_groups {
      
       columnDefs = [ 
          {key:"rolName", label:"Name", sortable:true},
-         {key:"description", label:"Description", sortable:true},
+         {key:"description", label:"Description", sortable:true}
 	   ]; 
 	        
 	   dataSource = new YAHOO.util.DataSource("<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/rols.php?");
