@@ -171,7 +171,7 @@ function npadmin_html_loginForm() {
    <div id="login_form_table">
       <div class="bd">
       <input id="npadmin_login_seed" type="hidden" value="<?= $_SESSION["npadmin_login_seed"] ?>"/>
-      <form id="npadmin_loginForm">
+      <form id="npadmin_loginForm" action="javascript:void">
          <table style="margin: 5px">
             <tr>
               <td rowspan="2" style="padding: 5px;"><img src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/login_big.png"/></td>
@@ -197,7 +197,7 @@ function npadmin_html_changePasswordForm() {
    <div id="changePassword_form_table">
       <div class="bd">
       <input id="npadmin_changePassword_seed" type="hidden" value=""/>
-      <form id="npadmin_changePasswordForm">
+      <form id="npadmin_changePasswordForm" action="javascript:void">
          <table style="margin: 5px">
             <tr>
               <td rowspan="3" style="padding: 5px;"><img src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/change_password_big.png"/></td>
