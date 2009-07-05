@@ -62,7 +62,7 @@ if (isset($_GET) && array_key_exists("LANG", $_GET)) {
      define('NP_LANG', $_GET[LANG]);
      setcookie('NP_LANG', $_GET[LANG]);
 } else {
-    define('NP_LANG', $_COOKIE['NP_LANG'] != NULL ? $_COOKIE['NP_LANG'] : NP_DEFAULT_LANG);
+    define('NP_LANG', array_key_exists('NP_LANG', $_COOKIE) && $_COOKIE['NP_LANG'] != NULL ? $_COOKIE['NP_LANG'] : NP_DEFAULT_LANG);
 }
     
 putenv("LC_ALL=".NP_LANG);

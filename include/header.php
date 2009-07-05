@@ -20,7 +20,6 @@
 	  <?php require_once($NPADMIN_PATH."static/npadmin_style.php"); ?>
 	  </style>
 	  
-      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/np-lib/nplib_common.js"></script>
       <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/np-lib/nplib_string.js"></script>
       <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/np-lib/security/AES.js"></script>
       <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/np-lib/nplib_security.js"></script>
