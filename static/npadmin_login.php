@@ -11,11 +11,13 @@ var referrer = null;
 var npadmin_loginDialog = null;
 var npadmin_messageBox = null;
 var npadmin_changePasswordDialog = null;
+var npadmin_resetPasswordDialog = null;
 
 function npadmin_showLogin(modal, ref) {
 	if (modal == null)
 		modal = true;
-	if (ref != null)
+		
+	if ((ref != null) && (ref.length>0))
 		referrer = ref;
 		
    if (npadmin_loginDialog == null) {
@@ -172,4 +174,53 @@ function changePasswordCallback(response) {
    } else {
       box_error("changepassword_result", "<?= _("Incorrect old password") ?>", "npadmin_showChangePassword()");
    }
+}
+
+function npadmin_showResetPassword() {
+	npadmin_loginDialog.hide();
+	if (npadmin_resetPasswordDialog == null) {
+      npadmin_resetPasswordDialog = new YAHOO.widget.Dialog("resetPassword_form_table", {
+            width: 350,
+            effect: {effect:YAHOO.widget.ContainerEffect.FADE, duration:0.25},
+            fixedcenter: true,
+            draggable: true,
+            constraintoviewport: true,
+            text: "<?= _("NP-Admin - Reset Password") ?>",
+            modal: true,
+            close: true,
+            buttons: [
+               { text:"<?= _("Cancel") ?>", handler: defaultButtonHandler },
+               { text:"<?= _("Change") ?>", handler: doResetPassword, isDefault:true }
+            ]
+          });
+      npadmin_resetPasswordDialog.setHeader("<?= _("NP-Admin - Reset Password") ?>");
+      var kl_enter = new YAHOO.util.KeyListener(document, { keys:YAHOO.util.KeyListener.KEY.ENTER },  							
+   		  { fn: doResetPassword,
+   			scope: npadmin_resetPasswordDialog,
+   			correctScope:true } );
+      var kl_esc = new YAHOO.util.KeyListener(document, { keys:27 },  							
+   		  { fn: defaultButtonHandler,
+   			scope: npadmin_resetPasswordDialog,
+   			correctScope:true } );
+      npadmin_resetPasswordDialog.cfg.queueProperty("keylisteners", [kl_enter, kl_esc]);
+      
+      npadmin_resetPasswordDialog.render(document.body);
+   } else {
+      npadmin_resetPasswordDialog.form.reset();
+   }
+   npadmin_resetPasswordDialog.show();
+}
+
+function doResetPassword() {
+	this.hide();
+	var formObject = document.getElementById('npadmin_resetPasswordForm');
+	YAHOO.util.Connect.setForm(formObject);
+    var transaction = YAHOO.util.Connect.asyncRequest('POST', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/ajax/users.php", {success:passwordResetResult});
+}
+
+function passwordResetResult(response) {
+	if (response.responseText.trim() == "OK")
+		box_info("resetpassword_info", "Se ha enviado un email a la dirección indicada que te permitirá cambiar la password.");
+	else
+		box_error("resetpassword_error", "Se produjo un error al iniciar el proceso de cambio de password.");
 }

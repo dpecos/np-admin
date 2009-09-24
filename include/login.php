@@ -27,7 +27,7 @@ $NPADMIN_PATH = "../";
       
       <script>
       YAHOO.util.Event.addListener(window, "load", function() {
-    	  npadmin_showLogin(true, "<?= $_GET['referrer'] ?>");
+         npadmin_showLogin(true, "<?= array_key_exists("referrer", $_GET) ? $_GET['referrer'] : npadmin_setting('NP-ADMIN', 'BASE_URL') ?>");
       });
       </script>
    </head>

@@ -34,7 +34,7 @@ require_once($NPADMIN_PATH."classes/MenuRol.class.php");
 require_once($NPADMIN_PATH."classes/Panel.class.php");
 require_once($NPADMIN_PATH."classes/PanelRol.class.php");
 require_once($NPADMIN_PATH."classes/PanelGroup.class.php");
-
+require_once($NPADMIN_PATH."classes/UserTmpPassword.class.php");
 require_once($NPADMIN_PATH."classes/Logger.class.php");
 
 Logger::init(array("npadmin", "nplib"));

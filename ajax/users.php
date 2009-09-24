@@ -55,6 +55,39 @@ if (array_key_exists("op", $_POST) && ($_POST['op'] == "login" || $_POST['op'] =
          echo "NOK";
       }
    }
+} else if (array_key_exists("op", $_POST) && ($_POST['op'] == "resetPassword")) {
+   $email = $_POST['email'];
+   if ($email != null && strlen($email) > 0) {
+   		$passwd = DefaultAuthenticator::resetPassword($email);
+		
+   		if ($passwd != null) {
+	   		// send email
+	   		$body = "Link para cambio de contraseña: ".npadmin_setting('NP-ADMIN', 'BASE_URL')."/panels/resetPasswordPanel.php?x=".$passwd;
+	   		//echo $body;
+	   		NP_sendMail("noreply@soporte-caixa.iberia.grupotecnocom", $email, "Cambio de contraseña", $body);
+	   		echo "OK";
+   		}
+   		
+   }   
+} else if (array_key_exists("op", $_POST) && ($_POST['op'] == "confirmResetPassword")) {
+	$email = $_POST['email'];
+	$passwd1 = $_POST['password1'];
+	$passwd2 = $_POST['password2'];
+	$x = $_POST['x'];
+	
+	if ($passwd1 === $passwd2) {
+		$sql = "SELECT * FROM ".$ddbb->getTable("UserTmpPassword")." WHERE ".$ddbb->getMapping("UserTmpPassword", "tmpPassword")."=".NP_DDBB::encodeSQLValue($x, "STRING");
+		$data = $ddbb->executePKSelectQuery($sql);
+		if ($data != null) {
+			$userTmpPassword = new UserTmpPassword($data);
+			if ($userTmpPassword->email === $email) {
+				 $auth = new SoporteAuthenticator();
+				 $auth->changePassword($userTmpPassword->userId, $passwd1);
+				 $userTmpPassword->delete();
+			}
+		}
+	}
+	NP_redirect("../index.php");
 } else {
 
 	npadmin_security(array("Administrators"), false);

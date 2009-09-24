@@ -21,6 +21,7 @@
 	  </style>
 	  
       <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/np-lib/nplib_string.js"></script>
+      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/np-lib/nplib_array.js"></script> 
       <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/np-lib/security/AES.js"></script>
       <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/np-lib/nplib_security.js"></script>
          

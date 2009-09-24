@@ -7,8 +7,9 @@
  * @copyright Copyright (c) Daniel Pecos Martínez 
  * @license http://www.gnu.org/licenses/lgpl.html  LGPL License
  */
-function npadmin_error($number, $msg,$file,$line) {
-	Logger::error("npadmin", $number." file: ".$file." line: ".$line.": ".$msg);
+function npadmin_error($level, $msg, $file, $line) {
+	$str = "(file: ".$file.", line: ".$line." [level: ".$level."]): ".$msg;
+	Logger::error("npadmin", $str);
 } 
 
 class Logger {
@@ -30,7 +31,7 @@ class Logger {
 	}
 	
 	static function debug($name, $msg) { NPLogger::debug($name, $msg); }
-	static function info($name, $msg) { NPLogger::info($name, $msg);}
+	static function info($name, $msg) { NPLogger::info($name, $msg); }
 	static function error($name, $msg) { NPLogger::error($name, $msg); }	
 	static function isEnabled() { return NPLogger::isEnabled(); }
 }

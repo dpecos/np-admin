@@ -84,6 +84,31 @@ class DefaultAuthenticator {
 
    }
 
+ 	public static function resetPassword($email) {
+   	  global $ddbb;
+   	  $param = null;
+   	  
+      $sql = "SELECT * FROM ".$ddbb->getTable("User")." WHERE ".$ddbb->getMapping('User','email')." = ".NP_DDBB::encodeSQLValue($email, "STRING");
+	  $data = $ddbb->executePKSelectQuery($sql);
+	  
+	  $tmpPassword = null;
+	  if ($data != null) {
+	  	  $tmpPassword = NP_random_string(20);
+		  $user = new User($data);
+		  
+		  $reset = new UserTmpPassword();
+		  $reset->userId = $user->userId;
+		  $reset->email = $user->email;
+		  $reset->tmpPassword = $tmpPassword;
+		  
+		  // borramos posibles claves anteriores para este email
+		  $reset->delete();
+	  
+	   	  $reset->store();
+	  }
+   	  return $tmpPassword;
+   }
+   
    public static function listGroups() {
 	   global $ddbb;
 
@@ -132,14 +157,13 @@ class DefaultAuthenticator {
 	   return DefaultAuthenticator::createUserList($sql);;
    }
 
-	/*public function listUnassignedUsersToGroupFiltro($groupId, $filtro) {
+	public function listUnassignedUsersToGroupFiltro($groupId, $filtro) {
 	   global $ddbb;
 
 	   $sql = "SELECT * FROM ".$ddbb->getTable("User")." WHERE UPPER(".$ddbb->getMapping("User","user").") LIKE UPPER('%".$filtro."%') AND user_id >= 0 AND user_id NOT IN (SELECT user_id FROM ".$ddbb->getTable("UserGroup")." WHERE group_id = ".$groupId.") ORDER BY 1";
 
 	   return $this->createUserList($sql);;
-   }*/
-   
+   }
    public static function listAssignedUsersToRol($rolId) {
 	   global $ddbb;
 
@@ -156,14 +180,13 @@ class DefaultAuthenticator {
 	   return DefaultAuthenticator::createUserList($sql);;
    }
 
-   /*public function listUnassignedUsersToRolFiltro($rolId, $filtro) {
+   public function listUnassignedUsersToRolFiltro($rolId, $filtro) {
 	   global $ddbb;
 
 	   $sql = "SELECT * FROM ".$ddbb->getTable("User")." WHERE UPPER(".$ddbb->getMapping("User","user").") LIKE UPPER('%".$filtro."%') AND user_id >= 0 AND user_id NOT IN (SELECT user_id FROM ".$ddbb->getTable("UserRol")." WHERE rol_id = ".$rolId.") ORDER BY 1";
 
 	   return $this->createUserList($sql);;
-   }*/
-   
+   }
    public static function listAssignedGroupsToRol($rolId) {
 	   global $ddbb;
 

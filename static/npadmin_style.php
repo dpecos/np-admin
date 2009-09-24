@@ -1,5 +1,5 @@
 html {
-    background-color: <?= npadmin_setting('NP-ADMIN', 'BG_COLOR') ?>;            
+    background-color: <?= npadmin_setting('NP-ADMIN_LNF', 'BODY_BG_COLOR') ?>;            
 }
 
 #main_body {
@@ -23,7 +23,7 @@ html {
     font-family: "Arial";
     margin-top: 5px;
     margin-bottom: 15px;
-    background-color: rgb(188,193,214);
+    background-color: <?= npadmin_setting('NP-ADMIN_LNF', 'TITLE_BG_COLOR') ?>;         
     border: 2px solid black;
     padding:10px;
 }

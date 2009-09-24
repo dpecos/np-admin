@@ -2,7 +2,7 @@
 require_once($NPADMIN_PATH."include/common.php");
 
 if (session_id() === "") {
-session_start();
+   session_start();
 }
 
 function npadmin_login($user, $password) {
@@ -21,7 +21,7 @@ function npadmin_logout() {
 
 function npadmin_loginData() {
 	if (session_id() === "")
-	session_start();
+	   session_start();
 	if (isset($_SESSION)) {
 		if (isset($_SESSION['npadmin_logindata']))
 			return $_SESSION['npadmin_logindata'];
@@ -174,7 +174,7 @@ function npadmin_html_loginForm() {
       <form id="npadmin_loginForm" action="javascript:void">
          <table style="margin: 5px">
             <tr>
-              <td rowspan="2" style="padding: 5px;"><img src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/login_big.png"/></td>
+              <td rowspan="3" style="padding: 5px;"><img src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/login_big.png"/></td>
               <td style="padding: 10px; padding-bottom: 0px;"><?= _("User name") ?>:</td>
               <td style="padding: 10px; padding-bottom: 0px;"><input type="text" name="user"/></td>
             </tr>
@@ -182,8 +182,28 @@ function npadmin_html_loginForm() {
               <td style="padding: 10px; padding-bottom: 0px;"><?= _("Password") ?>:</td>
               <td style="padding: 10px; padding-bottom: 0px;"><input type="password" name="password"/></td>
             </tr>
+            <tr>
+              <td style="padding: 10px; padding-bottom: 0px;" colspan="2" align="right"><a href="javascript: npadmin_showResetPassword();">He olvidado mis datos de acceso</a></td>
+            </tr>
          </table>
          <input type="hidden" name="op" value="login"/>
+      </form>
+      </div>
+   </div>
+</div>
+
+<div style="visibility: hidden; display:none">
+   <div id="resetPassword_form_table">
+      <div class="bd">
+      <form id="npadmin_resetPasswordForm" action="javascript:void">
+         <table style="margin: 5px">
+            <tr>
+              <td style="padding: 5px;"><img src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/login_big.png"/></td>
+              <td style="padding: 10px; padding-bottom: 0px;"><?= _("Email") ?>:</td>
+              <td style="padding: 10px; padding-bottom: 0px;"><input type="text" name="email"/></td>
+            </tr>
+         </table>
+         <input type="hidden" name="op" value="resetPassword"/>         
       </form>
       </div>
    </div>
