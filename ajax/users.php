@@ -62,8 +62,8 @@ if (array_key_exists("op", $_POST) && ($_POST['op'] == "login" || $_POST['op'] =
 		
    		if ($passwd != null) {
 	   		// send email
-	   		$body = "Link para cambio de contraseña: ".npadmin_setting('NP-ADMIN', 'BASE_URL')."/panels/resetPasswordPanel.php?x=".$passwd;
-	   		//echo $body;
+	   		$link = NP_get_server_url().npadmin_setting('NP-ADMIN', 'BASE_URL')."/panels/resetPasswordPanel.php?x=".$passwd;
+	   		$body = "Link para cambio de contraseña: $link";
 	   		NP_sendMail("noreply@soporte-caixa.iberia.grupotecnocom", $email, "Cambio de contraseña", $body);
 	   		echo "OK";
    		}
@@ -80,10 +80,16 @@ if (array_key_exists("op", $_POST) && ($_POST['op'] == "login" || $_POST['op'] =
 		$data = $ddbb->executePKSelectQuery($sql);
 		if ($data != null) {
 			$userTmpPassword = new UserTmpPassword($data);
-			if ($userTmpPassword->email === $email) {
-				 $auth = new SoporteAuthenticator();
-				 $auth->changePassword($userTmpPassword->userId, $passwd1);
-				 $userTmpPassword->delete();
+			$today = time();
+			$diffDays = floor(($today - strtotime($userTmpPassword->creationDate)) / (60*60*24));
+			if ($diffDays <= npadmin_setting("NP-ADMIN", "RESET_PASSWORD_DAYS")) {
+				if ($userTmpPassword->email === $email) {
+					 DefaultAuthenticator::changePassword($userTmpPassword->userId, $passwd1);
+					 $userTmpPassword->delete();
+				}
+			} else {
+				Logger::info("npadmin", "Reset password entry too old! (".$userTmpPassword->creationDate.", ".$userTmpPassword->email.", ".$userTmpPassword->tmpPassword.")");
+				$userTmpPassword->delete();
 			}
 		}
 	}

@@ -46,7 +46,9 @@ else {
 		$vars .= $k."=".$v."&";
 	$vars = substr($vars, 0, strlen($vars)-1);
 }
-Logger::info("npadmin", "Request received: ".$_SERVER["REQUEST_URI"].$vars);
+if (strlen($vars) > 0)
+   $vars = "?".$vars;
+Logger::info("npadmin", "Request received: ".NP_get_server_url().$_SERVER['PHP_SELF'].$vars);
 
 
 function __autoload($class_name) {
@@ -69,6 +71,11 @@ putenv("LC_ALL=".NP_LANG);
 setlocale(LC_ALL, NP_LANG);
 bindtextdomain("messages", $NPADMIN_PATH."/work/i18n");
 textdomain("messages");
+
+if (npadmin_setting("NP-ADMIN", "MAIL_SERVER") != null) {
+	ini_set("SMTP", npadmin_setting("NP-ADMIN", "MAIL_SERVER"));
+	ini_set("smtp_port", npadmin_setting("NP-ADMIN", "MAIL_PORT"));
+}
 
 $yui = new YUI(npadmin_setting('NP-ADMIN', 'YUI_PATH'));
 
