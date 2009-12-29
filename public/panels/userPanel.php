@@ -29,12 +29,12 @@ function html_head() {
 
 .yui-button#delUserButton button {
    padding-left: 2em;
-   background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/del.gif) 5% 50% no-repeat;
+   background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/img/del.gif) 5% 50% no-repeat;
 }
 
 .yui-button#addUserButton button {
    padding-left: 2em;
-   background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/add.gif) 5% 50% no-repeat;
+   background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/img/add.gif) 5% 50% no-repeat;
 }
 </style>
 
@@ -88,7 +88,7 @@ li.li_assigned_groups {
 
 .yui-button#saveGroupsButton button {
    padding-left: 2em;
-   background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/save.gif) 5% 50% no-repeat;
+   background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/img/save.gif) 5% 50% no-repeat;
 }
 </style>
 

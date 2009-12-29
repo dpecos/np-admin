@@ -14,7 +14,7 @@ function html_head() {
 
 .yui-button#addMenuButton button {
    padding-left: 2em;
-   background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/add.gif) 5% 50% no-repeat;
+   background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/img/add.gif) 5% 50% no-repeat;
 }
 </style>
 

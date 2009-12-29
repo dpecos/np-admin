@@ -174,7 +174,7 @@ function npadmin_html_loginForm() {
       <form id="npadmin_loginForm" action="javascript:void">
          <table style="margin: 5px">
             <tr>
-              <td rowspan="3" style="padding: 5px;"><img src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/login_big.png"/></td>
+              <td rowspan="3" style="padding: 5px;"><img src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/img/login_big.png"/></td>
               <td style="padding: 10px; padding-bottom: 0px;"><?= _("User name") ?>:</td>
               <td style="padding: 10px; padding-bottom: 0px;"><input type="text" name="user"/></td>
             </tr>
@@ -198,7 +198,7 @@ function npadmin_html_loginForm() {
       <form id="npadmin_resetPasswordForm" action="javascript:void">
          <table style="margin: 5px">
             <tr>
-              <td style="padding: 5px;"><img src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/login_big.png"/></td>
+              <td style="padding: 5px;"><img src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/img/login_big.png"/></td>
               <td style="padding: 10px; padding-bottom: 0px;"><?= _("Email") ?>:</td>
               <td style="padding: 10px; padding-bottom: 0px;"><input type="text" name="email"/></td>
             </tr>
@@ -220,7 +220,7 @@ function npadmin_html_changePasswordForm() {
       <form id="npadmin_changePasswordForm" action="javascript:void">
          <table style="margin: 5px">
             <tr>
-              <td rowspan="3" style="padding: 5px;"><img src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/change_password_big.png"/></td>
+              <td rowspan="3" style="padding: 5px;"><img src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/img/change_password_big.png"/></td>
               <td style="padding: 10px; padding-bottom: 0px;"><?= _("Old password") ?>:</td>
               <td style="padding: 10px; padding-bottom: 0px;"><input type="password" name="old_password"/></td>
             </tr>

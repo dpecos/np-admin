@@ -11,7 +11,7 @@
    em#npadminlabel {
        text-indent: -6em;
        display: block;
-       background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/glider.png) center center no-repeat;
+       background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/img/glider.png) center center no-repeat;
        width: 2em;
        overflow: hidden;
    }
@@ -19,7 +19,7 @@
    em#npadminsettings {
        text-indent: 2.5em;          
        display: block;
-       background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/settings.png) left center no-repeat;
+       background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/img/settings.png) left center no-repeat;
        height: 20px;
    }
    
@@ -27,20 +27,20 @@
        text-indent: 2.5em;
        font-style: italic;
        display: block;
-       background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/logout.png) left center no-repeat;
+       background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/img/logout.png) left center no-repeat;
    }
    
    em#npadminlogin {
        text-indent: 2.5em;
        font-style: italic;
        display: block;
-       background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/login.png) left center no-repeat;
+       background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/img/login.png) left center no-repeat;
    }
 
 <? foreach (split(",", npadmin_setting('NP-ADMIN', 'LANGUAGE_LIST')) as $lang) { ?>   
    #npadminlang_<?= $lang ?> {
       display: block;
-      background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/img/flags/<?= $lang ?>.gif) left center no-repeat;
+      background: url(<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/img/flags/<?= $lang ?>.gif) left center no-repeat;
    }
 <? } ?>
    

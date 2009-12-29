@@ -6,6 +6,11 @@ ini_set('display_errors', '1');
 
 if (file_exists($NPADMIN_PATH."private/config/ddbb_config.php"))
    require_once($NPADMIN_PATH."private/config/ddbb_config.php");
+else {
+   header("Location: ".$NPADMIN_PATH."public/install.php");
+   die();
+}
+
 
 global $NPLIB_PATH;
 if (!isset($NPLIB_PATH)) 

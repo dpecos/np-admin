@@ -94,6 +94,15 @@ function loginCallback(response) {
    }
 }
 
+function logout() {
+   box_question("userlogout_question", "<?= _("Are you sure you want to logout?") ?>", logoutConfirm);
+}
+
+function logoutConfirm() {
+   var transaction = YAHOO.util.Connect.asyncRequest('GET', "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/ajax/users.php?op=logout", {success: function() {document.location.href = "<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>"}} );
+}
+
+
 function npadmin_showChangePassword() {
 	if (npadmin_changePasswordDialog == null) {
       npadmin_changePasswordDialog = new YAHOO.widget.Dialog("changePassword_form_table", {

@@ -1,12 +1,19 @@
 <?
 $NPADMIN_PATH = "../";
-require_once($NPADMIN_PATH."private/include/common.php");
 
 global $msg, $file;
 $msg = "";
 $file = $NPADMIN_PATH."private/config/ddbb_config.php";
 
+$delete_config = false;
+if (!file_exists($file)) {
+   $delete_config = true;
+   fclose(fopen($file, "wb"));
+}
 require_once($NPADMIN_PATH."private/include/common.php");
+if ($delete_config) {
+   unlink($file);
+}
 
 $path = "";
 if (array_key_exists('_PATH', $_POST)) {
@@ -109,6 +116,54 @@ function html_head() {
    });
   
 </script>
+<style>
+/* Mismo contenido que npadmin_style.php -> en este punto no se puede hacer petición a ese fichero ya que puede que no exista la configuracion de BBDD y redirija de nuevo a install.php */
+html {
+    background-color: #9999BB;            
+}
+
+#main_body {
+    margin: 20px;
+    margin-top: 44px;
+    background-color: #FFFFFF; 
+    padding: 15px;
+    border: #000000 1px solid;
+    /*min-height: 80%;
+    height: auto !important;
+    height: 80%;*/
+}
+
+#mainTabs div.yui-content {
+    padding: 15px;
+}
+
+.page_title {
+    font-size: 22px;
+    font-weight: bold;
+    font-family: "Arial";
+    margin-top: 5px;
+    margin-bottom: 15px;
+    background-color: #BCC1D6;         
+    border: 2px solid black;
+    padding:10px;
+}
+
+.buttonBox {
+    border: 1px solid black;
+    margin-bottom:10px;
+    padding:10px;
+    background-color: rgb(190,211,206);
+}
+
+table .npadmin_login {
+    margin: 10px;
+}
+
+table .npadmin_login td {
+    padding: 10px;
+    padding-bottom: 0px;
+}
+</style>
 <?
 }
 ?>

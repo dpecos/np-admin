@@ -5,7 +5,7 @@ $NPADMIN_PATH = "../";
    <head>
       <? global $yui; $yui->dependencies(); ?>
       
-      <link href="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/npadmin_style.css" type="text/css" rel="stylesheet">     
+      <link href="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/css/npadmin_style.css" type="text/css" rel="stylesheet">     
       <style>
          .page_title {
             text-align: center;
@@ -17,13 +17,13 @@ $NPADMIN_PATH = "../";
          }
       </style>
       
-      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/np-lib/nplib_common.js"></script>
-      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/np-lib/nplib_string.js"></script>
-      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/np-lib/security/AES.js"></script>
-      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/np-lib/nplib_security.js"></script>
+      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/js/np-lib/nplib_common.js"></script>
+      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/js/np-lib/nplib_string.js"></script>
+      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/js/np-lib/security/AES.js"></script>
+      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/js/np-lib/nplib_security.js"></script>
             
-      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/npadmin_javascript.php"></script>
-      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/static/npadmin_login.php"></script>
+      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/js/npadmin_javascript.php"></script>
+      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/js/npadmin_login.php"></script>
       
       <script>
       YAHOO.util.Event.addListener(window, "load", function() {
