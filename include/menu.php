@@ -254,7 +254,7 @@ YAHOO.util.Event.onDOMReady(function () {
     oMenuBar.render(document.body);
     
     if (YAHOO.env.ua.ie > 0 && YAHOO.env.ua.ie < 7) {
-      if (npadmin_setting("NP-ADMIN", "IE6_FIXED_MENU")) {
+      if (npadmin_setting("NP-ADMIN_LNF", "IE6_FIXED_MENU")) {
          YAHOO.util.Event.addListener(window, "scroll", function() {
             var menu = document.getElementById("npadmin_menubar");
              menu.style.margin="0px";
