@@ -1,5 +1,5 @@
 <?
-require_once($NPADMIN_PATH."include/common.php");
+require_once($NPADMIN_PATH."private/include/common.php");
 
 if (session_id() === "") {
    session_start();
