@@ -24,13 +24,11 @@ html {
 
 .page_title {
     font-size: 22px;
-    font-weight: bold;
-    font-family: "Arial";
     margin-top: 5px;
     margin-bottom: 15px;
     background-color: <?= npadmin_setting('NP-ADMIN_LNF', 'TITLE_BG_COLOR') ?>;         
-    border: 2px solid black;
-    padding:10px;
+    border: 1px solid black;
+    padding: 10px;
 }
 
 .buttonBox {

@@ -81,7 +81,7 @@ $data = array (
       array('type' => 'NP-ADMIN', 'name' => 'AUTH', 'default_value' => ""),
       array('type' => 'NP-ADMIN', 'name' => 'AUTH_FORM', 'default_value' => "private/include/login.php"),
       array('type' => 'NP-ADMIN', 'name' => 'YUI_PATH', 'default_value' => 'http://yui.yahooapis.com/2.7.0/build', "value" => null),
-      array('type' => 'NP-ADMIN', 'name' => 'CACHE_SETTINGS', 'default_value' => "false"),
+      array('type' => 'NP-ADMIN', 'name' => 'CACHE_SETTINGS', 'default_value' => "true"),
       array('type' => 'NP-ADMIN', 'name' => 'CACHE_MENUS', 'default_value' => "false"),
       array('type' => 'NP-ADMIN', 'name' => 'LANGUAGE_LIST', 'default_value' => "en_US,es_ES"),
       array('type' => 'NP-ADMIN', 'name' => 'LANGUAGE_DEFAULT', 'default_value' => "en_US"),
@@ -258,6 +258,8 @@ if (isset($_POST) && count($_POST) >= 1) {
       echo "<br/>Upgrade succeed! Now you can <a href='panels/settingsPanel.php'>login and edit configuration</a> with your already configure users.\n";
    }
 } else {
+	
+	$path = substr($_SERVER["PHP_SELF"], 0, strpos($_SERVER["PHP_SELF"], "public/install.php"));
 ?>
            <p><? global $msg; echo $msg ?></p>
            <p>In order to start installation, fill next data and click on the "Start..." button:</p>
@@ -274,7 +276,7 @@ if (isset($_POST) && count($_POST) >= 1) {
            <br/>
            <table>
               <caption><b>Configuration</b></caption>
-              <tr><td width="150px">PATH</td><td><input type="text" name="_PATH" value="/np-admin"/></td></tr>
+              <tr><td width="150px">PATH</td><td><input type="text" name="_PATH" value="<?= $path ?>"/></td></tr>
            </table> 
            <br/>
            <input type="hidden" name="op" value="install"/>

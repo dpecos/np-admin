@@ -17,7 +17,7 @@ class YUI {
 
 
 		$this->css = array (
-		   "standar" => array("reset/reset.css", "fonts/fonts.css"),
+			"standar" => array("reset/reset.css", "fonts/fonts.css"),
 			"tabview" => array("tabview/assets/skins/sam/tabview.css", "fonts/fonts-min.css"),
 			"button" => array("button/assets/skins/sam/button.css"),
 			"menu" => array("menu/assets/skins/sam/menu.css"),
@@ -25,7 +25,8 @@ class YUI {
 			"logger" => array("logger/assets/skins/sam/logger.css"),
 			"simpledialog" => array("container/assets/skins/sam/container.css", "button/assets/skins/sam/button.css"),
 			"treeview" => array("treeview/assets/skins/sam/treeview.css"),
-			"calendar" => array("calendar/assets/skins/sam/calendar.css")
+			"calendar" => array("calendar/assets/skins/sam/calendar.css"),
+			"editor" => array("assets/skins/sam/skin.css")
 		);
 
 		$this->js = array(
@@ -40,7 +41,8 @@ class YUI {
 		   "logger" => array("yahoo-dom-event/yahoo-dom-event.js", "logger/logger-min.js"),
 		   "simpledialog" => array("yahoo-dom-event/yahoo-dom-event.js", "animation/animation-min.js", "dragdrop/dragdrop-min.js", "element/element-min.js", "button/button-min.js", "container/container-min.js"),
 		   "treeview" => array("yahoo/yahoo-min.js", "event/event-min.js", "treeview/treeview-min.js"),
-		   "calendar" => array("yahoo-dom-event/yahoo-dom-event.js", "calendar/calendar-min.js")
+		   "calendar" => array("yahoo-dom-event/yahoo-dom-event.js", "calendar/calendar-min.js"),
+		   "editor" => array("yahoo-dom-event/yahoo-dom-event.js", "element/element-min.js", "container/container_core-min.js", "menu/menu-min.js", "button/button-min.js", "editor/editor-min.js")
 		);
 
 		$this->loadComponents = array();

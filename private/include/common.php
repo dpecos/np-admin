@@ -31,16 +31,15 @@ require_once($NPADMIN_PATH."private/classes/Rol.class.php");
 require_once($NPADMIN_PATH."private/classes/Group.class.php");
 require_once($NPADMIN_PATH."private/classes/GroupRol.class.php");
 require_once($NPADMIN_PATH."private/classes/User.class.php");
-require_once($NPADMIN_PATH."private/classes/UserRol.class.php");
 require_once($NPADMIN_PATH."private/classes/UserGroup.class.php");
+require_once($NPADMIN_PATH."private/classes/UserRol.class.php");
 require_once($NPADMIN_PATH."private/classes/Menu.class.php");
-require_once($NPADMIN_PATH."private/classes/MenuGroup.class.php");
 require_once($NPADMIN_PATH."private/classes/MenuRol.class.php");
 require_once($NPADMIN_PATH."private/classes/Panel.class.php");
 require_once($NPADMIN_PATH."private/classes/PanelRol.class.php");
-require_once($NPADMIN_PATH."private/classes/PanelGroup.class.php");
 //require_once($NPADMIN_PATH."private/classes/UserTmpPassword.class.php");
 require_once($NPADMIN_PATH."private/classes/Logger.class.php");
+require_once($NPADMIN_PATH."private/classes/Application.class.php");
 
 Logger::init(array("npadmin", "nplib"));
 $vars = "";
@@ -71,6 +70,7 @@ if (isset($_GET) && array_key_exists("LANG", $_GET)) {
 } else {
     define('NP_LANG', array_key_exists('NP_LANG', $_COOKIE) && $_COOKIE['NP_LANG'] != NULL ? $_COOKIE['NP_LANG'] : NP_DEFAULT_LANG);
 }
+#Logger::debug("npadmin", "Language set to ".NP_LANG);
     
 putenv("LC_ALL=".NP_LANG);
 setlocale(LC_ALL, NP_LANG);
@@ -95,6 +95,7 @@ $yui->add("event");
 $yui->add("json");
 $yui->add("treeview");
 $yui->add("calendar");
+$yui->add("editor");
 
 $yui_logging = false;
 ?>

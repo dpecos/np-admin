@@ -15,5 +15,17 @@ $ddbb->addField("MenuRol", "menuId", "menu_id", "INT", array("PK" => true, "NULL
 $ddbb->addField("MenuRol", "rolId", "rol_id", "INT", array("PK" => true, "NULLABLE" => false));
 
 class MenuRol {
+
+        public function __construct($data = null) {
+                global $ddbb;
+                $ddbb->loadData($this, $data);
+        }
+
+        public function store() {
+                global $ddbb;
+                $ddbb->insertObject($this);
+                return true;
+        }
+
 }
 ?>

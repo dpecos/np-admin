@@ -22,12 +22,13 @@ $NPADMIN_PATH = "../";
       <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/js/np-lib/security/AES.js"></script>
       <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/js/np-lib/nplib_security.js"></script>
             
-      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/js/npadmin_javascript.php"></script>
-      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/js/npadmin_login.php"></script>
+      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/js/npadmin_javascript.php?LANG=<?= NP_LANG ?>"></script>
+      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/js/npadmin_login.php?LANG=<?= NP_LANG ?>"></script>
       
       <script>
       YAHOO.util.Event.addListener(window, "load", function() {
-         npadmin_showLogin(true, "<?= array_key_exists("referrer", $_GET) ? $_GET['referrer'] : npadmin_setting('NP-ADMIN', 'BASE_URL') ?>");
+         //npadmin_showLogin(true, "<?= array_key_exists("referrer", $_GET) ? $_GET['referrer'] : npadmin_setting('NP-ADMIN', 'BASE_URL') ?>");
+         npadmin_showLogin(true, "<?= array_key_exists("referrer", $_GET) ? $_GET['referrer'] : $_SERVER["PHP_SELF"] ?>");
       });
       </script>
    </head>

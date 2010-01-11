@@ -14,27 +14,37 @@
       </script>
       <? } ?>
       
-      <? require_once($NPADMIN_PATH."private/include/menu.php") ?>
+      <?
+        if (!defined("NP-ADMIN_HIDE_MENUBAR") || defined("NP-ADMIN_HIDE_MENUBAR") && NP-ADMIN_HIDE_MENUBAR) {
+            require_once($NPADMIN_PATH."private/include/menu.php");
+        }
+      ?>
 
-      <link rel="stylesheet" type="text/css" href="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/css/npadmin_style.php"/>
+      <link rel="stylesheet" type="text/css" href="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/css/npadmin_style.php?LANG=<?= NP_LANG ?>"/>
 	  
       <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/js/np-lib/nplib_string.js"></script>
       <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/js/np-lib/nplib_array.js"></script> 
       <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/js/np-lib/security/AES.js"></script>
       <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/js/np-lib/nplib_security.js"></script>
          
-      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/js/npadmin_javascript.php"></script>
-      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/js/npadmin_login.php"></script>
+      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/js/npadmin_javascript.php?LANG=<?= NP_LANG ?>"></script>
+      <script language="javascript" src="<?= npadmin_setting('NP-ADMIN', 'BASE_URL') ?>/public/js/npadmin_login.php?LANG=<?= NP_LANG ?>"></script>
       
       <? if (function_exists("html_head")) html_head() ?>
 
       <? 
+      global $panelData;
+      $panelTitle = "";
+      if ($panelData != null)
+         $panelTitle = $panelData->getTitle()." - ";
+
       $login = npadmin_loginData();
         if ($login != null) {      
       ?>
-      <title><?= npadmin_setting("APP", "TITLE") ?> - <?= $login->getUser()->user ?></title>
+    
+      <title><?= $panelTitle.npadmin_setting("APP", "TITLE")?> (<?= $login->getUser()->user ?>)</title>
       <? } else { ?>
-      <title><?= npadmin_setting("APP", "TITLE") ?></title>
+      <title><?= $panelTitle.npadmin_setting("APP", "TITLE")?></title>
       <? } ?>
       
    </head>

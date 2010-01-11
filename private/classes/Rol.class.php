@@ -29,12 +29,14 @@ class Rol {
    public function delete() {
 	   global $ddbb;
 	   $sql_1 = "DELETE FROM ".$ddbb->getTable('Rol')." WHERE ".$ddbb->getMapping('Rol','rolId')." = ".NP_DDBB::encodeSQLValue($this->rolId, $ddbb->getType('Rol','rolId'));
-	   //$sql_2 = "DELETE FROM ".$ddbb->getTable('UserRol')." WHERE ".$ddbb->getMapping('UserRol','rolId')." = ".NP_DDBB::encodeSQLValue($this->rolId, $ddbb->getType('UserRol','rolId'));            
-	   //$sql_3 = "DELETE FROM ".$ddbb->getTable('PanelRol')." WHERE ".$ddbb->getMapping('PanelRol','rolId')." = ".NP_DDBB::encodeSQLValue($this->rolId, $ddbb->getType('PanelRol','rolId'));            
-	   //$sql_4 = "DELETE FROM ".$ddbb->getTable('MenuRol')." WHERE ".$ddbb->getMapping('MenuRol','rolId')." = ".NP_DDBB::encodeSQLValue($this->rolId, $ddbb->getType('MenuRol','rolId'));            
-	   //$ddbb->executeDeleteQuery($sql_2);
-	   //$ddbb->executeDeleteQuery($sql_3);
-	   //$ddbb->executeDeleteQuery($sql_4);
+	   $sql_2 = "DELETE FROM ".$ddbb->getTable('UserRol')." WHERE ".$ddbb->getMapping('UserRol','rolId')." = ".NP_DDBB::encodeSQLValue($this->rolId, $ddbb->getType('UserRol','rolId'));            
+	   $sql_3 = "DELETE FROM ".$ddbb->getTable('PanelRol')." WHERE ".$ddbb->getMapping('PanelRol','rolId')." = ".NP_DDBB::encodeSQLValue($this->rolId, $ddbb->getType('PanelRol','rolId'));            
+	   $sql_4 = "DELETE FROM ".$ddbb->getTable('MenuRol')." WHERE ".$ddbb->getMapping('MenuRol','rolId')." = ".NP_DDBB::encodeSQLValue($this->rolId, $ddbb->getType('MenuRol','rolId'));            
+	   $sql_5 = "DELETE FROM ".$ddbb->getTable('GroupRol')." WHERE ".$ddbb->getMapping('GroupRol','rolId')." = ".NP_DDBB::encodeSQLValue($this->rolId, $ddbb->getType('GroupRol','rolId'));            
+	   $ddbb->executeDeleteQuery($sql_2);
+	   $ddbb->executeDeleteQuery($sql_3);
+	   $ddbb->executeDeleteQuery($sql_4);
+	   $ddbb->executeDeleteQuery($sql_5);
 	   return ($ddbb->executeDeleteQuery($sql_1) > 0);
    }
 }

@@ -92,7 +92,7 @@ function npadmin_setting($type, $name) {
 		if ($cacheSettings === null || (!isset($cacheSettings->value) && !isset($cacheSettings->defaultValue)) || ($cacheSettings->value === null && $cacheSettings->defaultValue === null))
 			$cacheSettings = new Setting("CACHE_SETTINGS", "NP-ADMIN");
 		 
-		if ($cacheSettings->value || ($cacheSettings->value === null && $cacheSettings->defaultValue === "true")) {
+		if ($cacheSettings->value == "true" || ($cacheSettings->value === null && $cacheSettings->defaultValue == "true")) {
 			$_settingsCache = __npadmin_settings_cache($type);
 				
 			if (array_key_exists($type, $_settingsCache) && array_key_exists($name, $_settingsCache[$type])) {

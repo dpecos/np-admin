@@ -35,13 +35,8 @@ class Menu {
    
    public function delete() {
       global $ddbb;
-      if (strlen($this->user) == 0) {
-         $sql_1 = "DELETE FROM ".$ddbb->getTable('Menu')." WHERE ".$ddbb->getMapping('Menu','menuId')." = ''";
-         $sql_2 = "DELETE FROM ".$ddbb->getTable('MenuRol')." WHERE ".$ddbb->getMapping('MenuRol','menuId')." = ''";            
-      } else {
-         $sql_1 = "DELETE FROM ".$ddbb->getTable('Menu')." WHERE ".$ddbb->getMapping('Menu','menuId')." = ".NP_DDBB::encodeSQLValue($this->user, $ddbb->getType('Menu','menuId'));
-         $sql_2 = "DELETE FROM ".$ddbb->getTable('MenuRol')." WHERE ".$ddbb->getMapping('MenuRol','menuId')." = ".NP_DDBB::encodeSQLValue($this->user, $ddbb->getType('MenuRol','menuId'));            
-      }
+      $sql_1 = "DELETE FROM ".$ddbb->getTable('Menu')." WHERE ".$ddbb->getMapping('Menu','menuId')." = ".NP_DDBB::encodeSQLValue($this->menuId, $ddbb->getType('Menu','menuId'));
+      $sql_2 = "DELETE FROM ".$ddbb->getTable('MenuRol')." WHERE ".$ddbb->getMapping('MenuRol','menuId')." = ".NP_DDBB::encodeSQLValue($this->menuId, $ddbb->getType('MenuRol','menuId'));            
       $ddbb->executeDeleteQuery($sql_2);
       return ($ddbb->executeDeleteQuery($sql_1) > 0);
    }

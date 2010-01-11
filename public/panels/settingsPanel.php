@@ -133,6 +133,4 @@ $npyui_setting->generateJS();
   </div>
 </div>  
 
-<? NP_YUI_generateHTML("Entry"); ?>
-
 <? require_once($NPADMIN_PATH."private/include/footer.php"); ?>

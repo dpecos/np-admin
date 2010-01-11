@@ -80,9 +80,9 @@ function createMenus($parentId = 0) {
    $login = npadmin_loginData();
    $menus = array();
    
-   if (npadmin_setting("NP-ADMIN","CACHE_MENUS") && isset($_SESSION) && array_key_exists("npadmin_menus_".$parentId, $_SESSION))
+   if (npadmin_setting("NP-ADMIN","CACHE_MENUS") == "true" && isset($_SESSION) && array_key_exists("npadmin_menus_".$parentId, $_SESSION)) {
         $menus = $_SESSION["npadmin_menus_".$parentId];
-   else if ($login != null) {
+   } else if ($login != null) {
       $myRols = $login->getRolsIds();
    
       $menus[$parentId] = array();
@@ -112,7 +112,7 @@ function createMenus($parentId = 0) {
       //echo $sql;
       $ddbb->executeSelectQuery($sql, "createMenuList", array($parentId, &$menus));
       //print_r($menus);
-      if (npadmin_setting("NP-ADMIN","CACHE_MENUS") && isset($_SESSION))
+      if (npadmin_setting("NP-ADMIN","CACHE_MENUS") == "true" && isset($_SESSION))
          $_SESSION["npadmin_menus_".$parentId] = $menus;
    }
    if (array_key_exists($parentId, $menus) && sizeof($menus[$parentId]) > 0) {
@@ -254,7 +254,7 @@ YAHOO.util.Event.onDOMReady(function () {
     oMenuBar.render(document.body);
     
     if (YAHOO.env.ua.ie > 0 && YAHOO.env.ua.ie < 7) {
-      if (npadmin_setting("NP-ADMIN_LNF", "IE6_FIXED_MENU")) {
+      if (npadmin_setting("NP-ADMIN_LNF", "IE6_FIXED_MENU") == "true") {
          YAHOO.util.Event.addListener(window, "scroll", function() {
             var menu = document.getElementById("npadmin_menubar");
              menu.style.margin="0px";
