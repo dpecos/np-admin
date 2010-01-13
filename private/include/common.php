@@ -4,23 +4,20 @@ global $NPADMIN_PATH, $ddbb, $ddbb_settings;
 error_reporting(E_ALL);
 ini_set('display_errors', '1'); 
 
-if (file_exists($NPADMIN_PATH."private/config/ddbb_config.php"))
-   require_once($NPADMIN_PATH."private/config/ddbb_config.php");
-else {
-   header("Location: ".$NPADMIN_PATH."public/install.php");
-   die();
-}
-
-
 global $NPLIB_PATH;
 if (!isset($NPLIB_PATH)) 
    $NPLIB_PATH = $NPADMIN_PATH."private/lib/np-lib/";
-
 require_once($NPLIB_PATH."includes.php");
-/*require_once($NPLIB_PATH."NPLib_Object.php");
-require_once($NPLIB_PATH."NPLib_Sql_2.php");
-require_once($NPLIB_PATH."NPLib_Net.php");
-require_once($NPLIB_PATH."NPLib_String.php");*/
+
+if (file_exists($NPADMIN_PATH."private/config/ddbb_config.php")) {
+   require_once($NPADMIN_PATH."private/config/ddbb_config.php");
+} else {
+    $location = $NPADMIN_PATH."public/install.php";
+    if (!NP_endsWith($location, $_SERVER["PHP_SELF"])) {
+        header("Location: ".$location);
+        die();
+    }
+}
 
 $ddbb = new NP_DDBB($ddbb_settings);
 

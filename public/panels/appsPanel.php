@@ -115,8 +115,6 @@ function npadmin_create_inserts($app, $doInsert = false) {
 
 global $app;
  
-define("NP-ADMIN_INSTALL", "true");
-
 $result = "";
 
 if (array_key_exists('app', $_GET)) {
@@ -139,14 +137,14 @@ if (array_key_exists('install', $_POST)) {
 	echo "Step 1: Inserting np-admin data ... \n";
 	echo "<pre>".npadmin_create_inserts($app, true)."</pre>";
 
-	$ddbb = new NP_DDBB($_POST);
 	require($file);
+	$app->ddbb->config = $_POST;
 
 	echo "Step 2: Creating database structure ... \n";
-	$sql = $ddbb->createSQLCreateTable();
+	$sql = $app->ddbb->createSQLCreateTable();
 	foreach (split(";", $sql) as $query) {
 		if (strlen(trim($query)) > 0)
-			$ddbb->executeInsertUpdateQuery($query);
+			$app->ddbb->executeInsertUpdateQuery($query);
 	}
 
 	echo "Done <br/><br/>\n";
@@ -173,11 +171,11 @@ if (array_key_exists('install', $_POST)) {
            <form method="POST" action="<?= $_SELF."?app=".$_GET['app'] ?>">
            <table>
               <caption><b>Database Connections</b></caption>
-              <tr><td width="150px">HOST</td><td><input type="text" name="HOST" value="<?= isset($ddbb_settings) ? $ddbb_settings['HOST'] : "localhost" ?>"/></td></tr>
-              <tr><td width="150px">USER</td><td><input type="text" name="USER" value="<?= isset($ddbb_settings) ? $ddbb_settings['USER'] : "" ?>"/></td></tr>
-              <tr><td width="150px">PASSWORD</td><td><input type="text" name="PASSWD" value="<?= isset($ddbb_settings) ? $ddbb_settings['PASSWD'] : "" ?>"/></td></tr>
-              <tr><td width="150px">NAME</td><td><input type="text" name="NAME" value="<?= isset($ddbb_settings) ? $ddbb_settings['NAME'] : "" ?>"/></td></tr>
-              <tr><td width="150px">TABLE PREFIX</td><td><input type="text" name="PREFIX" value="<?= isset($ddbb_settings) ? $ddbb_settings['PREFIX'] : "" ?>"/></td></tr>
+              <tr><td width="150px">HOST</td><td><input type="text" name="HOST" value="<?= isset($app->ddbb) ? $app->ddbb->config['HOST'] : "localhost" ?>"/></td></tr>
+              <tr><td width="150px">USER</td><td><input type="text" name="USER" value="<?= isset($app->ddbb) ? $app->ddbb->config['USER'] : "" ?>"/></td></tr>
+              <tr><td width="150px">PASSWORD</td><td><input type="text" name="PASSWD" value="<?= isset($app->ddbb) ? $app->ddbb->config['PASSWD'] : "" ?>"/></td></tr>
+              <tr><td width="150px">NAME</td><td><input type="text" name="NAME" value="<?= isset($app->ddbb) ? $app->ddbb->config['NAME'] : "" ?>"/></td></tr>
+              <tr><td width="150px">TABLE PREFIX</td><td><input type="text" name="PREFIX" value="<?= isset($app->ddbb) ? $app->ddbb->config['PREFIX'] : "" ?>"/></td></tr>
            </table>
 	   <input type="hidden" name="app" value="<?= $_GET['app'] ?>"/>
 	   <input type="hidden" name="install" value="true"/>
