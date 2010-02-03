@@ -13,7 +13,23 @@ var npadmin_messageBox = null;
 var npadmin_changePasswordDialog = null;
 var npadmin_resetPasswordDialog = null;
 
+function cookiesEnabled(){
+	var tmpcookie = new Date();
+	chkcookie = (tmpcookie.getTime() + '');
+	document.cookie = "chkcookie=" + chkcookie + "; path=/";
+	if (document.cookie.indexOf(chkcookie,0) < 0) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
 function npadmin_showLogin(modal, ref) {
+	if (!cookiesEnabled()) {
+		box_warn("npadmin_cookies", "You have to enable cookies if you want to login");
+		return;
+	}
+	
 	if (modal == null)
 		modal = true;
 		

@@ -25,10 +25,10 @@ function html_head() {
 
 <div class="page_title"><?= $panelData->getTitle() ?></div>
 	
-	<ul>
+	<!--ul>
 		<li>PHPDOC: <a href="../../private/lib/phpdoc/docbuilder/builder.php?setting_useconfig=np-admin&dataform=true">Generate Documentation</a></li>
 		<li>PHPDOC: <a href="../../documentation">View Documentation</a></li>
-	</ul>
+	</ul-->
 		
 <!--div id="mainTabs" class="yui-navset">
     <ul class="yui-nav">

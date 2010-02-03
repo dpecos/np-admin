@@ -25,7 +25,7 @@ class Logger {
 			$logfile = npadmin_setting("NPLOG", "LOG_FILE_".$name);
 			if ($logfile != null) {
    			$logfile = str_replace("#date#", date("Ymd"), $logfile);
-   			NPLogger::init($name, $NPADMIN_PATH.$logfile, "ALL");
+   			NPLogger::init($name, $NPADMIN_PATH.$logfile, "ALL", null, npadmin_setting("NPLOG", "ENABLE_SQL_EXPLAIN_PLAN"));
 		   }
 		}
 	}
