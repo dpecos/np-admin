@@ -25,6 +25,9 @@ if (array_key_exists("op", $_POST) && ($_POST['op'] == "login" || $_POST['op'] =
 		$password = NP_decrypt("AES", $_POST['password'], $_SESSION['npadmin_login_seed']);
 		echo npadmin_login($_POST['user'], $password) ? "OK" : "ERROR";
 
+	} else if (array_key_exists("op", $_POST) && $_POST['op'] == "loginClear") {
+		echo npadmin_login($_POST['user'], $_POST['password']) ? "OK" : "ERROR";
+
 	} else if (array_key_exists("op", $_POST) && $_POST['op'] == "logout" || array_key_exists("op", $_GET) && $_GET['op'] == "logout") {
 		npadmin_logout();
 		echo "OK";

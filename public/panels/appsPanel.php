@@ -137,7 +137,7 @@ if (array_key_exists('install', $_POST)) {
 	echo "Step 1: Inserting np-admin data ... \n";
 	echo "<pre>".npadmin_create_inserts($app, true)."</pre>";
 
-	require($file);
+    //require($file);
 	$app->ddbb->config = $_POST;
 
 	echo "Step 2: Creating database structure ... \n";

@@ -1,40 +1,22 @@
 <?
 require_once($NPADMIN_PATH."private/include/common.php");
 
-if (session_id() === "") {
-   session_start();
-}
+if (!isset($_SESSION))
+    session_start();
 
 function npadmin_login($user, $password) {
-	if (session_id() === "")
-		session_start();
-	$loginData = new LoginData();
-	return $loginData->login($user, $password);
+	$session = new SessionData(session_id(), $user, $password);
+    $result = $session->login();
+	return $result;
 }
 
 function npadmin_logout() {
-	if (session_id() === "")
-		session_start();
-	  if (isset($_SESSION) && array_key_exists('npadmin_logindata', $_SESSION))
-		$_SESSION['npadmin_logindata']->logout();
+    $session = SessionData::loadCookie();
+	$session->logout();
 }
 
 function npadmin_loginData() {
-	if (session_id() === "")
-	   session_start();
-	if (isset($_SESSION)) {
-		if (isset($_SESSION['npadmin_logindata']))
-			return $_SESSION['npadmin_logindata'];
-	}
-
-	$loginData = new LoginData();
-	if (!$loginData->isLoginFormRequired()) {
-		if (npadmin_login(null, null))
-			return $_SESSION['npadmin_logindata'];
-		else
-			return null;
-	} else
-		return null;
+	return SessionData::loadCookie();
 }
 
 function npadmin_loginForm() {

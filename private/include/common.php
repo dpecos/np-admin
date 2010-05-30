@@ -37,6 +37,7 @@ require_once($NPADMIN_PATH."private/classes/PanelRol.class.php");
 //require_once($NPADMIN_PATH."private/classes/UserTmpPassword.class.php");
 require_once($NPADMIN_PATH."private/classes/Logger.class.php");
 require_once($NPADMIN_PATH."private/classes/Application.class.php");
+require_once($NPADMIN_PATH."private/classes/SessionData.class.php");
 
 Logger::init(array("npadmin", "nplib"));
 $vars = "";
@@ -63,7 +64,7 @@ function __autoload($class_name) {
 define('NP_DEFAULT_LANG', npadmin_setting('NP-ADMIN', 'LANGUAGE_DEFAULT'));
 if (isset($_GET) && array_key_exists("LANG", $_GET)) {
      define('NP_LANG', $_GET["LANG"]);
-     setcookie('NP_LANG', $_GET["LANG"]);
+     setcookie('NP_LANG', $_GET["LANG"], 0, "/");
 } else {
     define('NP_LANG', array_key_exists('NP_LANG', $_COOKIE) && $_COOKIE['NP_LANG'] != NULL ? $_COOKIE['NP_LANG'] : NP_DEFAULT_LANG);
 }

@@ -81,7 +81,7 @@ $data = array (
    ),  
    'Setting' => array(
       array('type' => 'NP-ADMIN', 'name' => 'BASE_URL', 'default_value' => "/np-admin", "value" => $path),
-      array('type' => 'NP-ADMIN', 'name' => 'AUTH', 'default_value' => ""),
+      array('type' => 'NP-ADMIN', 'name' => 'AUTH', 'default_value' => "DefaultAuthenticator"),
       array('type' => 'NP-ADMIN', 'name' => 'AUTH_FORM', 'default_value' => "private/include/login.php"),
       array('type' => 'NP-ADMIN', 'name' => 'YUI_PATH', 'default_value' => 'http://yui.yahooapis.com/2.7.0/build', "value" => null),
       array('type' => 'NP-ADMIN', 'name' => 'CACHE_SETTINGS', 'default_value' => "true"),
