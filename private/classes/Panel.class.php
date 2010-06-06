@@ -22,7 +22,8 @@ class Panel {
          $ddbb->loadData($this, $panel);
       } else if ($panel != null) {
          $data = $ddbb->executePKSelectQuery("SELECT * FROM ".$ddbb->getTable('Panel')." WHERE ".$ddbb->getMapping('Panel','id')."=".NP_DDBB::encodeSQLValue($panel, $ddbb->getType('Panel','id')));
-         $ddbb->loadData($this, $data);
+         if ($data !== null)
+             $ddbb->loadData($this, $data);
       }
       
       if (isset($this->id) && $this->id != null) {   

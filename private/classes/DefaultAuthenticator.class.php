@@ -109,6 +109,14 @@ class DefaultAuthenticator {
    	  return $tmpPassword;
    }
    
+   public static function listUsers() {
+	   global $ddbb;
+
+	   $sql = "SELECT * FROM ".$ddbb->getTable("User")." ORDER BY ".$ddbb->getMapping('User','user');
+
+	   return DefaultAuthenticator::createUserList($sql);
+   }
+
    public static function listGroups() {
 	   global $ddbb;
 

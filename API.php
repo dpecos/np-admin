@@ -24,30 +24,30 @@ function npadmin_loginForm() {
 	exit();
 }
 
-function npadmin_security($rols = null, $showLoginForm = true) {
+function npadmin_security($rols = null, $showLoginForm = true, $msg = null) {
 	/* AJAX calls have $showLoginForm set to false, because it makes no sense to show a login form */
 
 	$login = npadmin_loginData();
 
-	if ($login == null) {
+	if ($login === null) {
 		if ($showLoginForm)
 			npadmin_loginForm();
 		else
-			die(_("You are not allowed to access this page"));
+			die($msg !== null ? $msg : _("You are not allowed to access this page"));
 	} else {
 		if (is_array($rols)) {
 			if (!$login->isAllowed($rols)) {
 				if ($showLoginForm)
 					npadmin_loginForm();
 				else
-					die(_("You are not allowed to access this page"));
+					die($msg !== null ? $msg : _("You are not allowed to access this page"));
 			}
-		} else {
-			// TODO:rols contains panelId
-			//$panel = new Panel($rols);
-
-
-		}
+        } else if ($rols === null) {
+            if ($showLoginForm)
+                npadmin_loginForm();
+            else
+                die($msg !== null ? $msg : _("You are not allowed to access this page"));
+        }
 	}
 }
 

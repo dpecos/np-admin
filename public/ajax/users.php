@@ -19,7 +19,7 @@ foreach ($_POST as $k => $v) {
 		$_POST[$k] = null;
 }
 
-if (array_key_exists("op", $_POST) && ($_POST['op'] == "login" || $_POST['op'] == "logout") || isset($_GET['op']) && $_GET['op'] == "logout") {
+if (array_key_exists("op", $_POST) && ($_POST['op'] == "login" || $_POST['op'] == "loginClear" || $_POST['op'] == "logout") || isset($_GET['op']) && $_GET['op'] == "logout") {
 
 	if (array_key_exists("op", $_POST) && $_POST['op'] == "login") {
 		$password = NP_decrypt("AES", $_POST['password'], $_SESSION['npadmin_login_seed']);
@@ -191,7 +191,7 @@ if (array_key_exists("op", $_POST) && ($_POST['op'] == "login" || $_POST['op'] =
 
 	if ($returnList) {
 		$users = array();
-		$usersT = $ddbb->executeSelectQuery("SELECT * FROM ".$ddbb->getTable("User")." ORDER BY 1");
+		/*$usersT = $ddbb->executeSelectQuery("SELECT * FROM ".$ddbb->getTable("User")." ORDER BY 1");
 
 		if ($usersT != null) {
 			foreach ($usersT as $data) {
@@ -199,7 +199,7 @@ if (array_key_exists("op", $_POST) && ($_POST['op'] == "login" || $_POST['op'] =
 				//$user->creationDate = date("Y-m-d", $user->creationDate);
 				$users[] = $user;
 			}
-		}
+		}*/
 
 		if ($authenticator != null) {
 			$users = array_merge($users, $authenticator->listUsers());

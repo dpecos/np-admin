@@ -12,6 +12,7 @@ global $ddbb;
 $ddbb->addTable("SessionData", "sessions");
 $ddbb->addField("SessionData", "cookieValue", null, "STRING", array("PK" => true, "NULLABLE" => false, "LENGTH" => 40));
 $ddbb->addField("SessionData", "data", null, "TEXT", array("NULLABLE" => false));
+$ddbb->addField("SessionData", "creationDate", "creation_date", "DATE", array("NULLABLE" => false, "DEFAULT" => "CURRENT_TIMESTAMP"));
 
 class SessionData {
    public function __construct($ses_id, $user, $password) {     
@@ -44,12 +45,18 @@ class SessionData {
    }
 
    private function load($cookieValue) {
-      global $ddbb;
-      $sql = "SELECT * FROM ".$ddbb->getTable('SessionData')." WHERE ".$ddbb->getMapping('SessionData','cookieValue')." = ".NP_DDBB::encodeSQLValue($cookieValue, $ddbb->getType('SessionData','cookieValue'));
-      $result = $ddbb->executePKSelectQuery($sql);  
-      $tmp = unserialize($result['data']);
-      $this->data = $tmp->data;
-      return $this;
+       global $ddbb;
+       $sql = "SELECT * FROM ".$ddbb->getTable('SessionData')." WHERE ".$ddbb->getMapping('SessionData','cookieValue')." = ".NP_DDBB::encodeSQLValue($cookieValue, $ddbb->getType('SessionData','cookieValue'));
+       $result = $ddbb->executePKSelectQuery($sql);  
+       if ($result !== null) {
+           $tmp = unserialize($result['data']);
+           $this->data = $tmp->data;
+
+           return $this;
+       } else {
+           $this->logout();
+           return null;
+       }
    }
    
    private function delete() {
@@ -59,12 +66,18 @@ class SessionData {
    }
 
    public static function loadCookie() {
+       session_start();
        $session = null;
-       if (array_key_exists("NPADMIN", $_COOKIE)) {
+
+       if (array_key_exists("NPADMIN", $_SESSION)) {
+           $session = $_SESSION['NPADMIN'];
+       } else if (array_key_exists("NPADMIN", $_COOKIE)) {
            $cookieValue = $_COOKIE["NPADMIN"];
            $session = new SessionData();
            $session->cookieValue = $cookieValue;
            $session->load($cookieValue);
+
+           $_SESSION['NPADMIN'] = $session;
        }
        return $session;
    }
@@ -98,6 +111,8 @@ class SessionData {
 
    public function logout() {
       $this->delete();
+      session_start();
+      unset($_SESSION['NPADMIN']);
       setcookie("NPADMIN", "", 0, "/");
    }
 

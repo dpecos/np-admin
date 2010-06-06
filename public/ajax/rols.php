@@ -18,8 +18,6 @@ if ($authClass != null) {
 	$authenticator = new $authClass;
 }
 
-$defaultAuthenticator = new DefaultAuthenticator();
-
 foreach ($_POST as $k => $v) {
    if ($v === "null")
       $_POST[$k] = null;
@@ -49,36 +47,32 @@ if (array_key_exists("op", $_POST)) {
 
    } else if ($_POST['op'] == "listAssignedUsers") {
 
-      $users = $defaultAuthenticator->listAssignedUsersToRol($_POST['rol_id']);
       if ($authenticator != null) {
-	      $users = array_merge($users, $authenticator->listAssignedUsersToRol($_POST['rol_id']));
+	      $users = $authenticator->listAssignedUsersToRol($_POST['rol_id']);
       }
 
       echo NP_json_encode($users);
 
    } else if ($_POST['op'] == "listUnassignedUsers") {
 
-      $users = $defaultAuthenticator->listUnassignedUsersToRol($_POST['rol_id']);
       if ($authenticator != null) {
-	      $users = array_merge($users, $authenticator->listUnassignedUsersToRol($_POST['rol_id']));
+	      $users = $authenticator->listUnassignedUsersToRol($_POST['rol_id']);
       }
 
       echo NP_json_encode($users);
 
     } else if ($_POST['op'] == "listAssignedGroups") {
 
-      $groups = $defaultAuthenticator->listAssignedGroupsToRol($_POST['rol_id']);
       if ($authenticator != null) {
-	      $groups = array_merge($groups, $authenticator->listAssignedGroupsToRol($_POST['rol_id']));
+	      $groups = $authenticator->listAssignedGroupsToRol($_POST['rol_id']);
       }
 
       echo NP_json_encode($groups);
 
    } else if ($_POST['op'] == "listUnassignedGroups") {
 
-      $groups = $defaultAuthenticator->listUnassignedGroupsToRol($_POST['rol_id']);
       if ($authenticator != null) {
-	      $groups = array_merge($groups, $authenticator->listUnassignedGroupsToRol($_POST['rol_id']));
+	      $groups = $authenticator->listUnassignedGroupsToRol($_POST['rol_id']);
       }
 
       echo NP_json_encode($groups);
@@ -120,7 +114,7 @@ if (array_key_exists("op", $_POST)) {
    }
 
    if ($returnList) {
-	   $rols = $defaultAuthenticator->listRols();
+	   $rols = $authenticator->listRols();
 
 	   echo NP_json_encode(array("Results" => $rols));
    }

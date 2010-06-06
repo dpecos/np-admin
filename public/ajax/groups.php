@@ -18,8 +18,6 @@ if ($authClass != null) {
 	$authenticator = new $authClass;
 }
 
-$defaultAuthenticator = new DefaultAuthenticator();
-
 foreach ($_POST as $k => $v) {
    if ($v === "null")
       $_POST[$k] = null;
@@ -49,12 +47,11 @@ if (array_key_exists("op", $_POST)) {
       
    } else if ($_POST['op'] == "listAssignedUsers") {
 
-      $users = $defaultAuthenticator->listAssignedUsersToGroup($_POST['group_id']);
       if ($authenticator != null) {
 	      if (npadmin_setting("AUTH","DEFAULT_GROUP") != null && npadmin_setting("AUTH","DEFAULT_GROUP") == $_POST['group_id']) {
-		      $users = array_merge($users, $authenticator->listUsers());
+		      $users = $authenticator->listUsers();
 	      } else {
-		      $users = array_merge($users, $authenticator->listAssignedUsersToGroup($_POST['group_id']));
+		      $users = $authenticator->listAssignedUsersToGroup($_POST['group_id']);
 	      }
       }
 
@@ -62,10 +59,9 @@ if (array_key_exists("op", $_POST)) {
 
    } else if ($_POST['op'] == "listUnassignedUsers") {
 
-      $users = $defaultAuthenticator->listUnassignedUsersToGroup($_POST['group_id']);
       if ($authenticator != null) {
 	      if (npadmin_setting("AUTH","DEFAULT_GROUP") == null || (npadmin_setting("AUTH","DEFAULT_GROUP") != null && npadmin_setting("AUTH","DEFAULT_GROUP") != $_POST['group_id'])) {
-		      $users = array_merge($users, $authenticator->listUnassignedUsersToGroup($_POST['group_id']));
+		      $users = $authenticator->listUnassignedUsersToGroup($_POST['group_id']);
 	      }
       }
 
@@ -95,7 +91,7 @@ if (array_key_exists("op", $_POST)) {
    }
    
    if ($returnList) {
-	   $groups = $defaultAuthenticator->listGroups();
+	   $groups = $authenticator->listGroups();
 	   echo NP_json_encode(array("Results" => $groups)); 
    } 
 }
