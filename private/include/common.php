@@ -4,10 +4,9 @@ global $NPADMIN_PATH, $ddbb, $ddbb_settings;
 error_reporting(E_ALL);
 ini_set('display_errors', '1'); 
 
-global $NPLIB_PATH;
-if (!isset($NPLIB_PATH)) 
-   $NPLIB_PATH = $NPADMIN_PATH."private/lib/np-lib/";
-require_once($NPLIB_PATH."includes.php");
+if (!defined("NPLIB_PATH")) 
+   define("NPLIB_PATH", $NPADMIN_PATH."private/lib/np-lib/");
+require_once(NPLIB_PATH."includes.php");
 
 if (file_exists($NPADMIN_PATH."private/config/ddbb_config.php")) {
    require_once($NPADMIN_PATH."private/config/ddbb_config.php");
